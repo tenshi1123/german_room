@@ -45,5 +45,11 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+    	<string>The app requires access to camera to take pictures and send them to the teacher.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+    	<string>This app requires access to the photo library to send images of questions or assignments to teachers.</string>
+	<key>NSMicrophoneUsageDescription</key>
+    	<string>Can I use the mic please? This app need to use the mic to record and give it to the teacher</string>
 </dict>
 </plist>
