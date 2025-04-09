@@ -1,0 +1,373 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:german_room/modules/bottombar/screen/user_info/change_pass_screen.dart';
+import 'package:german_room/modules/login/login_screen.dart';
+import 'package:german_room/student_models/profile_model.dart';
+import 'package:german_room/utils/constants/color.dart';
+import 'package:german_room/utils/constants/styles.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+class AccountScreen extends StatefulWidget {
+  const AccountScreen({super.key, required this.profileModel});
+  final ProfileModel profileModel;
+  @override
+  State<AccountScreen> createState() => _AccountScreenState();
+}
+
+class _AccountScreenState extends State<AccountScreen> {
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 390.w,
+      height: 844.h,
+      decoration: BoxDecoration(gradient: asdjajsdhasjidas),
+      child: Column(
+        children: [
+          SizedBox(
+            height: 60.h,
+          ),
+          SizedBox(
+            height: 250.h,
+            width: 349.w,
+            child: Stack(
+              children: [
+                Positioned(
+                  top: 50.h,
+                  child: Container(
+                    //height: 242.h,
+                    width: 349.w,
+                    padding: EdgeInsets.symmetric(horizontal: 18.w),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.white,
+                    ),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 8.h,
+                        ),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 120.w,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.profileModel.fullName,
+                                  style: defaultText18B,
+                                ),
+                                SizedBox(
+                                  height: 6.h,
+                                ),
+                                Text(
+                                  'Mã học viên: ${widget.profileModel.code}',
+                                  style: defaultText12Re.copyWith(
+                                    color: key1Color,
+                                  ),
+                                )
+                              ],
+                            ),
+                            const Spacer(),
+                            // GestureDetector(
+                            //   onTap: () {
+                            //     Navigator.push(
+                            //       context,
+                            //       MaterialPageRoute(
+                            //         builder: (context) =>
+                            //             const EditInfoScreen(),
+                            //       ),
+                            //     );
+                            //   },
+                            //   child: Container(
+                            //     height: 25.h,
+                            //     width: 25.w,
+                            //     padding: const EdgeInsets.all(3),
+                            //     decoration: BoxDecoration(
+                            //       shape: BoxShape.circle,
+                            //       gradient: mainGradient2,
+                            //     ),
+                            //     child:
+                            //         SvgPicture.asset('assets/icons/pencil.svg'),
+                            //   ),
+                            // ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 15.h,
+                        ),
+                        Divider(
+                          thickness: 1,
+                          // indent: 15.w,
+                          // endIndent: 15.w,
+                          color: Colors.black.withValues(alpha: 0.5),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Họ và tên',
+                              style: defaultText14Re,
+                            ),
+                            Text(
+                              widget.profileModel.fullName,
+                              style: defaultText14M,
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Ngày sinh',
+                              style: defaultText14Re,
+                            ),
+                            Text(
+                              widget.profileModel.dob,
+                              style: defaultText14M,
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Số điện thoại',
+                              style: defaultText14Re,
+                            ),
+                            Text(
+                              widget.profileModel.phone,
+                              style: defaultText14M,
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Địa chỉ',
+                              style: defaultText14Re,
+                            ),
+                            SizedBox(
+                              //height: 38.h,
+                              width: 202.w,
+                              child: Text(
+                                widget.profileModel.address,
+                                style: defaultText14B,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 0,
+                  left: 15.w,
+                  child: CircleAvatar(
+                    radius: 56.r,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                        56.r,
+                      ),
+                      child: Image.network(
+                        'https://lms.german_roomenglish.edu.vn/images/${widget.profileModel.img}',
+                        fit: BoxFit.fill,
+                        errorBuilder: (BuildContext context, Object exception,
+                            StackTrace? stackTrace) {
+                          return const Text('N/A');
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 20.h,
+          ),
+          Container(
+            height: 133.h,
+            width: 350.w,
+            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text(
+                  'Quản lý tài khoản',
+                  style: defaultText14M,
+                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     Text(
+                //       'Mật khẩu',
+                //       style: defaultText14M,
+                //     ),
+                //     Icon(
+                //       Icons.keyboard_arrow_right,
+                //       size: 30.h,
+                //       color: key1Color,
+                //     ),
+                //   ],
+                // ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     Text(
+                //       'Thông báo',
+                //       style: defaultText14M,
+                //     ),
+                //     Icon(
+                //       Icons.keyboard_arrow_right,
+                //       size: 30.h,
+                //       color: key1Color,
+                //     ),
+                //   ],
+                // ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ChangePassScreen(),
+                      ),
+                    );
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Mật khẩu',
+                        style: defaultText14M,
+                      ),
+                      Icon(
+                        Icons.keyboard_arrow_right,
+                        size: 30.h,
+                        color: key1Color,
+                      ),
+                    ],
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    _makePhoneCall('19008978');
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Hotline hỗ trợ',
+                        style: defaultText14M,
+                      ),
+                      Text(
+                        '1900 8978',
+                        style: defaultText14M.copyWith(
+                          color: sub1Color,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => _dialogBuilder(context),
+                  child: Container(
+                    height: 49.h,
+                    width: 315.w,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: state1,
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Đăng xuất',
+                        style: defaultText14M,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+Future<void> _dialogBuilder(BuildContext context) {
+  return showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(
+          'Đăng xuất',
+          style: defaultText14M,
+        ),
+        content: Text(
+          'Bạn có chắc muốn đăng xuất ?',
+          style: defaultText14M,
+        ),
+        actions: <Widget>[
+          TextButton(
+            style: TextButton.styleFrom(
+              textStyle: Theme.of(context).textTheme.labelLarge,
+            ),
+            child: const Text('Hủy'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            style: TextButton.styleFrom(
+              textStyle: Theme.of(context).textTheme.labelLarge,
+            ),
+            child: const Text('Xác nhận'),
+            onPressed: () async {
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              await prefs.remove('token');
+              if (!context.mounted) return;
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: ((context) => const LoginScreen()),
+                ),
+              );
+            },
+          ),
+        ],
+      );
+    },
+  );
+}

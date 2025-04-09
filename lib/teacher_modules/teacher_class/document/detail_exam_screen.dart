@@ -1,0 +1,310 @@
+import 'dart:io';
+
+import 'package:dotted_border/dotted_border.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:german_room/teacher/teacher_model/teacher_class_model.dart';
+import 'package:german_room/teacher/teacher_repo/teacher_class_repo.dart';
+import 'package:german_room/utils/constants/styles.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+class DetailExamScreen extends StatefulWidget {
+  const DetailExamScreen({super.key, required this.documentModel});
+  final DocumentModel? documentModel;
+  @override
+  State<DetailExamScreen> createState() => _DetailExamScreenState();
+}
+
+class _DetailExamScreenState extends State<DetailExamScreen> {
+  String? _fileName;
+  File? file;
+  final TextEditingController scoreController = TextEditingController();
+  final TextEditingController noteController = TextEditingController();
+  Future<void> _pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    if (result != null) {
+      file = File(result.files.single.path!);
+      setState(() {
+        _fileName = result.files.single.name;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    scoreController.text = widget.documentModel?.finalMark ?? '';
+    noteController.text = widget.documentModel?.noteTeacher ?? '';
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: const Color(0xff00AEEF),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop(false);
+          },
+        ),
+        title: Text(
+          '    Chấm điểm bài tập',
+          style: defaultText18B.copyWith(
+            color: Colors.white,
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              width: double.infinity,
+              height: 20.h,
+              color: const Color(0xff00AEEF),
+              child: Container(
+                width: double.infinity,
+                height: 20.h,
+                decoration: BoxDecoration(
+                  borderRadius:
+                      BorderRadius.vertical(top: Radius.circular(20.r)),
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(16),
+              width: 343.w,
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                _fileName ?? "Chưa có tệp nào được chọn",
+                style: TextStyle(color: Colors.grey[600]),
+              ),
+            ),
+            SizedBox(
+              height: 20.h,
+            ),
+            DottedBorder(
+              borderType: BorderType.RRect,
+              radius: const Radius.circular(8),
+              dashPattern: const [6, 3], // Áp dụng nét đứt
+              strokeWidth: 1,
+              color: Colors.blue,
+              child: GestureDetector(
+                onTap: _pickFile,
+                child: Container(
+                  width: 343.w,
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  color: Colors.blue.withValues(alpha: 0.1),
+                  alignment: Alignment.center,
+                  child: const Text(
+                    "+ Chọn tệp tải lên",
+                    style: TextStyle(color: Colors.blue, fontSize: 16),
+                  ),
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () async {
+                if (!await launchUrl(
+                    Uri.parse(widget.documentModel?.urlFileCustomer ?? ''))) {
+                  throw Exception('Error no data');
+                }
+              },
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.h),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(12.r),
+                    ),
+                    color: const Color(0xffF5F7FA)),
+                child: Row(
+                  children: [
+                    Image.asset(
+                      'assets/images/document.png',
+                      width: 28.w,
+                      height: 28.h,
+                    ),
+                    SizedBox(
+                      width: 8.w,
+                    ),
+                    Text(
+                      'Xem file học sinh đã nộp',
+                      style: defaultText16M,
+                    ),
+                    const Spacer(),
+                  ],
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () async {
+                if (!await launchUrl(
+                    Uri.parse(widget.documentModel?.urlFileTeacher ?? ''))) {
+                  throw Exception('Error no data');
+                }
+              },
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.h),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(12.r),
+                    ),
+                    color: const Color(0xffF5F7FA)),
+                child: Row(
+                  children: [
+                    Image.asset(
+                      'assets/images/document.png',
+                      width: 28.w,
+                      height: 28.h,
+                    ),
+                    SizedBox(
+                      width: 8.w,
+                    ),
+                    Text(
+                      'Xem file giải',
+                      style: defaultText16M,
+                    ),
+                    const Spacer(),
+                  ],
+                ),
+              ),
+            ),
+            Row(
+              children: [
+                SizedBox(
+                  width: 16.w,
+                ),
+                Text("Điểm bài tập", style: defaultText18B),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
+              child: TextField(
+                style: defaultText14M,
+                controller: scoreController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  // hintText: widget.documentModel?.finalMark ?? '',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                ),
+              ),
+            ),
+            Row(
+              children: [
+                SizedBox(
+                  width: 16.w,
+                ),
+                Text("Ghi chú của giáo viên", style: defaultText18B),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
+              child: TextField(
+                controller: noteController,
+                style: defaultText14M,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  // hintText: widget.documentModel?.noteTeacher ?? '',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                ),
+              ),
+            ),
+            Row(
+              children: [
+                SizedBox(
+                  width: 16.w,
+                ),
+                Text("Ghi chú của học viên", style: defaultText18B),
+              ],
+            ),
+            Container(
+              width: 358.w,
+              height: 120.h,
+              padding: const EdgeInsets.all(16),
+              margin: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
+              decoration: BoxDecoration(
+                color: Colors.blueGrey[50], // Màu nền nhạt
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                widget.documentModel?.noteCustomers ?? '',
+                style: defaultText14M,
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                TeacherClassRepo().uploadExcercise(
+                    id: widget.documentModel?.id ?? '',
+                    finalMark: scoreController.text,
+                    note: noteController.text,
+                    photo: file);
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      title: Row(
+                        children: [
+                          const Icon(Icons.check_circle,
+                              color: Colors.green, size: 28),
+                          const SizedBox(width: 10),
+                          Text("Thành công", style: defaultText16B),
+                        ],
+                      ),
+                      content: Text(
+                          "Thông tin của bạn đã được thay đổi thành công.",
+                          style: defaultText14B),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text("Đóng",
+                              style: TextStyle(color: Colors.blue)),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: Container(
+                width: 358.w,
+                height: 50.h,
+                margin: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
+                decoration: BoxDecoration(
+                  color: const Color(0xff00AEEF), // Màu nền nhạt
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Center(
+                  child: Text(
+                    'Lưu thay đổi',
+                    style: defaultText16B.copyWith(color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 30.h,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
