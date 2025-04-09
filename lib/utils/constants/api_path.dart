@@ -1,6 +1,6 @@
 class ApiPath {
   //baseurl
-  static const String baseUrl = 'https://lms.german_roomenglish.edu.vn/';
+  static const String baseUrl = 'https://lms.pmpenglish.edu.vn/';
 
   static const String hocvienUrl = '${baseUrl}api/customer';
 
