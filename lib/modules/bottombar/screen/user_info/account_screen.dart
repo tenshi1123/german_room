@@ -60,23 +60,26 @@ class _AccountScreenState extends State<AccountScreen> {
                             SizedBox(
                               width: 120.w,
                             ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.profileModel.fullName,
-                                  style: defaultText18B,
-                                ),
-                                SizedBox(
-                                  height: 6.h,
-                                ),
-                                Text(
-                                  'Mã học viên: ${widget.profileModel.code}',
-                                  style: defaultText12Re.copyWith(
-                                    color: key1Color,
+                            SizedBox(
+                              width: 190.w,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    widget.profileModel.fullName,
+                                    style: defaultText18B,
                                   ),
-                                )
-                              ],
+                                  SizedBox(
+                                    height: 6.h,
+                                  ),
+                                  Text(
+                                    'Mã học viên: ${widget.profileModel.code}',
+                                    style: defaultText12Re.copyWith(
+                                      color: key1Color,
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                             const Spacer(),
                             // GestureDetector(
@@ -324,7 +327,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: 10.h,
+                  height: 15.h,
                 )
               ],
             ),
