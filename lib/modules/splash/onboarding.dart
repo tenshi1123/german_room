@@ -97,7 +97,7 @@ class _OnbondingState extends State<Onbonding> {
                                     Image.asset(
                                       "assets/images/onboard1.png",
                                       width: 390.w,
-                                      height: 560.h,
+                                      height: 390.w,
                                       fit: BoxFit.fill,
                                     ),
                                     SizedBox(height: 5.h),
@@ -141,7 +141,7 @@ class _OnbondingState extends State<Onbonding> {
                                     Image.asset(
                                       "assets/images/onboard2.png",
                                       width: 390.w,
-                                      height: 560.h,
+                                      height: 390.w,
                                     ),
                                     SizedBox(height: 5.h),
                                     Padding(

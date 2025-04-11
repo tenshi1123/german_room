@@ -78,7 +78,7 @@ class _StudentItem extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         if (!await launchUrl(Uri.parse(
-            'https://lms.german_roomenglish.edu.vn/exercise/result/$slug-${examModel.ccseeId}'))) {
+            'https://lms.pmpenglish.edu.vn/exercise/result/$slug-${examModel.ccseeId}'))) {
           throw Exception('Could not launch ');
         }
       },

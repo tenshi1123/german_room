@@ -50,7 +50,7 @@ class _WebViewExampleState extends State<WebViewExample> {
           },
         ),
       )
-      ..loadRequest(Uri.parse('https://german_roomenglish.edu.vn/'));
+      ..loadRequest(Uri.parse('https://pmpenglish.edu.vn/'));
 
     // #docregion platform_features
     if (controller.platform is AndroidWebViewController) {

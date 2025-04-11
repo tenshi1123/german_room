@@ -27,8 +27,8 @@ LinearGradient asdjajsdhasjidas = LinearGradient(
   begin: Alignment.topLeft,
   end: const Alignment(1, 0.8),
   colors: [
-    const Color(0xff296142).withValues(alpha: 0.1),
     const Color(0xff296142).withValues(alpha: 0.7),
+    const Color(0xff296142).withValues(alpha: 0.1),
   ],
 );
 LinearGradient mainGradient2 = const LinearGradient(

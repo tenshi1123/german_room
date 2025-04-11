@@ -281,6 +281,20 @@ class _ExcerciseItem extends StatelessWidget {
                     ),
                 ],
               ),
+            ),
+            const Spacer(),
+            Container(
+              height: 30.h,
+              decoration: BoxDecoration(
+                gradient: mainGradient3,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Center(
+                child: Text(
+                  ' Xin nghỉ ',
+                  style: defaultText12B.copyWith(color: Colors.white),
+                ),
+              ),
             )
           ],
         ),

@@ -19,8 +19,8 @@ class _CourseScreenState extends State<CourseScreen>
   late TabController _tabController;
   final _tabs = [
     const Tab(text: 'Tất cả'),
-    const Tab(text: 'Đang học'),
-    const Tab(text: 'Hoàn thành'),
+    const Tab(text: 'Trả phí'),
+    const Tab(text: 'Miễn phí'),
   ];
   @override
   void initState() {
@@ -31,7 +31,7 @@ class _CourseScreenState extends State<CourseScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade200,
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           SizedBox(
@@ -49,6 +49,7 @@ class _CourseScreenState extends State<CourseScreen>
                 Positioned(
                   top: 115.h,
                   left: 20.h,
+                  bottom: 5.h,
                   child: Container(
                     width: 350.w,
                     height: 66.h,
@@ -56,6 +57,13 @@ class _CourseScreenState extends State<CourseScreen>
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.1),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
                     child: TabBar(
                       controller: _tabController,
@@ -74,7 +82,7 @@ class _CourseScreenState extends State<CourseScreen>
                   ),
                 ),
                 Positioned(
-                  bottom: 70.h,
+                  bottom: 72.h,
                   left: 22.w,
                   child: Text(
                     'Khóa học của bạn',
@@ -183,7 +191,7 @@ class CourseItem extends StatelessWidget {
               topRight: Radius.circular(16),
             ),
             child: Image.network(
-                'https://lms.german_roomenglish.edu.vn/images/${model.img}'),
+                'https://lms.pmpenglish.edu.vn/images/${model.img}'),
           ),
           SizedBox(
             height: 10.h,

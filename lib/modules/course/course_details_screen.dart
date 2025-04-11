@@ -55,7 +55,7 @@ class _CourseDetailsState extends State<CourseDetails>
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: NetworkImage(
-                          'https://lms.german_roomenglish.edu.vn/images/${model.img}',
+                          'https://lms.pmpenglish.edu.vn/images/${model.img}',
                         ),
                         fit: BoxFit.cover,
                         colorFilter: ColorFilter.mode(

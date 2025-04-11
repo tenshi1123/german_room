@@ -86,11 +86,12 @@ class _BottombarState extends State<Bottombar> {
             BottomNavigationBarItem(
               // backgroundColor: notifire.getprimerycolor,
               icon: SvgPicture.asset(
-                _selectedIndex == 4
+                _selectedIndex == 3
                     ? 'assets/icons/account_gradient.svg'
                     : 'assets/icons/account_icon.svg',
                 height: 30.h,
                 fit: BoxFit.fitHeight,
+                //color: _selectedIndex == 3 ? main1Color : key1Color,
               ),
               label: 'Tài khoản',
             ),

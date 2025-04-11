@@ -197,7 +197,7 @@ class _AccountScreenState extends State<AccountScreen> {
                         56.r,
                       ),
                       child: Image.network(
-                        'https://lms.german_roomenglish.edu.vn/images/${widget.profileModel.img}',
+                        'https://lms.pmpenglish.edu.vn/images/${widget.profileModel.img}',
                         fit: BoxFit.fill,
                         errorBuilder: (BuildContext context, Object exception,
                             StackTrace? stackTrace) {
@@ -214,7 +214,7 @@ class _AccountScreenState extends State<AccountScreen> {
             height: 20.h,
           ),
           Container(
-            height: 133.h,
+            //height: 133.h,
             width: 350.w,
             padding: EdgeInsets.symmetric(horizontal: 10.w),
             decoration: BoxDecoration(
@@ -224,6 +224,9 @@ class _AccountScreenState extends State<AccountScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                SizedBox(
+                  height: 10.h,
+                ),
                 Text(
                   'Quản lý tài khoản',
                   style: defaultText14M,
@@ -300,6 +303,9 @@ class _AccountScreenState extends State<AccountScreen> {
                     ],
                   ),
                 ),
+                SizedBox(
+                  height: 10.h,
+                ),
                 GestureDetector(
                   onTap: () => _dialogBuilder(context),
                   child: Container(
@@ -317,6 +323,9 @@ class _AccountScreenState extends State<AccountScreen> {
                     ),
                   ),
                 ),
+                SizedBox(
+                  height: 10.h,
+                )
               ],
             ),
           )

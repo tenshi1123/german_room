@@ -25,7 +25,7 @@ class _SplshscreenState extends State<Splshscreen> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 5), () async {
+    Timer(const Duration(seconds: 0), () async {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String? token = prefs.getString('token');
       final String? type = prefs.getString(ConstString.type);

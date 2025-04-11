@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:german_room/utils/widget/custom_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:german_room/modules/chat/screen/list_conversation_screen.dart';
 import 'package:german_room/modules/course/recomment_course.dart';
@@ -251,8 +252,9 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
           ),
+          //Text(''),
           Text(
-            '    Khóa học đề xuất cho bạn',
+            '    Khóa học ',
             style: defaultText16B,
           ),
           SizedBox(
@@ -592,20 +594,28 @@ class _Upcoming extends StatelessWidget {
                 SizedBox(
                   width: 80.w,
                 ),
-                Container(
-                  height: 29.h,
-                  width: 90.w,
-                  decoration: BoxDecoration(
-                    color: sub2Color,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(4.r),
+                GestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => const LeaveRequestDialog(),
+                    );
+                  },
+                  child: Container(
+                    height: 29.h,
+                    width: 90.w,
+                    decoration: BoxDecoration(
+                      color: sub2Color,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(4.r),
+                      ),
                     ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Xin nghỉ',
-                      style: defaultText14B.copyWith(
-                        color: Colors.white,
+                    child: Center(
+                      child: Text(
+                        'Xin nghỉ',
+                        style: defaultText14B.copyWith(
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
