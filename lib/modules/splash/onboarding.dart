@@ -100,7 +100,7 @@ class _OnbondingState extends State<Onbonding> {
                                       height: 390.w,
                                       fit: BoxFit.fill,
                                     ),
-                                    SizedBox(height: 5.h),
+                                    SizedBox(height: 15.h),
                                     Padding(
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 18.w),
@@ -143,7 +143,7 @@ class _OnbondingState extends State<Onbonding> {
                                       width: 390.w,
                                       height: 390.w,
                                     ),
-                                    SizedBox(height: 5.h),
+                                    SizedBox(height: 15.h),
                                     Padding(
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 18.w),
@@ -192,7 +192,7 @@ class _OnbondingState extends State<Onbonding> {
                                 "assets/images/onboard3.png",
                               ),
                               SizedBox(
-                                height: 10.h,
+                                height: 15.h,
                               ),
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 18.w),

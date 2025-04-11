@@ -235,23 +235,34 @@ class _HomeScreenState extends State<HomeScreen> {
             '    Lịch học gần nhất',
             style: defaultText16B,
           ),
-          SizedBox(
-            width: 380.w,
-            height: 250.h,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              shrinkWrap: true,
-              physics: const ScrollPhysics(),
-              //itemExtent: 390.0.w,
-              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-              itemCount: infomodel.lichHocSapToi.length,
-              itemBuilder: (BuildContext context, int index) {
-                return _Upcoming(
-                  model: infomodel.lichHocSapToi[index],
-                );
-              },
-            ),
-          ),
+          // SizedBox(
+          //   width: 380.w,
+          //   height: 250.h,
+          //   child: ListView.builder(
+          //     scrollDirection: Axis.horizontal,
+          //     shrinkWrap: true,
+          //     physics: const ScrollPhysics(),
+          //     //itemExtent: 390.0.w,
+          //     padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+          //     itemCount: infomodel.lichHocSapToi.length,
+          //     itemBuilder: (BuildContext context, int index) {
+          //       return _Upcoming(
+          //         model: infomodel.lichHocSapToi[index],
+          //       );
+          //     },
+          //   ),
+          // ),
+          infomodel.lichHocSapToi.isEmpty
+              ? Center(
+                  child: Image.asset(
+                    'assets/images/empty2.png',
+                    scale: 2,
+                  ),
+                )
+              : _Upcoming(
+                  model: infomodel.lichHocSapToi[0],
+                ),
+
           //Text(''),
           Text(
             '    Khóa học ',
@@ -621,6 +632,9 @@ class _Upcoming extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+            SizedBox(
+              height: 10.h,
             ),
           ],
         ),

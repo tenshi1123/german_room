@@ -59,7 +59,7 @@ class _CourseDetailsState extends State<CourseDetails>
                         ),
                         fit: BoxFit.cover,
                         colorFilter: ColorFilter.mode(
-                          Colors.black.withValues(alpha: 0.5),
+                          Colors.white.withValues(alpha: 0.5),
                           BlendMode.darken,
                         ),
                       ),
@@ -108,7 +108,7 @@ class _CourseDetailsState extends State<CourseDetails>
                       IconButton(
                         icon: const Icon(
                           Icons.arrow_back_ios,
-                          color: Colors.white,
+                          color: Colors.black,
                         ),
                         onPressed: () => Navigator.of(context).pop(),
                       ),
@@ -118,7 +118,7 @@ class _CourseDetailsState extends State<CourseDetails>
                       Text(
                         model.name,
                         style: defaultText20B.copyWith(
-                          color: Colors.white,
+                          color: Colors.black,
                         ),
                       ),
                     ],
