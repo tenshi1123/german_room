@@ -63,15 +63,18 @@ class _AccountScreenState extends State<AccountScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  widget.profileModel.fullName,
-                                  style: defaultText18B,
+                                SizedBox(
+                                  width: 160.w,
+                                  child: Text(
+                                    widget.profileModel.fullName,
+                                    style: defaultText18B,
+                                  ),
                                 ),
                                 SizedBox(
                                   height: 6.h,
                                 ),
                                 Text(
-                                  'Mã học viên: ${widget.profileModel.code}',
+                                  'Mã học viên: ${widget.profileModel.id}',
                                   style: defaultText12Re.copyWith(
                                     color: key1Color,
                                   ),
@@ -113,47 +116,19 @@ class _AccountScreenState extends State<AccountScreen> {
                           color: Colors.black.withValues(alpha: 0.5),
                         ),
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               'Họ và tên',
                               style: defaultText14Re,
                             ),
-                            Text(
-                              widget.profileModel.fullName,
-                              style: defaultText14M,
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10.h,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Ngày sinh',
-                              style: defaultText14Re,
-                            ),
-                            Text(
-                              widget.profileModel.dob,
-                              style: defaultText14M,
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10.h,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Số điện thoại',
-                              style: defaultText14Re,
-                            ),
-                            Text(
-                              widget.profileModel.phone,
-                              style: defaultText14M,
+                            SizedBox(
+                              width: 202.w,
+                              child: Text(
+                                widget.profileModel.fullName,
+                                style: defaultText14M,
+                              ),
                             ),
                           ],
                         ),
@@ -165,14 +140,54 @@ class _AccountScreenState extends State<AccountScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Địa chỉ',
+                              'Ngày sinh',
+                              style: defaultText14Re,
+                            ),
+                            SizedBox(
+                              width: 202.w,
+                              child: Text(
+                                widget.profileModel.birthday,
+                                style: defaultText14M,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Số điện thoại',
+                              style: defaultText14Re,
+                            ),
+                            SizedBox(
+                              width: 202.w,
+                              child: Text(
+                                widget.profileModel.phone,
+                                style: defaultText14M,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10.h,
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Giới tính',
                               style: defaultText14Re,
                             ),
                             SizedBox(
                               //height: 38.h,
                               width: 202.w,
                               child: Text(
-                                widget.profileModel.address,
+                                widget.profileModel.gender,
                                 style: defaultText14B,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 2,
@@ -197,7 +212,7 @@ class _AccountScreenState extends State<AccountScreen> {
                         56.r,
                       ),
                       child: Image.network(
-                        'https://lms.pmpenglish.edu.vn/images/${widget.profileModel.img}',
+                        'https://lms.pmpenglish.edu.vn/images/${widget.profileModel.avatar}',
                         fit: BoxFit.fill,
                         errorBuilder: (BuildContext context, Object exception,
                             StackTrace? stackTrace) {

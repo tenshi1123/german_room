@@ -1,17 +1,16 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
+import 'package:german_room/student_models/schedule_model.dart';
 import 'package:german_room/student_models/home_model.dart';
 import 'package:german_room/student_models/my_course_model.dart';
-import 'package:german_room/student_repo/mycourse_repo.dart';
 import 'package:german_room/utils/constants/color.dart';
 import 'package:german_room/utils/constants/styles.dart';
 import 'package:german_room/utils/widget/custom_widget.dart';
 
 class DetailLessonScreen extends StatelessWidget {
-  const DetailLessonScreen({super.key, required this.videoLessonModel});
-  final VideoLessonModel videoLessonModel;
+  const DetailLessonScreen({super.key, required this.detailLesson});
+  final DetaiLessonModel detailLesson;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,7 +75,8 @@ class DetailLessonScreen extends StatelessWidget {
                       height: 10.h,
                     ),
                     Text(
-                      "${videoLessonModel.name} ${videoLessonModel.teachingContent}",
+                      // "${videoLessonModel.name} ${videoLessonModel.teachingContent}",
+                      "",
                       style: defaultText18B,
                     ),
                     Divider(
@@ -119,7 +119,7 @@ class DetailLessonScreen extends StatelessWidget {
                               SizedBox(
                                 width: 180.w,
                                 child: Text(
-                                  videoLessonModel.phongHoc,
+                                  detailLesson.infoLesson.nameLesson,
                                   style: defaultText14B,
                                 ),
                               ),
@@ -139,7 +139,7 @@ class DetailLessonScreen extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                videoLessonModel.teacherFullName,
+                                detailLesson.infoLesson.lessonContent,
                                 style: defaultText14B,
                               ),
                             ],
@@ -157,12 +157,12 @@ class DetailLessonScreen extends StatelessWidget {
                                   style: defaultText14Re,
                                 ),
                               ),
-                              Text(
-                                '${DateFormat("hh:mm a").format(videoLessonModel.timeStart)} - ${DateFormat("hh:mm a").format(videoLessonModel.timeEnd)}',
-                                style: defaultText14B,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                              // Text(
+                              //   '${DateFormat("hh:mm a").format(videoLessonModel.timeStart)} - ${DateFormat("hh:mm a").format(videoLessonModel.timeEnd)}',
+                              //   style: defaultText14B,
+                              //   maxLines: 2,
+                              //   overflow: TextOverflow.ellipsis,
+                              // ),
                             ],
                           ),
                         ],
@@ -178,7 +178,7 @@ class DetailLessonScreen extends StatelessWidget {
                 height: 500.h,
                 width: 390.w,
                 child: DetailLessonTabbar(
-                  videoLessonModel: videoLessonModel,
+                  detailLesson: detailLesson,
                 ),
               ),
             ],
@@ -190,8 +190,8 @@ class DetailLessonScreen extends StatelessWidget {
 }
 
 class DetailLessonTabbar extends StatefulWidget {
-  const DetailLessonTabbar({super.key, required this.videoLessonModel});
-  final VideoLessonModel videoLessonModel;
+  const DetailLessonTabbar({super.key, required this.detailLesson});
+  final DetaiLessonModel detailLesson;
 
   @override
   State<DetailLessonTabbar> createState() => _DetailLessonTabbarState();
@@ -205,20 +205,20 @@ class _DetailLessonTabbarState extends State<DetailLessonTabbar>
   @override
   void initState() {
     super.initState();
-    _fetchData();
+    //_fetchData();
     // Khởi tạo TabController với số lượng tab
     // và vsync là this (đối tượng hiện tại của State)
     _tabController = TabController(length: 4, vsync: this);
   }
 
-  Future<void> _fetchData() async {
-    listdoc = await MycourseRepo().getDocument(id: widget.videoLessonModel.id);
-    evaModel =
-        await MycourseRepo().getEvaluation(id: widget.videoLessonModel.id);
-    setState(() {
-      // Cập nhật trạng thái để hiển thị dữ liệu mới
-    });
-  }
+  // Future<void> _fetchData() async {
+  //   listdoc = await MycourseRepo().getDocument(id: widget.detailLesson.infoLesson.id);
+  //   evaModel =
+  //       await MycourseRepo().getEvaluation(id: widget.detailLesson.id);
+  //   setState(() {
+  //     // Cập nhật trạng thái để hiển thị dữ liệu mới
+  //   });
+  // }
 
   @override
   void dispose() {
@@ -273,13 +273,13 @@ class _DetailLessonTabbarState extends State<DetailLessonTabbar>
           child: TabBarView(
             controller: _tabController,
             children: <Widget>[
-              _VideoWidget(
-                videoLessonModel: widget.videoLessonModel,
-              ),
-              ExerciseItem(
-                id: widget.videoLessonModel.id,
-                courseID: widget.videoLessonModel.customerCourseScheduleId,
-              ),
+              const _VideoWidget(
+                  // videoLessonModel: widget.videoLessonModel,
+                  ),
+              const ExerciseItem(
+                  // id: widget.videoLessonModel.id,
+                  // courseID: widget.videoLessonModel.customerCourseScheduleId,
+                  ),
               _DocumentItem(
                 listdoc: listdoc,
               ),
@@ -299,8 +299,8 @@ class _DetailLessonTabbarState extends State<DetailLessonTabbar>
 
 //hai người đàn bà và một con vịt thành cái chợ
 class _VideoWidget extends StatelessWidget {
-  const _VideoWidget({required this.videoLessonModel});
-  final VideoLessonModel videoLessonModel;
+  const _VideoWidget();
+  // final VideoLessonModel videoLessonModel;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -318,7 +318,8 @@ class _VideoWidget extends StatelessWidget {
               semanticLabel: 'Text to announce in accessibility modes',
             ),
             Text(
-              videoLessonModel.noteVideo,
+              // videoLessonModel.noteVideo,
+              'tes1',
               style: defaultText14M.copyWith(
                 color: main1Color,
               ),
@@ -438,11 +439,11 @@ class _FeedbackItem extends StatelessWidget {
 class ExerciseItem extends StatefulWidget {
   const ExerciseItem({
     super.key,
-    required this.id,
-    required this.courseID,
+    // required this.id,
+    // required this.courseID,
   });
-  final String id;
-  final String courseID;
+  // final String id;
+  // final String courseID;
   @override
   State<ExerciseItem> createState() => _ExerciseItemState();
 }
@@ -457,7 +458,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
   }
 
   Future<void> _fetchData() async {
-    baiTapValueModel = await MycourseRepo().getExerciseLesson(id: widget.id);
+    //baiTapValueModel = await MycourseRepo().getExerciseLesson(id: widget.id);
     setState(() {
       // Cập nhật trạng thái để hiển thị dữ liệu mới
     });
@@ -480,7 +481,7 @@ class _ExerciseItemState extends State<ExerciseItem> {
               return ExcerciseItem(
                 isComplete: true,
                 model: baiTapValueModel[index],
-                courseID: widget.courseID,
+                // courseID: widget.courseID,
               );
             });
   }

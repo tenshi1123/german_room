@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:german_room/modules/bottombar/screen/extension.dart/schedule_screen.dart';
 import 'package:german_room/modules/bottombar/screen/user_info/account_screen.dart';
-import 'package:german_room/student_models/customer_models.dart';
 import 'package:german_room/student_models/profile_model.dart';
 import 'package:german_room/utils/constants/color.dart';
 import 'package:german_room/utils/constants/styles.dart';
@@ -12,11 +11,10 @@ import 'screen/home_screen.dart';
 
 class Bottombar extends StatefulWidget {
   final int index;
-  final StudentHomeModel infomodel;
+
   final ProfileModel profileModel;
   const Bottombar({
     super.key,
-    required this.infomodel,
     required this.index,
     required this.profileModel,
   });
@@ -104,7 +102,7 @@ class _BottombarState extends State<Bottombar> {
         ),
         body: [
           HomeScreen(
-            infomodel: widget.infomodel,
+            infomodel: widget.profileModel,
           ),
           const CourseScreen(),
           const CalenderScreen(

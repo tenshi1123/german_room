@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:german_room/student_models/schedule_model.dart';
 import 'package:intl/intl.dart';
 import 'package:german_room/modules/bottombar/utils.dart';
 import 'package:german_room/modules/lesson/detail_lesson_screen.dart';
-import 'package:german_room/student_models/my_course_model.dart';
 import 'package:german_room/student_repo/customer_repo.dart';
-import 'package:german_room/student_models/customer_models.dart';
-import 'package:german_room/student_repo/mycourse_repo.dart';
 import 'package:german_room/utils/constants/color.dart';
 import 'package:german_room/utils/constants/styles.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -19,7 +17,7 @@ class CalenderScreen extends StatefulWidget {
 }
 
 class _CalenderScreenState extends State<CalenderScreen> {
-  late final ValueNotifier<List<CalendarModel>> _selectedEvents;
+  late final ValueNotifier<List<ScheduleModel>> _selectedEvents;
   CalendarFormat _calendarFormat = CalendarFormat.month;
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
       .toggledOn; // Can be toggled on/off by longpressing a date
@@ -27,16 +25,14 @@ class _CalenderScreenState extends State<CalenderScreen> {
   DateTime? _selectedDay;
   DateTime? _rangeStart;
   DateTime? _rangeEnd;
-  late List<CalendarModel> _listLichHoc;
+  late List<ScheduleModel> _listLichHoc;
 
   @override
   void initState() {
     super.initState();
     _selectedDay = _focusedDay;
     _listLichHoc = [];
-    _selectedEvents = ValueNotifier(_getEventsForRange(
-        DateTime(_focusedDay.year, _focusedDay.month, 1),
-        DateTime(_focusedDay.year, _focusedDay.month + 1, 0)));
+    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
   }
 
   @override
@@ -47,16 +43,16 @@ class _CalenderScreenState extends State<CalenderScreen> {
 
   Future<void> getSchedule(
       {required String dayStart, required String dayEnd}) async {
-    _listLichHoc =
-        await CustomerRepo().getListTkb(day1: dayStart, day2: dayEnd);
+    _listLichHoc = await CustomerRepo().getScheduleList(dayStart, dayEnd);
     _selectedEvents.value = _listLichHoc;
   }
 
-  List<CalendarModel> _getEventsForDay(DateTime day) {
+  List<ScheduleModel> _getEventsForDay(DateTime day) {
     // Implementation example
     getSchedule(
-        dayStart: DateFormat('yyyy-MM-dd').format(day),
-        dayEnd: DateFormat('yyyy-MM-dd').format(day));
+        dayStart: DateFormat('dd-MM-yyyy').format(day),
+        dayEnd:
+            DateFormat('dd-MM-yyyy').format(day.add(const Duration(days: 1))));
     return _listLichHoc;
   }
 
@@ -67,10 +63,10 @@ class _CalenderScreenState extends State<CalenderScreen> {
   //   return test;
   // }
 
-  List<CalendarModel> _getEventsForRange(DateTime start, DateTime end) {
+  List<ScheduleModel> _getEventsForRange(DateTime start, DateTime end) {
     getSchedule(
-      dayStart: DateFormat('yyyy-MM-dd').format(start),
-      dayEnd: DateFormat('yyyy-MM-dd').format(end),
+      dayStart: DateFormat('dd-MM-yyyy').format(start),
+      dayEnd: DateFormat('dd-MM-yyyy').format(end),
     );
     return _listLichHoc;
   }
@@ -186,12 +182,12 @@ class _CalenderScreenState extends State<CalenderScreen> {
                 height: 403.h,
                 width: 350.w,
                 decoration: BoxDecoration(
-                  color: main2Color.withValues(alpha: 0.24),
+                  color: Colors.blue.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.all(
                     Radius.circular(8.r),
                   ),
                 ),
-                child: TableCalendar<CalendarModel>(
+                child: TableCalendar<ScheduleModel>(
                   locale: 'vi_VI',
                   firstDay: kFirstDay,
                   lastDay: kLastDay,
@@ -244,7 +240,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
                   },
                 ),
               ),
-              ValueListenableBuilder<List<CalendarModel>>(
+              ValueListenableBuilder<List<ScheduleModel>>(
                 valueListenable: _selectedEvents,
                 builder: (context, value, _) {
                   return value.isEmpty
@@ -328,7 +324,7 @@ AnimatedContainer buildCalendarDayMarker({
 }
 
 class ItemTableCalender extends StatefulWidget {
-  final CalendarModel model;
+  final ScheduleModel model;
   const ItemTableCalender({super.key, required this.model});
 
   @override
@@ -344,13 +340,11 @@ class _ItemTableCalenderState extends State<ItemTableCalender> {
         setState(() {
           _isLoading = true;
         });
-        // CalendarModel detailLesson = await CustomerRepo().getDetailSchedule(
-        //   checkinOffId: widget.model.checkinOffId,
-        //   typeLearn: widget.model.typeLearn,
-        //   meetingId: widget.model.meetingId,
-        // );
-        VideoLessonModel videoLesson =
-            await MycourseRepo().getVideoLesson(id: widget.model.id);
+        DetaiLessonModel detailLesson = await CustomerRepo().getDetailSchedule(
+          checkinOffId: widget.model.checkinOffId,
+          typeLearn: widget.model.typeLearn,
+          meetingId: widget.model.meetingId,
+        );
         setState(() {
           _isLoading = false;
         });
@@ -359,7 +353,7 @@ class _ItemTableCalenderState extends State<ItemTableCalender> {
           context,
           MaterialPageRoute(
             builder: ((context) => DetailLessonScreen(
-                  videoLessonModel: videoLesson,
+                  detailLesson: detailLesson,
                 )),
           ),
         );
@@ -417,7 +411,7 @@ class _ItemTableCalenderState extends State<ItemTableCalender> {
                               height: 8.h,
                             ),
                             Text(
-                              widget.model.day.day.toString(),
+                              widget.model.createdDate.day.toString(),
                               style: defaultText16B.copyWith(
                                   color: Colors.white, fontSize: 24.sp),
                             ),
@@ -425,7 +419,7 @@ class _ItemTableCalenderState extends State<ItemTableCalender> {
                               height: 8.h,
                             ),
                             Text(
-                              '  Tháng ${widget.model.day.month}  ',
+                              '  Tháng ${widget.model.createdDate.month}  ',
                               style: defaultText16B.copyWith(
                                   color: Colors.white, fontSize: 24.sp),
                             ),
@@ -443,22 +437,18 @@ class _ItemTableCalenderState extends State<ItemTableCalender> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.model.courseScheduleAlias,
+                            widget.model.courseName,
                             style: defaultText18B,
                           ),
                           SizedBox(
                             height: 8.h,
                           ),
                           Text(
-                            widget.model.name,
+                            widget.model.courseAlias,
                             style: defaultText18B,
                           ),
                           SizedBox(
                             height: 8.h,
-                          ),
-                          Text(
-                            '${widget.model.timeStart.substring(0, 5)}-${widget.model.timeEnd.substring(0, 5)}',
-                            style: defaultText14M,
                           ),
                         ],
                       )
@@ -472,11 +462,11 @@ class _ItemTableCalenderState extends State<ItemTableCalender> {
                       ),
                       RichText(
                         text: TextSpan(
-                          text: 'Giáo viên: ',
+                          text: 'Buổi học: ',
                           style: defaultText16M,
                           children: [
                             TextSpan(
-                                text: widget.model.teacherName,
+                                text: widget.model.buoiHoc,
                                 style:
                                     defaultText16B.copyWith(color: main1Color)),
                           ],
@@ -487,11 +477,12 @@ class _ItemTableCalenderState extends State<ItemTableCalender> {
                       ),
                       RichText(
                         text: TextSpan(
-                          text: 'Phòng học: ',
+                          text: 'Bắt đầu: ',
                           style: defaultText16M,
                           children: [
                             TextSpan(
-                                text: widget.model.phongHocName,
+                                text: DateFormat('kk:mm– dd/MM/yyyy')
+                                    .format(widget.model.timeStart),
                                 style:
                                     defaultText16B.copyWith(color: main1Color)),
                           ],
@@ -502,11 +493,12 @@ class _ItemTableCalenderState extends State<ItemTableCalender> {
                       ),
                       RichText(
                         text: TextSpan(
-                          text: 'Chi nhánh: ',
+                          text: 'Kết thúc: ',
                           style: defaultText16M,
                           children: [
                             TextSpan(
-                                text: widget.model.cosoAddress,
+                                text: DateFormat('kk:mm – dd/MM/yyyy')
+                                    .format(widget.model.timeEnd),
                                 style:
                                     defaultText16B.copyWith(color: main1Color)),
                           ],

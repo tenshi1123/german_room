@@ -10,14 +10,17 @@ import 'package:sp_util/sp_util.dart';
 class LoginRepo {
   Dio dio = Dio();
   Future<bool> login(String code, String password) async {
-    dio.options.headers['Token'] = 'PMP123456789';
+    // dio.options.headers['Token'] = 'PMP123456789';
     Response response;
+    var formData = FormData.fromMap({
+      'phone': code,
+      'password': password,
+    });
     try {
-      response = await dio.post(ApiPath.login,
-          data: jsonEncode({
-            'phone': code,
-            'password': password,
-          }));
+      response = await dio.post(
+        ApiPath.login,
+        data: formData,
+      );
     } on DioException {
       return false;
     }
@@ -25,10 +28,8 @@ class LoginRepo {
       return false;
     }
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('token', response.data["refresh_token"]);
-    await prefs.setString(ConstString.type, 'student');
-    await prefs.setString('id_user', response.data["customer_id"]);
-    return response.data["refresh_token"] != null;
+    await prefs.setString('token', response.data['data']["refresh_token"]);
+    return response.data['data']["refresh_token"] != null;
   }
 
   Future<String> refreshToken() async {

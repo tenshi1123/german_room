@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:german_room/modules/bottombar/screen/extension.dart/testtkb.dart';
+import 'package:german_room/modules/bottombar/screen/extension.dart/schedule_screen.dart';
 import 'package:german_room/teacher/teacher_model/home_teacher_model.dart';
 
 import 'package:german_room/teacher_modules/teacher_info/teacher_info.dart';
@@ -86,7 +86,9 @@ class _TeacherBottomBarState extends State<TeacherBottomBar> {
           ),
         ),
         PersistentTabConfig(
-          screen: const ScheduleScreen(),
+          screen: const CalenderScreen(
+            type: 1,
+          ),
           item: ItemConfig(
             icon: SvgPicture.asset(
               'assets/icons/calendar.svg',

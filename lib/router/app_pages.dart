@@ -1,7 +1,6 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:german_room/modules/bottombar/bottom_bar_screen.dart';
-import 'package:german_room/student_models/customer_models.dart';
 import 'package:german_room/student_models/profile_model.dart';
 
 import '../modules/login/forgot_password_screen.dart';
@@ -43,12 +42,10 @@ extension AppPagesExtension on AppPages {
       case AppPages.ForgotPassScreen:
         return PageConfig()..pageBuilder = () => const ForgotPassScreen();
       case AppPages.BottomNavBarPage:
-        final StudentHomeModel infoModel = arguments!['infoModel'];
-        final ProfileModel profileModel = arguments['profileModel'];
+        final ProfileModel profileModel = arguments?['profileModel'];
         return PageConfig()
           ..pageBuilder = () => Bottombar(
                 index: 0,
-                infomodel: infoModel,
                 profileModel: profileModel,
               );
       // default:

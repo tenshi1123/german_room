@@ -13,7 +13,7 @@ class DiemdanhRepo {
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
     response = await dio.post(
-      ApiPath.diemDanh,
+      ApiPath.schedule,
     );
     //return DiemDanhModel.fromJson(response.data['data']);
     List<DiemDanhModel> result = ((response.data)['data']['value'] as List)
@@ -27,8 +27,7 @@ class DiemdanhRepo {
     final String? token = prefs.getString('token');
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
-    response =
-        await dio.post(ApiPath.detailDiemdanh, data: jsonEncode({"id": id}));
+    response = await dio.post(ApiPath.schedule, data: jsonEncode({"id": id}));
     return InfoDiemDanh.fromJson((response.data)['data']);
   }
 }

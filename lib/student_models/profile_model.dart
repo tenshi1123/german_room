@@ -1,38 +1,29 @@
 class ProfileModel {
-  final String id;
-  final String code;
+  final String avatar;
   final String fullName;
-  final String phone;
+  final String id;
   final String email;
-  final String dob;
-  final String img;
-  final String address;
-  final String targetIelts;
-  final int? totalCustomerScore;
+  final String phone;
+  final String gender;
+  final String birthday;
   ProfileModel({
-    required this.id,
-    required this.code,
+    required this.avatar,
     required this.fullName,
-    required this.phone,
+    required this.id,
     required this.email,
-    required this.dob,
-    required this.img,
-    required this.address,
-    required this.targetIelts,
-    this.totalCustomerScore,
+    required this.phone,
+    required this.gender,
+    required this.birthday,
   });
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
     return ProfileModel(
-      id: json['id'] ?? '',
-      code: json['code'] ?? '',
+      avatar: json['avatar'] ?? '',
       fullName: json['full_name'] ?? '',
-      phone: json['phone'] ?? '',
+      id: json['id'] ?? '',
       email: json['email'] ?? '',
-      dob: json['dob'] ?? '',
-      img: json['img'] ?? '',
-      address: json['address'] ?? '',
-      targetIelts: json['target_ielts'] ?? '',
-      totalCustomerScore: json['total_customer_score'],
+      phone: json['phone'] ?? '',
+      gender: json['gender'] ?? '',
+      birthday: json['birthday'] ?? '',
     );
   }
 }

@@ -1,53 +1,52 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
-import 'package:german_room/student_models/customer_models.dart';
 import 'package:german_room/student_models/profile_model.dart';
+import 'package:german_room/student_models/schedule_model.dart';
 import 'package:german_room/utils/constants/api_path.dart';
-import 'package:german_room/utils/constants/const_string.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomerRepo {
   Dio dio = Dio();
-  Future<StudentHomeModel?> getHomeInfo() async {
+
+  //lịch học
+  Future<List<ScheduleModel>> getScheduleList(
+      String dayStart, String dayEnd) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('token');
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
-
-    try {
-      response = await dio.post(
-        ApiPath.hocvienUrl,
-      );
-      return StudentHomeModel.fromJson(response.data['data']);
-    } on DioException {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.remove('token');
-      await prefs.remove(ConstString.type);
-    } catch (e) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.remove('token');
-      await prefs.remove(ConstString.type);
-    }
-    return null;
+    response = await dio.get(
+      ApiPath.schedule,
+      queryParameters: {
+        'day_start': dayStart,
+        'day_end': dayEnd,
+      },
+    );
+    List<ScheduleModel> result = ((response.data)['data'] as List)
+        .map((e) => ScheduleModel.fromJson(e))
+        .toList();
+    return result;
   }
 
-  Future<List<CalendarModel>> getListTkb(
-      {required String day1, required String day2}) async {
+  Future<DetaiLessonModel> getDetailSchedule({
+    required String? checkinOffId,
+    required String typeLearn,
+    required String? meetingId,
+  }) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('token');
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
-    response = await dio.post(ApiPath.calendar,
-        data: jsonEncode({
-          'start_day': day1,
-          'end_day': day2,
-        }));
-    List<CalendarModel> list = [];
-    for (var item in response.data['data']['value']) {
-      list.add(CalendarModel.fromJson(item));
-    }
-    return list;
+    response = await dio.get(
+      ApiPath.homework,
+      queryParameters: {
+        'checkin_off_id': checkinOffId,
+        'type_learn': typeLearn,
+        'meeting_id': meetingId,
+      },
+    );
+    DetaiLessonModel result =
+        DetaiLessonModel.fromJson((response.data)['data']);
+    return result;
   }
 
   Future<ProfileModel> getCustomerProfile() async {
@@ -56,9 +55,9 @@ class CustomerRepo {
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
     response = await dio.post(
-      ApiPath.profile,
+      ApiPath.userInfo,
     );
-    return ProfileModel.fromJson(response.data['data']['value']);
+    return ProfileModel.fromJson(response.data['data']);
   }
 
   Future<String> changePassword(
@@ -75,20 +74,6 @@ class CustomerRepo {
     return response.data['message'];
   }
 
-  Future<List<PaymentModel>> getPayment() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? token = prefs.getString('token');
-    dio.options.headers['Authorization'] = 'Bearer $token';
-    Response response;
-    response = await dio.post(
-      ApiPath.payment,
-    );
-    List<PaymentModel> list = [];
-    for (var item in response.data['data']['value']) {
-      list.add(PaymentModel.fromJson(item));
-    }
-    return list;
-  }
   // change teacher password
   // Future<String> changePassword(
   //     String oldPass, String password, String newPass) async {

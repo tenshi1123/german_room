@@ -310,12 +310,18 @@ class _OnbondingState extends State<Onbonding> {
                           GestureDetector(
                             onTap: () {
                               //tips and trick
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: ((context) => const LoginScreen()),
-                                ),
-                              );
+                              if (_currentPage != _numPages - 1) {
+                                _pageController.nextPage(
+                                    duration: const Duration(microseconds: 300),
+                                    curve: Curves.easeIn);
+                              } else {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: ((context) => const LoginScreen()),
+                                  ),
+                                );
+                              }
                             },
                             child: Container(
                               height: 42.h,

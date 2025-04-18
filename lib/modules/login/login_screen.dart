@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,7 +7,6 @@ import 'package:german_room/student_repo/customer_repo.dart';
 import 'package:german_room/student_repo/login_repo.dart';
 import 'package:german_room/router/app_pages.dart';
 import 'package:german_room/router/app_router.dart';
-import 'package:german_room/student_models/customer_models.dart';
 import 'package:german_room/student_models/profile_model.dart';
 import 'package:german_room/utils/constants/color.dart';
 import 'package:german_room/utils/constants/styles.dart';
@@ -226,18 +222,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     // "password": "123456"
                     bool loged = await LoginRepo().login(
                         studenIdController?.text ?? '',
-                        md5
-                            .convert(utf8.encode(passController?.text ?? ''))
-                            .toString());
+                        passController?.text ?? '');
                     if (loged == true) {
-                      StudentHomeModel? infoModel =
-                          await CustomerRepo().getHomeInfo();
                       ProfileModel profileModel =
                           await CustomerRepo().getCustomerProfile();
                       if (!context.mounted) return;
                       AppRouter.toPage(context, AppPages.BottomNavBarPage,
                           arguments: {
-                            'infoModel': infoModel,
                             'profileModel': profileModel,
                           });
                     } else {

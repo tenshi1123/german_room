@@ -15,7 +15,7 @@ class ChatRepo {
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
     response = await dio.post(
-      ApiPath.chat,
+      ApiPath.listTeacher,
     );
     List<ChatModel> list = [];
     for (var item in response.data['data']['value']) {
@@ -30,7 +30,7 @@ class ChatRepo {
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
     response = await dio.post(
-      ApiPath.teacherChat,
+      ApiPath.listTeacher,
     );
     List<ChatModel> list = [];
     for (var item in response.data['data']['value']) {
@@ -45,7 +45,7 @@ class ChatRepo {
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
     response = await dio.post(
-      ApiPath.chatTeacher,
+      ApiPath.listMessage,
       data: {
         'chat_id': chatId,
       },
@@ -78,7 +78,7 @@ class ChatRepo {
           filename: photo.path.split('/').last),
     });
     Response response;
-    response = await dio.post(ApiPath.sendImageMessage, data: formData);
+    response = await dio.post(ApiPath.sendMessage, data: formData);
     return response.data['status'] == 200;
   }
 }

@@ -17,7 +17,7 @@ class HomeRepo {
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
     response = await dio.post(
-      ApiPath.baiTap,
+      ApiPath.detailClass,
     );
     //return DiemDanhModel.fromJson(response.data['data']);
     return ListExcerciseModel.fromJson((response.data)['data']);
@@ -30,7 +30,7 @@ class HomeRepo {
     final String? token = prefs.getString('token');
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
-    response = await dio.post(ApiPath.detailBaiTap,
+    response = await dio.post(ApiPath.detailClass,
         data: jsonEncode({
           'id': int.tryParse(id),
           'customer_course_schedule_id': int.tryParse(
@@ -68,20 +68,41 @@ class HomeRepo {
       });
     }
 
-    await dio.post(ApiPath.submitExeTL, data: formData);
+    await dio.post(ApiPath.detailClass, data: formData);
   }
 
   //Báo cáo điểm
-  Future<BaoCaoHocTapModel> getBaoCaoDiem() async {
+  Future<List<BaoCaoHocTapModel>> getBaoCaoDiem() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('token');
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
     response = await dio.post(
-      ApiPath.reportExercise,
+      ApiPath.feedback,
     );
     //return DiemDanhModel.fromJson(response.data['data']);
-    return BaoCaoHocTapModel.fromJson((response.data)['data']);
+    List<BaoCaoHocTapModel> list = [];
+    for (var item in response.data['data']) {
+      list.add(BaoCaoHocTapModel.fromJson(item));
+    }
+    return list;
+  }
+
+  Future<String> getDetailFeedback(
+      String? checkinOffId, String typeLearn, String? meetingId) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    dio.options.headers['Authorization'] = 'Bearer $token';
+    Response response;
+    response = await dio.get(
+      ApiPath.feedbackDetail,
+      queryParameters: {
+        'checkin_off_id': checkinOffId,
+        'type_learn': typeLearn,
+        'meeting_id': meetingId,
+      },
+    );
+    return (response.data)['data'];
   }
 
   Future<InfoDiemDanh> getDetailDiemDanh(String id) async {
@@ -90,7 +111,7 @@ class HomeRepo {
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
     response =
-        await dio.post(ApiPath.detailDiemdanh, data: jsonEncode({"id": id}));
+        await dio.post(ApiPath.detailClass, data: jsonEncode({"id": id}));
     return InfoDiemDanh.fromJson((response.data)['data']);
   }
 
@@ -99,7 +120,7 @@ class HomeRepo {
     final String? token = prefs.getString('token');
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
-    response = await dio.post(ApiPath.post,
+    response = await dio.post(ApiPath.detailClass,
         data: jsonEncode({
           'page': page,
           'limit': 10,
@@ -116,7 +137,8 @@ class HomeRepo {
     final String? token = prefs.getString('token');
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
-    response = await dio.post(ApiPath.postDetail, data: jsonEncode({"id": id}));
+    response =
+        await dio.post(ApiPath.detailClass, data: jsonEncode({"id": id}));
     return DetailPostModel.fromJson((response.data)['data']);
   }
 }

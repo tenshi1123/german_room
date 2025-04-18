@@ -1,29 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:german_room/modules/bottombar/screen/extension.dart/class_history_screen.dart';
+import 'package:german_room/modules/bottombar/screen/extension.dart/free_course_screen.dart';
+import 'package:german_room/student_models/schedule_model.dart';
 import 'package:german_room/utils/widget/custom_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:german_room/modules/chat/screen/list_conversation_screen.dart';
 import 'package:german_room/modules/course/recomment_course.dart';
 import 'package:german_room/modules/feature_home/academic_report_screen.dart';
-import 'package:german_room/modules/feature_home/evaluate/evaluate_screen.dart';
-import 'package:german_room/modules/lesson/detail_lesson_screen.dart';
 import 'package:german_room/modules/notification/notification.dart';
 import 'package:german_room/student_models/chat_models.dart';
 import 'package:german_room/student_models/my_course_model.dart';
 import 'package:german_room/student_repo/chat_repo.dart';
 import 'package:german_room/student_repo/customer_repo.dart';
-import 'package:german_room/student_repo/extension_repo.dart';
 import 'package:german_room/student_repo/home_repo.dart';
-import 'package:german_room/student_models/customer_models.dart';
 import 'package:german_room/student_models/home_model.dart';
 import 'package:german_room/student_models/profile_model.dart';
-import 'package:german_room/student_models/review_models.dart';
 import 'package:german_room/student_repo/mycourse_repo.dart';
 import 'package:german_room/utils/constants/color.dart';
 import 'package:german_room/utils/constants/styles.dart';
-
-import '../../feature_home/exercise/exercise_screen.dart';
 import 'extension.dart/schedule_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -31,17 +27,33 @@ class HomeScreen extends StatefulWidget {
     super.key,
     required this.infomodel,
   });
-  final StudentHomeModel infomodel;
+  final ProfileModel infomodel;
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late StudentHomeModel infomodel;
+  late ProfileModel infomodel;
+  late List<ScheduleModel> listLichHoc = [];
+  late List<FreeCourseModel> listFreeCourse = [];
   @override
   void initState() {
-    infomodel = widget.infomodel;
     super.initState();
+    infomodel = widget.infomodel;
+    _fetchData();
+  }
+
+  Future<void> _fetchData() async {
+    listFreeCourse = await MycourseRepo().getLessonFree();
+    listLichHoc = await CustomerRepo().getScheduleList(
+      DateFormat('dd-MM-yyyy').format(DateTime.now()),
+      DateFormat('dd-MM-yyyy').format(
+        DateTime.now().add(
+          const Duration(days: 15),
+        ),
+      ),
+    );
+    setState(() {});
   }
 
   @override
@@ -52,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Container(
             width: 390.w,
-            height: 120.h,
+            //height: 120.h,
             decoration: BoxDecoration(gradient: mainGradient),
             child: SafeArea(
               child: Column(
@@ -67,8 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       CircleAvatar(
                         radius: 24.r,
-                        backgroundImage:
-                            NetworkImage(infomodel.customerInfoModel.img),
+                        backgroundImage: NetworkImage(infomodel.avatar),
                         backgroundColor: Colors.transparent,
                       ),
                       SizedBox(
@@ -82,9 +93,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             style:
                                 defaultText14Re.copyWith(color: Colors.white),
                           ),
-                          Text(
-                            infomodel.customerInfoModel.fullName,
-                            style: defaultText18B.copyWith(color: Colors.white),
+                          SizedBox(
+                            width: 160.w,
+                            child: Text(
+                              infomodel.fullName,
+                              style:
+                                  defaultText18B.copyWith(color: Colors.white),
+                            ),
                           ),
                         ],
                       ),
@@ -129,6 +144,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
+                  SizedBox(
+                    height: 16.h,
+                  ),
                 ],
               ),
             ),
@@ -153,14 +171,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       title: 'Lịch học', image: 'assets/images/lich_thi.png')),
               GestureDetector(
                   onTap: () async {
-                    ListExcerciseModel model = await HomeRepo().getListBaiTap();
                     if (!context.mounted) return;
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ExerciseScreen(
-                          model: model,
-                        ),
+                        builder: (context) => const ClassHistoryScreen(),
                       ),
                     );
                   },
@@ -168,7 +183,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       title: 'Lịch sử', image: 'assets/images/bai_tap.png')),
               GestureDetector(
                 onTap: () async {
-                  BaoCaoHocTapModel model = await HomeRepo().getBaoCaoDiem();
+                  List<BaoCaoHocTapModel> model =
+                      await HomeRepo().getBaoCaoDiem();
                   if (!context.mounted) return;
                   Navigator.push(
                     context,
@@ -182,19 +198,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: _homeIcon(
                     title: 'Báo cáo', image: 'assets/images/bao_cao_diem.png'),
               ),
-              // Nút đánh giá
+              // Nút Tự học
               GestureDetector(
                   onTap: () async {
-                    List<ReviewModels> listReview =
-                        await ExtensionRepo().getListReview();
-                    if (!context.mounted) return;
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => EvaluateScreen(
-                          listReview: listReview,
-                        ),
-                      ),
+                          builder: (context) => const FreeCourseScreen()),
                     );
                   },
                   child: _homeIcon(
@@ -244,15 +254,15 @@ class _HomeScreenState extends State<HomeScreen> {
           //     physics: const ScrollPhysics(),
           //     //itemExtent: 390.0.w,
           //     padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-          //     itemCount: infomodel.lichHocSapToi.length,
+          //     itemCount: listLichHoc.length,
           //     itemBuilder: (BuildContext context, int index) {
           //       return _Upcoming(
-          //         model: infomodel.lichHocSapToi[index],
+          //         model: listLichHoc[index],
           //       );
           //     },
           //   ),
           // ),
-          infomodel.lichHocSapToi.isEmpty
+          listLichHoc.isEmpty
               ? Center(
                   child: Image.asset(
                     'assets/images/empty2.png',
@@ -260,7 +270,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 )
               : _Upcoming(
-                  model: infomodel.lichHocSapToi[0],
+                  model: listLichHoc[0],
                 ),
 
           //Text(''),
@@ -277,7 +287,7 @@ class _HomeScreenState extends State<HomeScreen> {
               physics: const ScrollPhysics(),
               //itemExtent: 390.0.w,
               padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-              itemCount: infomodel.listCourse.length,
+              itemCount: listFreeCourse.length,
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
                     onTap: () {
@@ -288,7 +298,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       );
                     },
-                    child: _reComment(model: infomodel.listCourse[index]));
+                    child: _reComment(model: listFreeCourse[index]));
               },
             ),
           ),
@@ -341,11 +351,11 @@ Widget _homeIcon({required String title, required String image}) {
   );
 }
 
-Widget _reComment({required CourseModels model}) {
+Widget _reComment({required FreeCourseModel model}) {
   return Container(
     height: 228.h,
-    width: 242.w,
-    padding: EdgeInsets.symmetric(horizontal: 10.w),
+    width: 252.w,
+    padding: EdgeInsets.symmetric(horizontal: 20.w),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(15.r),
     ),
@@ -358,7 +368,7 @@ Widget _reComment({required CourseModels model}) {
             borderRadius:
                 BorderRadius.circular(15.r), // Adjust the radius as needed
             child: Image.network(
-              model.img,
+              model.courseImg,
               fit: BoxFit.cover,
               width: 222.w,
               height: 141.h,
@@ -370,7 +380,7 @@ Widget _reComment({required CourseModels model}) {
           ),
           child: Center(
             child: Text(
-              model.categoryName,
+              model.courseName,
               style: defaultText14M.copyWith(
                 color: sub1Color,
               ),
@@ -378,11 +388,11 @@ Widget _reComment({required CourseModels model}) {
           ),
         ),
         Text(
-          model.name,
+          model.courseName,
           style: defaultText14M,
         ),
         Text(
-          'Lộ trình: ${model.soBuoiHoc}',
+          'Lộ trình: ${model.lessonNumber}',
           style: defaultText12Re,
         ),
       ],
@@ -431,21 +441,21 @@ Widget _chatNoti({
 //widget lịch học sắp tới
 class _Upcoming extends StatelessWidget {
   const _Upcoming({required this.model});
-  final CalendarModel model;
+  final ScheduleModel model;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        VideoLessonModel videoLesson =
-            await MycourseRepo().getVideoLesson(id: model.id);
-        if (!context.mounted) return;
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => DetailLessonScreen(
-              videoLessonModel: videoLesson,
-            ),
-          ),
-        );
+        // VideoLessonModel videoLesson =
+        //     await MycourseRepo().getVideoLesson(id: model.id);
+        // if (!context.mounted) return;
+        // Navigator.of(context).push(
+        //   MaterialPageRoute(
+        //     builder: (context) => DetailLessonScreen(
+        //       videoLessonModel: videoLesson,
+        //     ),
+        //   ),
+        // );
       },
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
@@ -486,7 +496,7 @@ class _Upcoming extends StatelessWidget {
                   ),
                   padding: EdgeInsets.symmetric(vertical: 15.h),
                   child: (Text(
-                    model.courseScheduleAlias,
+                    model.courseAlias,
                     style: defaultText16B.copyWith(
                       color: Colors.white,
                     ),
@@ -503,15 +513,15 @@ class _Upcoming extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Text(
-                        model.name,
+                        model.courseName,
                         style: defaultText16B,
                       ),
                       Text(
-                        DateFormat("dd/MM/yyyy").format(model.day),
+                        DateFormat("dd/MM/yyyy").format(model.createdDate),
                         style: defaultText14Re,
                       ),
                       Text(
-                        '${model.timeStart.substring(0, 4)} - ${model.timeEnd.substring(0, 4)}',
+                        '${model.timeStart.hour} - ${model.timeEnd.hour}',
                         style: defaultText14Re,
                       ),
                     ],
@@ -549,7 +559,7 @@ class _Upcoming extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        model.phongHocName,
+                        model.phongHocName ?? 'zoom',
                         style: defaultText14B,
                       ),
                     ],
@@ -570,7 +580,7 @@ class _Upcoming extends StatelessWidget {
                       SizedBox(
                         width: 220.w,
                         child: Text(
-                          model.cosoAddress,
+                          model.cosoName ?? 'zoom',
                           style: defaultText14B,
                         ),
                       ),
@@ -585,25 +595,7 @@ class _Upcoming extends StatelessWidget {
             Row(
               children: [
                 SizedBox(
-                  width: 12.w,
-                ),
-                Container(
-                  height: 14.h,
-                  width: 14.w,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(),
-                  ),
-                ),
-                SizedBox(
-                  width: 4.w,
-                ),
-                Text(
-                  model.status,
-                  style: defaultText14M,
-                ),
-                SizedBox(
-                  width: 80.w,
+                  width: 110.w,
                 ),
                 GestureDetector(
                   onTap: () {

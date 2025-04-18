@@ -1,43 +1,41 @@
 import 'package:intl/intl.dart';
 
 class MyCourseModel {
-  final String id;
-  final String cosoName;
-  final String teacherName;
-  final String ccsStatus;
-  final String name;
-  final String img;
-  final String alias;
-  final String totalDathemvaoCuocHop;
-  final int totalBuoiHoc;
-  final int totalAttended;
-  final String statusName;
+  final String courseName;
+  final String courseId;
+  final String courseScheduleName;
+  final String customerCourseScheduleId;
+  final String courseImg;
+  final String courseScheduleId;
+  final String settingCourseTypeId;
+  final String settingCourseTypeName;
+  final String settingCourseType;
+  final String customerZoomGoogleOfflineId;
   MyCourseModel({
-    required this.id,
-    required this.cosoName,
-    required this.teacherName,
-    required this.ccsStatus,
-    required this.name,
-    required this.img,
-    required this.alias,
-    required this.totalDathemvaoCuocHop,
-    required this.totalBuoiHoc,
-    required this.totalAttended,
-    required this.statusName,
+    required this.courseName,
+    required this.courseId,
+    required this.courseScheduleName,
+    required this.customerCourseScheduleId,
+    required this.courseImg,
+    required this.courseScheduleId,
+    required this.settingCourseTypeId,
+    required this.settingCourseTypeName,
+    required this.settingCourseType,
+    required this.customerZoomGoogleOfflineId,
   });
   factory MyCourseModel.fromJson(Map<String, dynamic> json) {
     return MyCourseModel(
-      id: json['id'],
-      cosoName: json['coso_name'],
-      teacherName: json['teachers_full_name'],
-      ccsStatus: json['ccs_status'],
-      name: json['name'],
-      img: json['img'],
-      alias: json['alias'],
-      totalDathemvaoCuocHop: json['total_da_them_vao_cuoc_hop'],
-      totalBuoiHoc: int.tryParse(json['total_buoi_hoc']) ?? 0,
-      totalAttended: int.tryParse(json['total_attended']) ?? 0,
-      statusName: json['status_name'],
+      courseName: json['course_name'] ?? '',
+      courseId: json['course_id'] ?? '',
+      courseScheduleName: json['course_schedule_name'] ?? '',
+      customerCourseScheduleId: json['customer_course_schedule_id'] ?? '',
+      courseImg: json['course_img'] ?? '',
+      courseScheduleId: json['course_schedule_id'] ?? '',
+      settingCourseTypeId: json['setting_course_type_id'] ?? '',
+      settingCourseTypeName: json['setting_course_type_name'] ?? '',
+      settingCourseType: json['setting_course_type_type'] ?? '',
+      customerZoomGoogleOfflineId:
+          json['customer_zoom_google_offline_id'] ?? '',
     );
   }
 }
@@ -291,6 +289,104 @@ class EvaluationModel {
       fullName: json['full_name'] ?? '',
       star: json['star'] ?? '',
       value: (json['value'] as List).map((e) => e['text'].toString()).toList(),
+    );
+  }
+}
+
+class FreeCourseModel {
+  final String courseName;
+  final String courseId;
+  final String courseImg;
+  final String lessonNumber;
+  final String metaDescription;
+  FreeCourseModel({
+    required this.courseName,
+    required this.courseId,
+    required this.courseImg,
+    required this.lessonNumber,
+    required this.metaDescription,
+  });
+  factory FreeCourseModel.fromJson(Map<String, dynamic> json) {
+    return FreeCourseModel(
+      courseName: json['course_name'] ?? '',
+      courseId: json['course_id'] ?? '',
+      courseImg: json['course_img'] ?? '',
+      lessonNumber: json['lesson_number'] ?? '',
+      metaDescription: json['meta_description'] ?? '',
+    );
+  }
+}
+
+class CourseVideoModel {
+  final DetailClassModel detailClassModel;
+  final List<TopicalModel> listTopical;
+  CourseVideoModel({
+    required this.detailClassModel,
+    required this.listTopical,
+  });
+  factory CourseVideoModel.fromJson(Map<String, dynamic> json) {
+    return CourseVideoModel(
+      detailClassModel: DetailClassModel.fromJson(json['info']),
+      listTopical: ((json['topical'] as List)
+          .map((e) => TopicalModel.fromJson(e))
+          .toList()),
+    );
+  }
+}
+
+class DetailClassModel {
+  final String name;
+  final String courseId;
+  final String settingCourseTypeName;
+  final String settingCourseTypeId;
+  final String courseImg;
+  final String metaDescription;
+  final int percentLearning;
+  DetailClassModel({
+    required this.name,
+    required this.courseId,
+    required this.settingCourseTypeName,
+    required this.settingCourseTypeId,
+    required this.courseImg,
+    required this.metaDescription,
+    required this.percentLearning,
+  });
+  factory DetailClassModel.fromJson(Map<String, dynamic> json) {
+    return DetailClassModel(
+      name: json['course_name'] ??
+          json['name'].replaceAll(RegExp(r'&amp;'), '&') ??
+          '',
+      courseId: json['course_id'] ?? '',
+      settingCourseTypeName: json['setting_course_type_name'] ?? '',
+      settingCourseTypeId: json['setting_course_type_id'] ?? '',
+      courseImg: json['course_img'] ?? '',
+      metaDescription: json['meta_description'] ?? '',
+      percentLearning: json['percent_learning'] ?? 0,
+    );
+  }
+}
+
+class TopicalModel {
+  final String topicalId;
+  final String nameTopical;
+  final String courseId;
+  final String settingCourseTypeId;
+  final String numLLessson;
+
+  TopicalModel({
+    required this.topicalId,
+    required this.nameTopical,
+    required this.courseId,
+    required this.settingCourseTypeId,
+    required this.numLLessson,
+  });
+  factory TopicalModel.fromJson(Map<String, dynamic> json) {
+    return TopicalModel(
+      topicalId: json['topical_id'] ?? '',
+      nameTopical: json['name_topical'] ?? '',
+      courseId: json['course_id'] ?? '',
+      settingCourseTypeId: json['setting_course_type_id'] ?? '',
+      numLLessson: json['num_lessson'] ?? '0',
     );
   }
 }

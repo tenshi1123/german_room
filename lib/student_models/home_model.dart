@@ -211,55 +211,39 @@ class DetailTestModel {
 
 //Báo cáo học tập
 class BaoCaoHocTapModel {
-  final int chuyenCan;
-  final int baitap;
-  final int tichCuc;
+  final String name;
   final List<ExamScheduleModel> schedules;
   BaoCaoHocTapModel({
-    required this.baitap,
-    required this.tichCuc,
-    required this.chuyenCan,
+    required this.name,
     required this.schedules,
   });
   factory BaoCaoHocTapModel.fromJson(Map<String, dynamic> json) {
     return BaoCaoHocTapModel(
-        chuyenCan: json["cc"],
-        baitap: json["bt"],
-        tichCuc: json["tich_cuc"],
-        schedules: ((json['orderOfflineExamSchedule'] as List)
+        name: json['name'],
+        schedules: ((json['list'] as List)
             .map((e) => ExamScheduleModel.fromJson(e))
             .toList()));
   }
 }
 
 class ExamScheduleModel {
-  final String id;
-  final String cosoName;
-  final String cosoAddress;
+  final String meetingId;
+  final String typeLearn;
+  final String createdAt;
   final String name;
-  final String description;
-  final String day;
-  final String type;
-  final String score;
-  ExamScheduleModel(
-      {required this.id,
-      required this.cosoName,
-      required this.cosoAddress,
-      required this.name,
-      required this.description,
-      required this.day,
-      required this.type,
-      required this.score});
+
+  ExamScheduleModel({
+    required this.meetingId,
+    required this.typeLearn,
+    required this.createdAt,
+    required this.name,
+  });
   factory ExamScheduleModel.fromJson(Map<String, dynamic> json) {
     return ExamScheduleModel(
-      id: json["id"] ?? '',
-      cosoName: json["coso_name"],
-      cosoAddress: json["coso_address"],
-      name: json["name"] ?? ' ',
-      description: json["description"] ?? '',
-      day: json["day"] ?? '',
-      type: json["type"] ?? '',
-      score: json["score"] ?? '',
+      meetingId: json["meeting_id"] ?? '',
+      typeLearn: json["type_learn"],
+      createdAt: json["created_at"],
+      name: json["ten_buoi"] ?? ' ',
     );
   }
 }

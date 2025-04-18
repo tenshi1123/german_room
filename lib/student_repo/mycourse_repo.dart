@@ -12,13 +12,33 @@ class MycourseRepo {
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
     response = await dio.post(
-      ApiPath.myCourse,
+      ApiPath.lesson,
     );
     List<MyCourseModel> list = [];
-    for (var item in response.data['data']['value']) {
+    for (var item in response.data['data']) {
       list.add(MyCourseModel.fromJson(item));
     }
     return list;
+  }
+
+  Future<CourseVideoModel> getListTopical({
+    required String typeId,
+    required String scheduleId,
+    required String courseId,
+    required int type,
+  }) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    dio.options.headers['Authorization'] = 'Bearer $token';
+    final response = await dio.post(
+      type == 1 ? ApiPath.topical : ApiPath.topicalFree,
+      data: {
+        'course_id': courseId,
+        'course_schedule_id': scheduleId,
+        'setting_course_type_id': typeId,
+      },
+    );
+    return CourseVideoModel.fromJson(response.data['data']);
   }
 
   Future<DetailMyCourse> getDetailMyCourse({required String id}) async {
@@ -27,7 +47,7 @@ class MycourseRepo {
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
     response = await dio.post(
-      ApiPath.detailMyCourse,
+      ApiPath.listClass,
       data: {
         'id': id,
       },
@@ -41,7 +61,7 @@ class MycourseRepo {
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
     response = await dio.post(
-      ApiPath.detailBaoCao,
+      ApiPath.listClass,
       data: {
         'id': id,
       },
@@ -55,7 +75,7 @@ class MycourseRepo {
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
     response = await dio.post(
-      ApiPath.myCoursedetailBaiTap,
+      ApiPath.listClass,
       data: {
         'id': id,
       },
@@ -71,10 +91,24 @@ class MycourseRepo {
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
     response = await dio.post(
-      ApiPath.detailBuoihoc,
+      ApiPath.listClass,
       data: {'id': id, 'type': "video"},
     );
     return VideoLessonModel.fromJson(response.data['data']['value']);
+  }
+
+  Future<List<FreeCourseModel>> getLessonFree() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    dio.options.headers['Authorization'] = 'Bearer $token';
+    Response response;
+    response = await dio.get(
+      ApiPath.lessonFree,
+    );
+    List<FreeCourseModel> result = ((response.data)['data'] as List)
+        .map((e) => FreeCourseModel.fromJson(e))
+        .toList();
+    return result;
   }
 
   Future<List<BaiTapValueModel>> getExerciseLesson({
@@ -85,7 +119,7 @@ class MycourseRepo {
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
     response = await dio.post(
-      ApiPath.detailBuoihoc,
+      ApiPath.detailClass,
       data: {'id': id, 'type': "exercise"},
     );
     List<BaiTapValueModel> list = [];
@@ -103,7 +137,7 @@ class MycourseRepo {
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
     response = await dio.post(
-      ApiPath.detailBuoihoc,
+      ApiPath.detailClass,
       data: {'id': id, 'type': "document"},
     );
     List<DeValueModel> list = [];
@@ -121,7 +155,7 @@ class MycourseRepo {
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
     response = await dio.post(
-      ApiPath.detailBuoihoc,
+      ApiPath.detailClass,
       data: {'id': id, 'type': "evaluation"},
     );
     return EvaluationModel.fromJson(response.data['data']['evaluation']);

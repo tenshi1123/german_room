@@ -13,7 +13,7 @@ class ExamScheduleRepo {
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
     response = await dio.post(
-      ApiPath.offlineExamSchedule,
+      ApiPath.detailClass,
     );
     return LichthiModel.fromJson(response.data['data']);
   }
@@ -24,7 +24,7 @@ class ExamScheduleRepo {
     final String? token = prefs.getString('token');
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
-    response = await dio.post(ApiPath.changeCoso,
+    response = await dio.post(ApiPath.detailClass,
         data: jsonEncode({
           'coso_id': int.parse(cosoId),
           'type': type,
@@ -42,7 +42,7 @@ class ExamScheduleRepo {
     final String? token = prefs.getString('token');
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
-    response = await dio.post(ApiPath.changeDay,
+    response = await dio.post(ApiPath.detailClass,
         data: jsonEncode({
           'coso_id': int.parse(cosoId),
           'type': type,
@@ -60,7 +60,7 @@ class ExamScheduleRepo {
     final String? token = prefs.getString('token');
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
-    response = await dio.post(ApiPath.dangKyThi,
+    response = await dio.post(ApiPath.detailClass,
         data: jsonEncode({
           'ca_thi_id': id,
         }));

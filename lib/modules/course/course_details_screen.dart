@@ -1,38 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:german_room/modules/course/lich_hoc.dart';
-import 'package:german_room/modules/course/reportage.dart';
 import 'package:german_room/student_models/my_course_model.dart';
-import 'package:german_room/utils/constants/color.dart';
 import 'package:german_room/utils/constants/styles.dart';
 
-import 'excercise_screen.dart';
-
 class CourseDetails extends StatefulWidget {
-  const CourseDetails(
-      {super.key,
-      required this.detailMyCourse,
-      required this.detailBaoCao,
-      required this.baiTapModel});
-  final DetailMyCourse detailMyCourse;
-  final MycourseBaiTapModel baiTapModel;
-  final DetailBaoCaoModel detailBaoCao;
+  const CourseDetails({
+    super.key,
+    required this.detailMyCourse,
+  });
+  final CourseVideoModel detailMyCourse;
   @override
   State<CourseDetails> createState() => _CourseDetailsState();
 }
 
-class _CourseDetailsState extends State<CourseDetails>
-    with TickerProviderStateMixin {
-  late TabController _tabController;
-  late final DetailMyCourse model;
-  final _tabs = [
-    const Tab(text: 'Lịch học'),
-    const Tab(text: 'Bài tập'),
-    const Tab(text: 'Báo cáo'),
-  ];
+class _CourseDetailsState extends State<CourseDetails> {
+  late final CourseVideoModel model;
+
   @override
   void initState() {
-    _tabController = TabController(length: 3, vsync: this);
     model = widget.detailMyCourse;
     super.initState();
   }
@@ -41,108 +26,111 @@ class _CourseDetailsState extends State<CourseDetails>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text(
+          model.detailClassModel.name,
+          style: defaultText14M,
+        ),
+        backgroundColor: Colors.white,
+      ),
       body: Column(
         children: [
-          SizedBox(
+          Container(
+            width: 390.w,
             height: 180.h,
-            child: Stack(
-              children: [
-                Positioned(
-                  top: 0,
-                  child: Container(
-                    width: 390.w,
-                    height: 140.h,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(
-                          'https://lms.pmpenglish.edu.vn/images/${model.img}',
-                        ),
-                        fit: BoxFit.cover,
-                        colorFilter: ColorFilter.mode(
-                          Colors.white.withValues(alpha: 0.5),
-                          BlendMode.darken,
-                        ),
-                      ),
-                    ),
-                  ),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage(
+                  model.detailClassModel.courseImg,
                 ),
-                Positioned(
-                  top: 114.h,
-                  left: 20.h,
-                  child: Container(
-                    width: 350.w,
-                    height: 66.h,
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withValues(alpha: 0.2),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: const Offset(
-                                0, 2), // changes position of shadow
-                          ),
-                        ]),
-                    child: TabBar(
-                      controller: _tabController,
-                      dividerColor: Colors.transparent,
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      indicator: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8.0),
-                          gradient: mainGradient2),
-                      labelStyle: const TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.w500),
-                      labelColor: Colors.white,
-                      unselectedLabelColor: Colors.black,
-                      tabs: _tabs,
-                    ),
-                  ),
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(
+                  Colors.white.withValues(alpha: 0.5),
+                  BlendMode.darken,
                 ),
-                Positioned(
-                  bottom: 70.h,
-                  left: 22.w,
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: Text(
+              '\n${model.detailClassModel.metaDescription}\n',
+              style: defaultText14M,
+            ),
+          ),
+          ListView.builder(
+              shrinkWrap: true,
+              physics: const ClampingScrollPhysics(),
+              itemCount: model.listTopical.length,
+              itemBuilder: (BuildContext context, int index) {
+                return GestureDetector(
+                  onTap: () async {
+                    // String detailFeedBack =
+                    //     await HomeRepo().getDetailFeedback(
+                    //   model.schedules[index].meetingId,
+                    //   model.schedules[index].typeLearn,
+                    //   model.schedules[index].meetingId,
+                    // );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: ((context) => DetailReportScreen(
+                    //           feedback: detailFeedBack,
+                    //         )),
+                    //   ),
+                    // );
+                  },
                   child: Row(
                     children: [
-                      IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back_ios,
-                          color: Colors.black,
-                        ),
-                        onPressed: () => Navigator.of(context).pop(),
-                      ),
                       SizedBox(
-                        width: 50.w,
+                        width: 32.w,
                       ),
-                      Text(
-                        model.name,
-                        style: defaultText20B.copyWith(
-                          color: Colors.black,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            height: 8.h,
+                          ),
+                          SizedBox(
+                            width: 120.w,
+                            child: Text(
+                              model.listTopical[index].nameTopical,
+                              style: defaultText14B,
+                            ),
+                          ),
+                          Text(
+                            '${model.listTopical[index].numLLessson} buổi',
+                            style: defaultText14Re,
+                          ),
+                          SizedBox(
+                            height: 8.h,
+                          ),
+                        ],
+                      ),
+                      Container(
+                        height: 30.h,
+                        width: 30.w,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withValues(alpha: 0.2),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: const Offset(
+                                  0, 2), // changes position of shadow
+                            ),
+                          ],
                         ),
+                        child: const Center(
+                            child: Icon(Icons.keyboard_arrow_right_outlined)),
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                LichHocScreen(
-                  model: model,
-                ),
-                ExcerciseScreen(
-                  baiTapModel: widget.baiTapModel,
-                ),
-                ReportageScreen(
-                  detailBaoCao: widget.detailBaoCao,
-                ),
-              ],
-            ),
-          )
+                );
+              }),
         ],
       ),
     );

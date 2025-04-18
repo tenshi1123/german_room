@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:german_room/modules/lesson/detail_lesson_screen.dart';
-import 'package:german_room/student_models/my_course_model.dart';
 import 'package:german_room/student_models/review_models.dart';
-import 'package:german_room/student_repo/mycourse_repo.dart';
 import 'package:german_room/utils/constants/color.dart';
 import 'package:german_room/utils/constants/styles.dart';
 
@@ -82,16 +79,16 @@ class EvaluateScreen extends StatelessWidget {
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                     onTap: () async {
-                      VideoLessonModel videoLesson =
-                          await MycourseRepo().getVideoLesson(id: '4');
-                      if (!context.mounted) return;
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => DetailLessonScreen(
-                            videoLessonModel: videoLesson,
-                          ),
-                        ),
-                      );
+                      // VideoLessonModel videoLesson =
+                      //     await MycourseRepo().getVideoLesson(id: '4');
+                      // if (!context.mounted) return;
+                      // Navigator.of(context).push(
+                      //   MaterialPageRoute(
+                      //     builder: (context) => DetailLessonScreen(
+                      //       videoLessonModel: videoLesson,
+                      //     ),
+                      //   ),
+                      // );
                     },
                     child: _ReviewItem(
                       model: listReview[index],

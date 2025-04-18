@@ -12,7 +12,7 @@ class ExtensionRepo {
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
     response = await dio.post(
-      ApiPath.listFeedback,
+      ApiPath.schedule,
     );
     List<ReviewModels> list = [];
     for (var item in response.data['data']['value']) {
