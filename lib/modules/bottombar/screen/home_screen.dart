@@ -105,22 +105,22 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       const Spacer(),
-                      GestureDetector(
-                        onTap: () async {
-                          List<ChatModel> listConversation =
-                              await ChatRepo().getListConversation();
-                          if (!context.mounted) return;
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ListConversationScreen(
-                                listConversation: listConversation,
-                              ),
-                            ),
-                          );
-                        },
-                        child: _chatNoti(icon: 'assets/icons/chat.svg'),
-                      ),
+                      // GestureDetector(
+                      //   onTap: () async {
+                      //     List<ChatModel> listConversation =
+                      //         await ChatRepo().getListConversation();
+                      //     if (!context.mounted) return;
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => ListConversationScreen(
+                      //           listConversation: listConversation,
+                      //         ),
+                      //       ),
+                      //     );
+                      //   },
+                      //   child: _chatNoti(icon: 'assets/icons/chat.svg'),
+                      // ),
                       SizedBox(
                         width: 10.w,
                       ),
