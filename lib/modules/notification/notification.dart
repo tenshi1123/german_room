@@ -66,15 +66,25 @@ class NotificationScreen extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-                shrinkWrap: true,
-                physics: const ClampingScrollPhysics(),
-                itemCount: listNoti.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Noti(
-                    noti: listNoti[index],
-                  );
-                }),
+            child: listNoti.isEmpty
+                ? Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    child: Text(
+                      'Không có thông báo nào',
+                      style: defaultText16B.copyWith(
+                        color: key1Color,
+                      ),
+                    ),
+                  )
+                : ListView.builder(
+                    shrinkWrap: true,
+                    physics: const ClampingScrollPhysics(),
+                    itemCount: listNoti.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Noti(
+                        noti: listNoti[index],
+                      );
+                    }),
           ),
         ],
       ),

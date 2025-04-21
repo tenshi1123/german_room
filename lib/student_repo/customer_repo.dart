@@ -108,7 +108,7 @@ class CustomerRepo {
       ApiPath.notification,
     );
     List<NotiModel> reults = [];
-    for (var item in response.data['data']['value']) {
+    for (var item in response.data['data']) {
       reults.add(NotiModel.fromJson(item));
     }
     return reults;

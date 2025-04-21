@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:german_room/modules/bottombar/screen/extension.dart/class_history_screen.dart';
 import 'package:german_room/modules/bottombar/screen/extension.dart/free_course_screen.dart';
+import 'package:german_room/modules/course/course_details_screen.dart';
 import 'package:german_room/student_models/schedule_model.dart';
 import 'package:german_room/utils/widget/custom_dialog.dart';
 import 'package:intl/intl.dart';
@@ -290,11 +291,22 @@ class _HomeScreenState extends State<HomeScreen> {
               itemCount: listFreeCourse.length,
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
-                    onTap: () {
+                    onTap: () async {
+                      CourseVideoModel detailClassModel =
+                          await MycourseRepo().getListTopical(
+                        typeId: '',
+                        scheduleId: '',
+                        courseId: listFreeCourse[index].courseId,
+                        type: 2,
+                      );
+                      if (!context.mounted) return;
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const RecommentCourse(),
+                          builder: (context) => CourseDetails(
+                            detailMyCourse: detailClassModel,
+                            type: 2,
+                          ),
                         ),
                       );
                     },

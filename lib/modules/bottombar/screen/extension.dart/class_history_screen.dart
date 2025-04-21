@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:german_room/modules/bottombar/screen/course_screen.dart';
+import 'package:german_room/modules/bottombar/screen/extension.dart/class_screen.dart';
+import 'package:german_room/modules/course/course_details_screen.dart';
 import 'package:german_room/student_repo/mycourse_repo.dart';
 import 'package:german_room/student_models/my_course_model.dart';
 import 'package:german_room/utils/constants/color.dart';
 import 'package:german_room/utils/constants/styles.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 class ClassHistoryScreen extends StatefulWidget {
   const ClassHistoryScreen({super.key});
@@ -101,11 +103,129 @@ class _ClassHistoryScreenState extends State<ClassHistoryScreen> {
                 physics: const ClampingScrollPhysics(),
                 itemCount: listMyCourse.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return CourseItem(
+                  return _CourseItem(
                     index: index,
                     model: listMyCourse[index],
                   );
                 }),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CourseItem extends StatelessWidget {
+  const _CourseItem({super.key, required this.index, required this.model});
+  final int index;
+  final MyCourseModel model;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 20.w),
+      //height: 402.h,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(
+          Radius.circular(16),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(16),
+              topRight: Radius.circular(16),
+            ),
+            child: Image.network(
+              model.courseImg,
+              width: 350.w,
+              fit: BoxFit.fitWidth,
+            ),
+          ),
+          SizedBox(
+            height: 10.h,
+          ),
+          SizedBox(
+            width: 330.w,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  ' Khóa học : ${model.courseName}',
+                  style: TextStyle(
+                    color: key1Color,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14.sp,
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    gradient: mainGradient,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(4.r),
+                    ),
+                  ),
+                  child: Text(
+                    model.settingCourseTypeName,
+                    style: defaultText12B.copyWith(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 16.h,
+          ),
+          Text(
+            'Lớp: ${model.courseScheduleName} ',
+            style: defaultText14M.copyWith(
+              color: key1Color.withValues(alpha: 0.7),
+            ),
+          ),
+          SizedBox(
+            height: 10.h,
+          ),
+          SizedBox(
+            height: 10.h,
+          ),
+          GestureDetector(
+            onTap: () async {
+              ClassDetailModel detailClassModel =
+                  await MycourseRepo().getListLesson(
+                typeId: model.settingCourseTypeId,
+                scheduleId: model.courseScheduleId,
+              );
+              pushWithoutNavBar(
+                context,
+                MaterialPageRoute(
+                  builder: ((context) => ClassScreen(
+                        detailClassModel: detailClassModel,
+                      )),
+                ),
+              );
+            },
+            child: Container(
+              height: 39.h,
+              margin: EdgeInsets.symmetric(horizontal: 10.w),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                  border: Border.all(
+                    color: key2Color,
+                  )),
+              child: Center(
+                child: Text(
+                  'Chi tiết',
+                  style: TextStyle(
+                    color: key1Color,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14.sp,
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
       ),

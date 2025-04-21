@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:german_room/modules/course/course_details_screen.dart';
 import 'package:german_room/student_repo/mycourse_repo.dart';
 import 'package:german_room/student_models/my_course_model.dart';
 import 'package:german_room/utils/constants/color.dart';
@@ -199,23 +200,23 @@ class _FreeCourseItem extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () async {
-              // DetailMyCourse courseDetail =
-              //     await MycourseRepo().getDetailMyCourse(id: model.id);
-              // MycourseBaiTapModel baiTap =
-              //     await MycourseRepo().getMycourseBaitap(id: model.id);
-              // DetailBaoCaoModel detailBaoCao =
-              //     await MycourseRepo().getMycourseBaocao(id: model.id);
-              // if (!context.mounted) return;
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => CourseDetails(
-              //       detailMyCourse: courseDetail,
-              //       detailBaoCao: detailBaoCao,
-              //       baiTapModel: baiTap,
-              //     ),
-              //   ),
-              // );
+              CourseVideoModel detailClassModel =
+                  await MycourseRepo().getListTopical(
+                typeId: '',
+                scheduleId: '',
+                courseId: model.courseId,
+                type: 2,
+              );
+              if (!context.mounted) return;
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CourseDetails(
+                    detailMyCourse: detailClassModel,
+                    type: 2,
+                  ),
+                ),
+              );
             },
             child: Container(
               height: 39.h,

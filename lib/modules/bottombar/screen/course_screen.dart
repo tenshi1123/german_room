@@ -131,7 +131,7 @@ class _CourseScreenState extends State<CourseScreen>
                     physics: const ClampingScrollPhysics(),
                     itemCount: listMyCourse.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return CourseItem(
+                      return _CourseItem(
                         index: index,
                         model: listMyCourse[index],
                       );
@@ -155,8 +155,8 @@ class _CourseScreenState extends State<CourseScreen>
   }
 }
 
-class CourseItem extends StatelessWidget {
-  const CourseItem({super.key, required this.index, required this.model});
+class _CourseItem extends StatelessWidget {
+  const _CourseItem({required this.index, required this.model});
   final int index;
   final MyCourseModel model;
   @override
@@ -246,6 +246,7 @@ class CourseItem extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (context) => CourseDetails(
                     detailMyCourse: detailClassModel,
+                    type: 1,
                   ),
                 ),
               );
@@ -375,6 +376,7 @@ class _FreeCourseItem extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (context) => CourseDetails(
                     detailMyCourse: detailClassModel,
+                    type: 2,
                   ),
                 ),
               );

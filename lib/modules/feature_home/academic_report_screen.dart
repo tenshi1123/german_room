@@ -125,7 +125,7 @@ class _BaoCaoHocTapItem extends StatelessWidget {
                 physics: const ClampingScrollPhysics(),
                 itemCount: model.schedules.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
+                  return InkWell(
                     onTap: () async {
                       String detailFeedBack =
                           await HomeRepo().getDetailFeedback(

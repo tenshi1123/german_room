@@ -40,6 +40,68 @@ class MyCourseModel {
   }
 }
 
+class ClassDetailModel {
+  final DetailClassModel detailClassModel;
+  final List<InfoLessonModel> listLesson;
+  ClassDetailModel({
+    required this.detailClassModel,
+    required this.listLesson,
+  });
+  factory ClassDetailModel.fromJson(Map<String, dynamic> json) {
+    return ClassDetailModel(
+      detailClassModel: DetailClassModel.fromJson(json['info']),
+      listLesson: ((json['class'] as List)
+          .map((e) => InfoLessonModel.fromJson(e))
+          .toList()),
+    );
+  }
+}
+
+class InfoLessonModel {
+  final String typeLearn;
+  final DateTime createdDate;
+  final String phonghocName;
+  final String cosoName;
+  final String name;
+  final String topic;
+  final String gvStatus;
+  final String checkId;
+  final String leaveId;
+  final String leaveReason;
+  final String leaveCreateAt;
+  final String meetingId;
+  InfoLessonModel({
+    required this.typeLearn,
+    required this.createdDate,
+    required this.phonghocName,
+    required this.cosoName,
+    required this.name,
+    required this.topic,
+    required this.gvStatus,
+    required this.checkId,
+    required this.leaveId,
+    required this.leaveReason,
+    required this.leaveCreateAt,
+    required this.meetingId,
+  });
+  factory InfoLessonModel.fromJson(Map<String, dynamic> json) {
+    return InfoLessonModel(
+      typeLearn: json['type_learn'] ?? '',
+      createdDate: DateFormat("dd-MM-yyyy").parse(json['created_date'] ?? ''),
+      phonghocName: json['phonghoc_name'] ?? '',
+      cosoName: json['coso_name'] ?? '',
+      name: json['name'] ?? '',
+      topic: json['topic'] ?? '',
+      gvStatus: json['gv_status'] ?? '',
+      checkId: json['checkin_off_id'] ?? '',
+      leaveId: json['customer_leave_id'] ?? '',
+      leaveReason: json['customer_leave_reason'] ?? '',
+      leaveCreateAt: json['customer_leave_created_at'] ?? '',
+      meetingId: json['meeting_id'] ?? '',
+    );
+  }
+}
+
 class DetailMyCourse {
   final String id;
   final String alias;
@@ -387,6 +449,42 @@ class TopicalModel {
       courseId: json['course_id'] ?? '',
       settingCourseTypeId: json['setting_course_type_id'] ?? '',
       numLLessson: json['num_lessson'] ?? '0',
+    );
+  }
+}
+
+class LessonVideoModel {
+  final String lessonsId;
+  final String lessonType;
+  final String settingCourseTypeId;
+  final String name;
+  final String time;
+  final String isTrial;
+  final String documentFilesActive;
+  final String type;
+  //final String document;
+  LessonVideoModel({
+    required this.lessonsId,
+    required this.lessonType,
+    required this.settingCourseTypeId,
+    required this.name,
+    required this.time,
+    required this.isTrial,
+    required this.documentFilesActive,
+    required this.type,
+    //required this.document,
+  });
+  factory LessonVideoModel.fromJson(Map<String, dynamic> json) {
+    return LessonVideoModel(
+      lessonsId: json['lessons_id'] ?? '',
+      lessonType: json['lesson_type'] ?? '',
+      settingCourseTypeId: json['setting_course_type_id'] ?? '',
+      name: json['name'] ?? '',
+      time: json['time'] ?? '',
+      isTrial: json['is_trial'] ?? '',
+      documentFilesActive: json['document_files_active'] ?? '',
+      type: json['type'] ?? '',
+      //document: json['document'] ?? '',
     );
   }
 }

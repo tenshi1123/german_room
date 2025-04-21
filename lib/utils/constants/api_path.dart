@@ -1,6 +1,6 @@
 class ApiPath {
   //baseurl
-  static const String baseUrl = 'https://lms.tiengduc.hvg.edu.vn/api';
+  static const String baseUrl = 'https://lms.germanroom.vn/api';
 
   //Authentication
   static const String login = '$baseUrl/login';
@@ -36,8 +36,8 @@ class ApiPath {
   static const String schedule = '$baseUrl/schedule';
 
   //Chi tiet 1 lich hoc
-  static const String homework = '$baseUrl/schedule/homework';
-  static const String uploadHomework = '$baseUrl/schedule/homework/upload';
+  static const String homework = '$baseUrl/homework';
+  static const String uploadHomework = '$baseUrl/homework/upload';
 
   static const String listClass = '$baseUrl/class';
   static const String detailClass = '$baseUrl/class/detail';

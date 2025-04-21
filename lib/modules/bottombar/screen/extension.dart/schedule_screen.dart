@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:german_room/modules/bottombar/screen/extension.dart/detail_screen.dart';
 import 'package:german_room/student_models/schedule_model.dart';
+import 'package:german_room/student_repo/mycourse_repo.dart';
 import 'package:intl/intl.dart';
 import 'package:german_room/modules/bottombar/utils.dart';
 import 'package:german_room/modules/lesson/detail_lesson_screen.dart';
 import 'package:german_room/student_repo/customer_repo.dart';
 import 'package:german_room/utils/constants/color.dart';
 import 'package:german_room/utils/constants/styles.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalenderScreen extends StatefulWidget {
@@ -332,28 +335,44 @@ class ItemTableCalender extends StatefulWidget {
 }
 
 class _ItemTableCalenderState extends State<ItemTableCalender> {
-  bool _isLoading = false;
+  final bool _isLoading = false;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      // onTap: () async {
+      //   setState(() {
+      //     _isLoading = true;
+      //   });
+      //   DetaiLessonModel detailLesson = await CustomerRepo().getDetailSchedule(
+      //     checkinOffId: widget.model.checkinOffId,
+      //     typeLearn: widget.model.typeLearn,
+      //     meetingId: widget.model.meetingId,
+      //   );
+      //   setState(() {
+      //     _isLoading = false;
+      //   });
+      //   if (!context.mounted) return;
+      //   Navigator.push(
+      //     context,
+      //     MaterialPageRoute(
+      //       builder: ((context) => DetailLessonScreen(
+      //             detailLesson: detailLesson,
+      //           )),
+      //     ),
+      //   );
+      // },
       onTap: () async {
-        setState(() {
-          _isLoading = true;
-        });
-        DetaiLessonModel detailLesson = await CustomerRepo().getDetailSchedule(
+        DetaiLessonModel listExcercise = await MycourseRepo().getDetailSchedule(
           checkinOffId: widget.model.checkinOffId,
           typeLearn: widget.model.typeLearn,
           meetingId: widget.model.meetingId,
         );
-        setState(() {
-          _isLoading = false;
-        });
-        if (!context.mounted) return;
-        Navigator.push(
+
+        pushWithoutNavBar(
           context,
           MaterialPageRoute(
-            builder: ((context) => DetailLessonScreen(
-                  detailLesson: detailLesson,
+            builder: ((context) => DetailScreen(
+                  detailLesson: listExcercise,
                 )),
           ),
         );
