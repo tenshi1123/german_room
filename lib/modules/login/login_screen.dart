@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:german_room/modules/login/forgot_password_screen.dart';
+import 'package:german_room/modules/splash/onboarding.dart';
 import 'package:german_room/student_repo/customer_repo.dart';
 import 'package:german_room/student_repo/login_repo.dart';
 import 'package:german_room/router/app_pages.dart';
@@ -224,13 +225,23 @@ class _LoginScreenState extends State<LoginScreen> {
                         studenIdController?.text ?? '',
                         passController?.text ?? '');
                     if (loged == true) {
-                      ProfileModel profileModel =
+                      ProfileModel? profileModel =
                           await CustomerRepo().getCustomerProfile();
-                      if (!context.mounted) return;
-                      AppRouter.toPage(context, AppPages.BottomNavBarPage,
-                          arguments: {
-                            'profileModel': profileModel,
-                          });
+                      if (profileModel != null) {
+                        if (!context.mounted) return;
+                        AppRouter.toPage(context, AppPages.BottomNavBarPage,
+                            arguments: {
+                              'profileModel': profileModel,
+                            });
+                      } else {
+                        if (!context.mounted) return;
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Onbonding(),
+                          ),
+                        );
+                      }
                     } else {
                       if (!context.mounted) return;
                       showDialog(

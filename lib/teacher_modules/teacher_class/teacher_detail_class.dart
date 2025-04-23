@@ -323,7 +323,7 @@ class ListFbDinhKy extends StatelessWidget {
             child: Text(
               'Lớp',
               style: defaultText20B.copyWith(
-                color: const Color(0xff273D8C),
+                color: const Color(0xff296142),
               ),
             ),
           ),

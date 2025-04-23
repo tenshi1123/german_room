@@ -49,15 +49,27 @@ class CustomerRepo {
     return result;
   }
 
-  Future<ProfileModel> getCustomerProfile() async {
+  Future<ProfileModel?> getCustomerProfile() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('token');
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
-    response = await dio.post(
-      ApiPath.userInfo,
-    );
-    return ProfileModel.fromJson(response.data['data']);
+
+    try {
+      response = await dio.post(
+        ApiPath.userInfo,
+      );
+      return ProfileModel.fromJson(response.data['data']);
+    } on DioException catch (e) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      await prefs.remove('token');
+      return null;
+    } catch (e) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.remove('token');
+      return null;
+    }
   }
 
   Future<String> changePassword(

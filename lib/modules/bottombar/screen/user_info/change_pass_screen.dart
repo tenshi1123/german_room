@@ -284,7 +284,7 @@ class _ChangePassScreenState extends State<ChangePassScreen> {
                   width: 340.w,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(24.r),
-                    color: const Color(0xff00AEEF),
+                    color: const Color(0xff296142),
                   ),
                   child: Center(
                     child: Text(

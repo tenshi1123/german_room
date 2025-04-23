@@ -31,98 +31,89 @@ class _CourseDetailsState extends State<CourseDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          SizedBox(
-            height: 130.h,
-            child: Stack(
-              children: [
-                Positioned(
-                  top: 0,
-                  child: Container(
-                    width: 390.w,
-                    height: 120.h,
-                    decoration: BoxDecoration(gradient: mainGradient),
-                  ),
-                ),
-                Positioned(
-                  bottom: 20.h,
-                  left: 22.w,
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Icon(
-                          Icons.arrow_back_ios_new_rounded,
-                          color: Colors.white,
-                          size: 24.sp,
-                        ),
+        backgroundColor: Colors.white,
+        body: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: 130.h,
+                child: Stack(
+                  children: [
+                    Positioned(
+                      top: 0,
+                      child: Container(
+                        width: 390.w,
+                        height: 120.h,
+                        decoration: BoxDecoration(gradient: mainGradient),
                       ),
-                      SizedBox(
-                        width: 10.w,
+                    ),
+                    Positioned(
+                      bottom: 20.h,
+                      left: 22.w,
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Icon(
+                              Icons.arrow_back_ios_new_rounded,
+                              color: Colors.white,
+                              size: 24.sp,
+                            ),
+                          ),
+                          SizedBox(width: 10.w),
+                          Text(
+                            model.detailClassModel.name,
+                            style: defaultText20B.copyWith(color: Colors.white),
+                          ),
+                        ],
                       ),
-                      Text(
-                        model.detailClassModel.name,
-                        style: defaultText20B.copyWith(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                // Positioned(
-                //   bottom: 0.h,
-                //   left: 250.w,
-                //   child: Image.asset(
-                //     'assets/images/course_icon.png',
-                //     width: 115.w,
-                //     height: 92.h,
-                //     fit: BoxFit.fill,
-                //   ),
-                // )
-              ],
-            ),
-          ),
-          Container(
-            width: 350.w,
-            height: 180.h,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(
-                  model.detailClassModel.courseImg,
-                ),
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(
-                  Colors.white.withValues(alpha: 0.5),
-                  BlendMode.darken,
+                    ),
+                  ],
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
-            child: Text(
-              '\n${model.detailClassModel.metaDescription}\n',
-              style: defaultText14M,
+            SliverToBoxAdapter(
+              child: Container(
+                width: 350.w,
+                height: 180.h,
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(model.detailClassModel.courseImg),
+                    fit: BoxFit.cover,
+                    colorFilter: ColorFilter.mode(
+                      Colors.white.withOpacity(0.5),
+                      BlendMode.darken,
+                    ),
+                  ),
+                ),
+              ),
             ),
-          ),
-          ListView.builder(
-              shrinkWrap: true,
-              physics: const ClampingScrollPhysics(),
-              itemCount: model.listTopical.length,
-              itemBuilder: (BuildContext context, int index) {
-                return LessonItem(
-                  index: index,
-                  topicModel: model.listTopical[index],
-                  type: widget.type,
-                );
-              }),
-        ],
-      ),
-    );
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 6.h),
+                child: Text(
+                  model.detailClassModel.metaDescription,
+                  style: defaultText14M,
+                ),
+              ),
+            ),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  return LessonItem(
+                    index: index,
+                    topicModel: model.listTopical[index],
+                    type: widget.type,
+                  );
+                },
+                childCount: model.listTopical.length,
+              ),
+            ),
+          ],
+        ));
   }
 }
 
@@ -229,7 +220,7 @@ class _LessonItemState extends State<LessonItem> {
         if (isExpanded)
           Column(
             children: listLessonVideoModels
-                .map((e) => GestureDetector(
+                .map((e) => InkWell(
                       // onTap: () async {
                       //   String link = await VideoRepository().getLinkVideo(
                       //       lessonId: e.lessonsId,
@@ -254,7 +245,7 @@ class _LessonItemState extends State<LessonItem> {
                           lessonId: e.lessonsId,
                           settingCoureTypeId: e.settingCourseTypeId,
                           lessonType: e.lessonType,
-                          type: 1,
+                          type: widget.type,
                         );
                         if (!await launchUrl(Uri.parse(link))) {
                           throw Exception('Could not launch ');

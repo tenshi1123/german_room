@@ -112,7 +112,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       // appBar: AppBar(
-      //   backgroundColor: const Color(0xff273D8C),
+      //   backgroundColor: const Color(0xff296142),
       //   automaticallyImplyLeading: false,
       //   title: Center(
       //     child: Text(
@@ -402,7 +402,7 @@ class _ItemTableCalenderState extends State<ItemTableCalender> {
                 borderRadius: BorderRadius.all(Radius.circular(12.r)),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xff273D8C).withValues(alpha: 0.12),
+                    color: const Color(0xff296142).withValues(alpha: 0.12),
                     blurRadius: 16,
                     spreadRadius: 0,
                     offset: const Offset(0, 4), // Shadow position

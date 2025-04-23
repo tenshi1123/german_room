@@ -28,10 +28,19 @@ class _SplshscreenState extends State<Splshscreen> {
         // if (type != null) {
         //if (type == 'student') {
         // StudentHomeModel? infoModel = await CustomerRepo().getHomeInfo();
-        ProfileModel profileModel = await CustomerRepo().getCustomerProfile();
-        AppRouter.toPage(context, AppPages.BottomNavBarPage, arguments: {
-          'profileModel': profileModel,
-        });
+        ProfileModel? profileModel = await CustomerRepo().getCustomerProfile();
+        if (profileModel != null) {
+          AppRouter.toPage(context, AppPages.BottomNavBarPage, arguments: {
+            'profileModel': profileModel,
+          });
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const Onbonding(),
+            ),
+          );
+        }
 
         // } else {
         //   TeacherHomeModel? infoModel = await TeacherRepo().getHomeInfo();

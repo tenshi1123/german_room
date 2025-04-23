@@ -76,12 +76,12 @@ class _TeacherBottomBarState extends State<TeacherBottomBar> {
               'assets/icons/class.svg',
             ),
             title: "Lớp học",
-            activeForegroundColor: const Color(0xff273D8C),
+            activeForegroundColor: const Color(0xff296142),
             inactiveIcon: SvgPicture.asset(
               'assets/icons/inactive_class.svg',
             ),
             inactiveForegroundColor:
-                const Color(0xff273D8C).withValues(alpha: 0.4),
+                const Color(0xff296142).withValues(alpha: 0.4),
             inactiveBackgroundColor: Colors.white.withValues(alpha: 0.2),
           ),
         ),
@@ -94,9 +94,9 @@ class _TeacherBottomBarState extends State<TeacherBottomBar> {
               'assets/icons/calendar.svg',
             ),
             title: "Lịch dạy",
-            activeForegroundColor: const Color(0xff273D8C),
+            activeForegroundColor: const Color(0xff296142),
             inactiveForegroundColor:
-                const Color(0xff273D8C).withValues(alpha: 0.4),
+                const Color(0xff296142).withValues(alpha: 0.4),
             inactiveIcon: SvgPicture.asset(
               'assets/icons/inactive_calender.svg',
             ),
@@ -112,9 +112,9 @@ class _TeacherBottomBarState extends State<TeacherBottomBar> {
               'assets/icons/person.svg',
             ),
             title: "Cá nhân",
-            activeForegroundColor: const Color(0xff273D8C),
+            activeForegroundColor: const Color(0xff296142),
             inactiveForegroundColor:
-                const Color(0xff273D8C).withValues(alpha: 0.4),
+                const Color(0xff296142).withValues(alpha: 0.4),
             inactiveIcon: SvgPicture.asset(
               'assets/icons/inactive_person.svg',
             ),

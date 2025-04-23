@@ -33,7 +33,7 @@ class _DetailScreenState extends State<DetailScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color(0xff273D8C),
+        backgroundColor: const Color(0xff296142),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
           onPressed: () {
@@ -72,7 +72,7 @@ class _DetailScreenState extends State<DetailScreen> {
                               horizontal: 12.w,
                             ),
                             decoration: BoxDecoration(
-                                color: const Color(0xFF273D8C),
+                                color: const Color(0xff296142),
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(8.r))),
                             child: Text(
@@ -91,17 +91,17 @@ class _DetailScreenState extends State<DetailScreen> {
 
               Text(
                 widget.detailLesson.infoLesson.nameLesson,
-                style: defaultText14B.copyWith(color: const Color(0xff273D8C)),
+                style: defaultText14B.copyWith(color: const Color(0xff296142)),
               ),
               SizedBox(height: 12.h),
               Text(
                 widget.detailLesson.infoLesson.topic,
-                style: defaultText16B.copyWith(color: const Color(0xff273D8C)),
+                style: defaultText16B.copyWith(color: const Color(0xff296142)),
               ),
               SizedBox(height: 12.h),
               Text(
                 'Nội dung buổi học: ${widget.detailLesson.infoLesson.lessonContent}',
-                style: defaultText14M.copyWith(color: const Color(0xff273D8C)),
+                style: defaultText14M.copyWith(color: const Color(0xff296142)),
               ),
               SizedBox(height: 12.h),
               // Expanded(
@@ -168,14 +168,14 @@ class _NestedTabBarState extends State<NestedTabBar>
             borderRadius: BorderRadius.circular(
               8.r,
             ),
-            //color: const Color(0xff273D8C),
+            //color: const Color(0xff296142),
           ),
           isScrollable: false,
           automaticIndicatorColorAdjustment: false,
           dividerColor: Colors.white,
           labelStyle: defaultText14M,
           labelColor: Colors.white,
-          unselectedLabelColor: const Color(0xff273D8C),
+          unselectedLabelColor: const Color(0xff296142),
           tabs: [
             Tab(
               child: Container(
@@ -183,7 +183,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                 width: 108.w,
                 decoration: BoxDecoration(
                     color: activeTabIndex == 0
-                        ? const Color(0xFF273D8C)
+                        ? const Color(0xff296142)
                         : const Color(0xFFEFF1F7),
                     borderRadius: BorderRadius.all(Radius.circular(8.r))),
                 child: const Align(
@@ -198,7 +198,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                 width: 108.w,
                 decoration: BoxDecoration(
                     color: activeTabIndex == 1
-                        ? const Color(0xFF273D8C)
+                        ? const Color(0xff296142)
                         : const Color(0xFFEFF1F7),
                     borderRadius: BorderRadius.all(Radius.circular(8.r))),
                 child: const Align(
@@ -213,7 +213,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                 width: 108.w,
                 decoration: BoxDecoration(
                     color: activeTabIndex == 2
-                        ? const Color(0xFF273D8C)
+                        ? const Color(0xff296142)
                         : const Color(0xFFEFF1F7),
                     borderRadius: BorderRadius.all(Radius.circular(8.r))),
                 child: const Align(

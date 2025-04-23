@@ -43,7 +43,7 @@ class _BottombarState extends State<Bottombar> {
         // logic
       },
       child: Scaffold(
-// backgroundColor: notifire.getwihitecolor,
+        backgroundColor: Colors.white,
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           unselectedItemColor: key1Color,

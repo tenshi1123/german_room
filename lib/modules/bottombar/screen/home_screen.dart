@@ -155,62 +155,67 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(
             height: 16.h,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const CalenderScreen(
-                                type: 1,
-                              )),
-                    );
-                  },
-                  child: _homeIcon(
-                      title: 'Lịch học', image: 'assets/images/lich_thi.png')),
-              GestureDetector(
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const CalenderScreen(
+                                  type: 1,
+                                )),
+                      );
+                    },
+                    child: _homeIcon(
+                        title: 'Lịch học',
+                        image: 'assets/images/lich_thi.png')),
+                GestureDetector(
+                    onTap: () async {
+                      if (!context.mounted) return;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ClassHistoryScreen(),
+                        ),
+                      );
+                    },
+                    child: _homeIcon(
+                        title: 'Lịch sử', image: 'assets/images/bai_tap.png')),
+                GestureDetector(
                   onTap: () async {
+                    List<BaoCaoHocTapModel> model =
+                        await HomeRepo().getBaoCaoDiem();
                     if (!context.mounted) return;
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const ClassHistoryScreen(),
+                        builder: (context) => AcademicReportScreen(
+                          model: model,
+                        ),
                       ),
                     );
                   },
                   child: _homeIcon(
-                      title: 'Lịch sử', image: 'assets/images/bai_tap.png')),
-              GestureDetector(
-                onTap: () async {
-                  List<BaoCaoHocTapModel> model =
-                      await HomeRepo().getBaoCaoDiem();
-                  if (!context.mounted) return;
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AcademicReportScreen(
-                        model: model,
-                      ),
-                    ),
-                  );
-                },
-                child: _homeIcon(
-                    title: 'Báo cáo', image: 'assets/images/bao_cao_diem.png'),
-              ),
-              // Nút Tự học
-              GestureDetector(
-                  onTap: () async {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const FreeCourseScreen()),
-                    );
-                  },
-                  child: _homeIcon(
-                      title: 'Tự học', image: 'assets/images/danh_gia.png')),
-            ],
+                      title: 'Báo cáo',
+                      image: 'assets/images/bao_cao_diem.png'),
+                ),
+                // Nút Tự học
+                GestureDetector(
+                    onTap: () async {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const FreeCourseScreen()),
+                      );
+                    },
+                    child: _homeIcon(
+                        title: 'Tự học', image: 'assets/images/danh_gia.png')),
+              ],
+            ),
           ),
           // Học phí
           // Container(
@@ -240,11 +245,14 @@ class _HomeScreenState extends State<HomeScreen> {
           //   ),
           // ),
           SizedBox(
-            height: 10.h,
+            height: 20.h,
           ),
           Text(
             '    Lịch học gần nhất',
             style: defaultText16B,
+          ),
+          SizedBox(
+            height: 10.h,
           ),
           // SizedBox(
           //   width: 380.w,
@@ -275,9 +283,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
 
           //Text(''),
-          Text(
-            '    Khóa học ',
-            style: defaultText16B,
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 10.h),
+            child: Text(
+              '    Khóa học ',
+              style: defaultText16B,
+            ),
           ),
           SizedBox(
             width: 380.w,

@@ -102,7 +102,7 @@ class _ClassScreenState extends State<ClassScreen> {
               child: Text(
                 widget.detailClassModel.detailClassModel.name,
                 style: defaultText20B.copyWith(
-                  color: const Color(0xff273D8C),
+                  color: const Color(0xff296142),
                 ),
               ),
             ),
@@ -196,7 +196,7 @@ class _ClassScreenState extends State<ClassScreen> {
                               borderRadius: BorderRadius.circular(16.r),
                               boxShadow: [
                                 BoxShadow(
-                                  color: const Color(0xff273D8C).withAlpha(80),
+                                  color: const Color(0xff296142).withAlpha(80),
                                   spreadRadius: 0,
                                   blurRadius: 8,
                                   offset: const Offset(
@@ -212,7 +212,7 @@ class _ClassScreenState extends State<ClassScreen> {
                                 Text(
                                   "${DateFormat("dd-MM-yyyy").format(listLesson[index].createdDate)} ${listLesson[index].cosoName}",
                                   style: defaultText14M.copyWith(
-                                      color: const Color(0xff273D8C)),
+                                      color: const Color(0xff296142)),
                                 ),
                                 SizedBox(
                                   height: 10.h,
@@ -220,7 +220,7 @@ class _ClassScreenState extends State<ClassScreen> {
                                 Text(
                                   listLesson[index].name,
                                   style: defaultText16B.copyWith(
-                                      color: const Color(0xff273D8C)),
+                                      color: const Color(0xff296142)),
                                 ),
                                 SizedBox(
                                   height: 10.h,
@@ -228,7 +228,7 @@ class _ClassScreenState extends State<ClassScreen> {
                                 Text(
                                   'Nội dung buổi học: ${listLesson[index].topic}',
                                   style: defaultText14M.copyWith(
-                                      color: const Color(0xff273D8C)),
+                                      color: const Color(0xff296142)),
                                 ),
                                 SizedBox(
                                   height: 10.h,
