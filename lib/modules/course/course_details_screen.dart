@@ -5,6 +5,7 @@ import 'package:german_room/student_models/my_course_model.dart';
 import 'package:german_room/student_repo/mycourse_repo.dart';
 import 'package:german_room/utils/constants/color.dart';
 import 'package:german_room/utils/constants/styles.dart';
+import 'package:german_room/utils/widget/video_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CourseDetails extends StatefulWidget {
@@ -241,15 +242,21 @@ class _LessonItemState extends State<LessonItem> {
                       //   );
                       // },
                       onTap: () async {
-                        String link = await MycourseRepo().getLinkVideo(
-                          lessonId: e.lessonsId,
-                          settingCoureTypeId: e.settingCourseTypeId,
-                          lessonType: e.lessonType,
-                          type: widget.type,
+                        // String link = await MycourseRepo().getLinkVideo(
+                        //   lessonId: e.lessonsId,
+                        //   settingCoureTypeId: e.settingCourseTypeId,
+                        //   lessonType: e.lessonType,
+                        //   type: widget.type,
+                        // );
+                        // if (!await launchUrl(Uri.parse(link))) {
+                        //   throw Exception('Could not launch ');
+                        // }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const VdoCipherScreen(),
+                          ),
                         );
-                        if (!await launchUrl(Uri.parse(link))) {
-                          throw Exception('Could not launch ');
-                        }
                       },
                       child: DetailItem(
                         title: e.name,

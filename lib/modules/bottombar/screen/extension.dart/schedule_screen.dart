@@ -3,9 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:german_room/modules/bottombar/screen/extension.dart/detail_screen.dart';
 import 'package:german_room/student_models/schedule_model.dart';
 import 'package:german_room/student_repo/mycourse_repo.dart';
+import 'package:german_room/utils/widget/custom_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:german_room/modules/bottombar/utils.dart';
-import 'package:german_room/modules/lesson/detail_lesson_screen.dart';
 import 'package:german_room/student_repo/customer_repo.dart';
 import 'package:german_room/utils/constants/color.dart';
 import 'package:german_room/utils/constants/styles.dart';
@@ -35,7 +35,9 @@ class _CalenderScreenState extends State<CalenderScreen> {
     super.initState();
     _selectedDay = _focusedDay;
     _listLichHoc = [];
-    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
+    _selectedEvents = ValueNotifier(_getEventsForRange(
+        DateTime(_focusedDay.year, _focusedDay.month, 1),
+        DateTime(_focusedDay.year, _focusedDay.month + 1, 0)));
   }
 
   @override
@@ -243,6 +245,13 @@ class _CalenderScreenState extends State<CalenderScreen> {
                   },
                 ),
               ),
+              SizedBox(
+                height: 20.h,
+              ),
+              Text(
+                'Chọn ngày trên lịch để xem lịch học',
+                style: defaultText16B,
+              ),
               ValueListenableBuilder<List<ScheduleModel>>(
                 valueListenable: _selectedEvents,
                 builder: (context, value, _) {
@@ -266,38 +275,6 @@ class _CalenderScreenState extends State<CalenderScreen> {
                 },
               ),
               SizedBox(height: 24.h),
-              // FutureBuilder(
-              //   future: ScheduleRepo().getScheduleList(
-              //       DateFormat('dd-MM-yyyy')
-              //           .format(_rangeStart ?? DateTime.now()),
-              //       DateFormat('dd-MM-yyyy')
-              //           .format(_rangeEnd ?? DateTime.now())), // Hàm gọi API
-              //   //               if (start != null && end != null) {
-              //   //   _selectedEvents.value = ScheduleRepo().getScheduleList(dayStart, dayEnd),
-              //   // } else if (start != null) {
-              //   //   _selectedEvents.value = ScheduleRepo().getScheduleList(dayStart, dayEnd),
-              //   // } else if (end != null) {
-              //   //   _selectedEvents.value = ScheduleRepo().getScheduleList(dayStart, dayEnd),
-              //   // }
-              //   builder: (context, snapshot) {
-              //     if (snapshot.connectionState == ConnectionState.waiting) {
-              //       return const CircularProgressIndicator();
-              //     } else if (snapshot.hasError) {
-              //       return Text(
-              //         'Vui lòng kiểm tra lại kết nối internet',
-              //         style: defaultText14M,
-              //       );
-              //     } else if (snapshot.hasData) {
-              //       _listLichHoc = snapshot.data as List<ScheduleModel>;
-              //       return
-              //     } else {
-              //       return Text(
-              //         'Vui lòng kiểm tra lại kết nối internet2',
-              //         style: defaultText14M,
-              //       );
-              //     }
-              //   },
-              // ),
             ],
           ),
         );
@@ -339,28 +316,6 @@ class _ItemTableCalenderState extends State<ItemTableCalender> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      // onTap: () async {
-      //   setState(() {
-      //     _isLoading = true;
-      //   });
-      //   DetaiLessonModel detailLesson = await CustomerRepo().getDetailSchedule(
-      //     checkinOffId: widget.model.checkinOffId,
-      //     typeLearn: widget.model.typeLearn,
-      //     meetingId: widget.model.meetingId,
-      //   );
-      //   setState(() {
-      //     _isLoading = false;
-      //   });
-      //   if (!context.mounted) return;
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //       builder: ((context) => DetailLessonScreen(
-      //             detailLesson: detailLesson,
-      //           )),
-      //     ),
-      //   );
-      // },
       onTap: () async {
         DetaiLessonModel listExcercise = await MycourseRepo().getDetailSchedule(
           checkinOffId: widget.model.checkinOffId,
@@ -390,7 +345,8 @@ class _ItemTableCalenderState extends State<ItemTableCalender> {
               ),
             )
           : Container(
-              margin: EdgeInsets.only(top: 16.h, bottom: 10.h),
+              margin: EdgeInsets.only(
+                  top: 16.h, bottom: 10.h, left: 16.w, right: 16.w),
               padding: EdgeInsets.symmetric(
                 horizontal: 16.w,
                 vertical: 16.h,
@@ -400,12 +356,12 @@ class _ItemTableCalenderState extends State<ItemTableCalender> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.all(Radius.circular(12.r)),
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
-                    color: const Color(0xff296142).withValues(alpha: 0.12),
+                    color: Color.fromARGB(255, 79, 107, 92),
                     blurRadius: 16,
                     spreadRadius: 0,
-                    offset: const Offset(0, 4), // Shadow position
+                    offset: Offset(0, 4), // Shadow position
                   ),
                 ],
               ),
@@ -481,7 +437,7 @@ class _ItemTableCalenderState extends State<ItemTableCalender> {
                       ),
                       RichText(
                         text: TextSpan(
-                          text: 'Buổi học: ',
+                          text: 'Buổi học:    ',
                           style: defaultText16M,
                           children: [
                             TextSpan(
@@ -496,7 +452,7 @@ class _ItemTableCalenderState extends State<ItemTableCalender> {
                       ),
                       RichText(
                         text: TextSpan(
-                          text: 'Bắt đầu: ',
+                          text: 'Bắt đầu:     ',
                           style: defaultText16M,
                           children: [
                             TextSpan(
@@ -512,7 +468,7 @@ class _ItemTableCalenderState extends State<ItemTableCalender> {
                       ),
                       RichText(
                         text: TextSpan(
-                          text: 'Kết thúc: ',
+                          text: 'Kết thúc:    ',
                           style: defaultText16M,
                           children: [
                             TextSpan(
@@ -523,8 +479,95 @@ class _ItemTableCalenderState extends State<ItemTableCalender> {
                           ],
                         ),
                       ),
+                      widget.model.customerLeaveReason == null
+                          ? const SizedBox()
+                          : Text(
+                              'Lịch sử nghỉ học \nLý do: ${widget.model.customerLeaveReason}',
+                              style: defaultText14M.copyWith(
+                                  color: const Color(0xffED1C24)),
+                            ),
                     ],
-                  )
+                  ),
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  (widget.model.createdDate.isBefore(DateTime.now()))
+                      ? const SizedBox()
+                      : Row(
+                          children: [
+                            const Spacer(),
+                            GestureDetector(
+                              onTap: () {
+                                (widget.model.customerLeaveReason == null)
+                                    ? showDialog(
+                                        context: context,
+                                        builder: (context) =>
+                                            LeaveRequestDialog(
+                                          checkinOffId: widget.model
+                                              .meetingCustomerZoomGoogleOfflineId,
+                                          lichhoc: DateFormat(
+                                                  'kk:mm– dd/MM/yyyy')
+                                              .format(widget.model.timeStart),
+                                          onConfirm: () {
+                                            setState(() {
+                                              widget.model.customerLeaveReason =
+                                                  'Chọn lại ngày này để xem lý do xin nghỉ';
+                                            });
+                                          },
+                                        ),
+                                      )
+                                    : showDialog(
+                                        context: context,
+                                        builder: (context) =>
+                                            CancelLeaveReqDialog(
+                                          checkinOffId: widget.model
+                                              .meetingCustomerZoomGoogleOfflineId,
+                                          lichhoc: DateFormat(
+                                                  'kk:mm– dd/MM/yyyy')
+                                              .format(widget.model.timeStart),
+                                          onConfirm: () {
+                                            setState(() {
+                                              widget.model.customerLeaveReason =
+                                                  null;
+                                            });
+                                          },
+                                          mettingId:
+                                              widget.model.meetingId ?? '',
+                                        ),
+                                      );
+                              },
+                              child: Container(
+                                height: 29.h,
+                                width: 90.w,
+                                decoration: BoxDecoration(
+                                  color:
+                                      widget.model.customerLeaveReason == null
+                                          ? sub2Color
+                                          : const Color(0xffED1C24),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(4.r),
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    widget.model.customerLeaveReason == null
+                                        ? 'Xin nghỉ'
+                                        : 'Hủy xin nghỉ',
+                                    style: defaultText14B.copyWith(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 30.w,
+                            ),
+                          ],
+                        ),
+                  SizedBox(
+                    height: 10.h,
+                  ),
                 ],
               ),
             ),

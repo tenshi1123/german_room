@@ -280,6 +280,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 )
               : _Upcoming(
                   model: listLichHoc[0],
+                  onLeaveConfirmed: () async {
+                    listLichHoc = await CustomerRepo().getScheduleList(
+                      DateFormat('dd-MM-yyyy').format(DateTime.now()),
+                      DateFormat('dd-MM-yyyy').format(
+                        DateTime.now().add(
+                          const Duration(days: 15),
+                        ),
+                      ),
+                    );
+                    setState(() {});
+                  },
                 ),
 
           //Text(''),
@@ -462,9 +473,16 @@ Widget _chatNoti({
 }
 
 //widget lịch học sắp tới
-class _Upcoming extends StatelessWidget {
-  const _Upcoming({required this.model});
+class _Upcoming extends StatefulWidget {
+  const _Upcoming({required this.model, required this.onLeaveConfirmed});
   final ScheduleModel model;
+  final VoidCallback onLeaveConfirmed;
+
+  @override
+  State<_Upcoming> createState() => _UpcomingState();
+}
+
+class _UpcomingState extends State<_Upcoming> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -519,7 +537,7 @@ class _Upcoming extends StatelessWidget {
                   ),
                   padding: EdgeInsets.symmetric(vertical: 15.h),
                   child: (Text(
-                    model.courseAlias,
+                    widget.model.courseAlias,
                     style: defaultText16B.copyWith(
                       color: Colors.white,
                     ),
@@ -536,16 +554,17 @@ class _Upcoming extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Text(
-                        model.courseName,
+                        widget.model.courseName,
                         style: defaultText16B,
                       ),
                       Text(
-                        DateFormat("dd/MM/yyyy").format(model.createdDate),
-                        style: defaultText14Re,
+                        DateFormat("dd/MM/yyyy")
+                            .format(widget.model.createdDate),
+                        style: defaultText14M,
                       ),
                       Text(
-                        '${model.timeStart.hour} - ${model.timeEnd.hour}',
-                        style: defaultText14Re,
+                        '${widget.model.timeStart.hour}h : ${widget.model.timeStart.minute}',
+                        style: defaultText14M,
                       ),
                     ],
                   ),
@@ -582,7 +601,7 @@ class _Upcoming extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        model.phongHocName ?? 'zoom',
+                        widget.model.phongHocName ?? 'zoom',
                         style: defaultText14B,
                       ),
                     ],
@@ -603,7 +622,7 @@ class _Upcoming extends StatelessWidget {
                       SizedBox(
                         width: 220.w,
                         child: Text(
-                          model.cosoName ?? 'zoom',
+                          widget.model.cosoName ?? 'zoom',
                           style: defaultText14B,
                         ),
                       ),
@@ -615,36 +634,73 @@ class _Upcoming extends StatelessWidget {
             SizedBox(
               height: 10.h,
             ),
+            widget.model.customerLeaveReason == null
+                ? const SizedBox()
+                : Text(
+                    'Lịch sử nghỉ học \nLý do: ${widget.model.customerLeaveReason}',
+                    style:
+                        defaultText14M.copyWith(color: const Color(0xffED1C24)),
+                  ),
+            SizedBox(
+              height: 10.h,
+            ),
             Row(
               children: [
-                SizedBox(
-                  width: 110.w,
-                ),
+                const Spacer(),
                 GestureDetector(
                   onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) => const LeaveRequestDialog(),
-                    );
+                    (widget.model.customerLeaveReason == null)
+                        ? showDialog(
+                            context: context,
+                            builder: (context) => LeaveRequestDialog(
+                              checkinOffId: widget
+                                  .model.meetingCustomerZoomGoogleOfflineId,
+                              lichhoc: DateFormat('kk:mm– dd/MM/yyyy')
+                                  .format(widget.model.timeStart),
+                              onConfirm: () {
+                                widget.onLeaveConfirmed();
+                              },
+                            ),
+                          )
+                        : showDialog(
+                            context: context,
+                            builder: (context) => CancelLeaveReqDialog(
+                              checkinOffId: widget
+                                  .model.meetingCustomerZoomGoogleOfflineId,
+                              lichhoc: DateFormat('kk:mm– dd/MM/yyyy')
+                                  .format(widget.model.timeStart),
+                              onConfirm: () {
+                                widget.onLeaveConfirmed();
+                              },
+                              mettingId: widget.model.meetingId ?? '',
+                            ),
+                          );
                   },
                   child: Container(
                     height: 29.h,
                     width: 90.w,
                     decoration: BoxDecoration(
-                      color: sub2Color,
+                      color: widget.model.customerLeaveReason == null
+                          ? sub2Color
+                          : const Color(0xffED1C24),
                       borderRadius: BorderRadius.all(
                         Radius.circular(4.r),
                       ),
                     ),
                     child: Center(
                       child: Text(
-                        'Xin nghỉ',
+                        widget.model.customerLeaveReason == null
+                            ? 'Xin nghỉ'
+                            : 'Hủy xin nghỉ',
                         style: defaultText14B.copyWith(
                           color: Colors.white,
                         ),
                       ),
                     ),
                   ),
+                ),
+                SizedBox(
+                  width: 60.w,
                 ),
               ],
             ),

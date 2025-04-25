@@ -13,6 +13,10 @@ class ScheduleModel {
   final String? checkinOffId;
   final String? linkZoom;
   final String? meetingId;
+  final String meetingCustomerZoomGoogleOfflineId;
+  final String? customerLeaveId;
+  String? customerLeaveReason;
+  final String? customerLeaveCreateAt;
   final String typeLearn;
   ScheduleModel({
     required this.courseName,
@@ -26,7 +30,11 @@ class ScheduleModel {
     this.checkinOffId,
     this.linkZoom,
     this.meetingId,
+    this.customerLeaveId,
+    this.customerLeaveReason,
+    this.customerLeaveCreateAt,
     required this.typeLearn,
+    required this.meetingCustomerZoomGoogleOfflineId,
   });
   factory ScheduleModel.fromJson(Map<String, dynamic> json) {
     return ScheduleModel(
@@ -42,7 +50,12 @@ class ScheduleModel {
       checkinOffId: json["checkin_off_id"],
       linkZoom: json["link_zoom"],
       meetingId: json["meeting_id"],
+      customerLeaveId: json["customer_leave_id"],
+      customerLeaveReason: json["customer_leave_reason"],
+      customerLeaveCreateAt: json["customer_leave_created_at"],
       typeLearn: json["type_learn"] ?? '',
+      meetingCustomerZoomGoogleOfflineId:
+          json["meeting_customer_zoom_google_offline_id"] ?? '',
     );
   }
 }

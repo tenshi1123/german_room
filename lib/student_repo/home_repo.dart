@@ -11,17 +11,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 class HomeRepo {
   Dio dio = Dio();
   //Lấy danh sách bài tập
-  Future<ListExcerciseModel> getListBaiTap() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? token = prefs.getString('token');
-    dio.options.headers['Authorization'] = 'Bearer $token';
-    Response response;
-    response = await dio.post(
-      ApiPath.detailClass,
-    );
-    //return DiemDanhModel.fromJson(response.data['data']);
-    return ListExcerciseModel.fromJson((response.data)['data']);
-  }
 
   //Lấy chi tiết bài tập chi tiet bai tap
   Future<DetailExcerciseModel> getDetailExsercise(

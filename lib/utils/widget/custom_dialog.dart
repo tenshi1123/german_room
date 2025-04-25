@@ -1,42 +1,144 @@
 // xin nghi dialog
 import 'package:flutter/material.dart';
+import 'package:german_room/student_repo/customer_repo.dart';
+import 'package:german_room/utils/constants/styles.dart';
 
 class LeaveRequestDialog extends StatelessWidget {
-  const LeaveRequestDialog({super.key});
-
+  const LeaveRequestDialog(
+      {super.key,
+      required this.checkinOffId,
+      required this.lichhoc,
+      required this.onConfirm});
+  final String checkinOffId;
+  final String lichhoc;
+  final VoidCallback onConfirm;
   @override
   Widget build(BuildContext context) {
     TextEditingController reasonController = TextEditingController();
 
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      backgroundColor: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Lịch học: 08:00 - 11:00, 21/05/2024.',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            Text(
+              'Lịch học: $lichhoc',
+              style: defaultText16M,
             ),
             const SizedBox(height: 16),
-            const Text(
+            Text(
               'Lý do xin nghỉ',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              style: defaultText16M,
             ),
             const SizedBox(height: 8),
             TextField(
               controller: reasonController,
+              style: defaultText14M,
               maxLines: 3,
               decoration: InputDecoration(
-                hintText: 'Trùng lịch học trên trường',
+                hintText: 'Nhập lý do nghỉ',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
                 contentPadding: const EdgeInsets.all(12),
               ),
             ),
+            const SizedBox(height: 24),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Close the dialog
+                    },
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: const Color.fromARGB(255, 59, 54, 54),
+                      backgroundColor: const Color(0xFFF7F4F6),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                    child: const Text('Hủy'),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      // Handle confirmation logic
+                      await CustomerRepo().leaveSchedule(
+                          checkinOffId: checkinOffId,
+                          reason: reasonController.text);
+                      onConfirm();
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Đã gửi yêu cầu nghỉ học'),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFF7C98B),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                    child: const Text('Xác nhận'),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CancelLeaveReqDialog extends StatelessWidget {
+  const CancelLeaveReqDialog(
+      {super.key,
+      required this.checkinOffId,
+      required this.lichhoc,
+      required this.onConfirm,
+      required this.mettingId});
+  final String checkinOffId;
+  final String mettingId;
+  final String lichhoc;
+  final VoidCallback onConfirm;
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      backgroundColor: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Lịch học: $lichhoc',
+              style: defaultText16M,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Bạn chắc chắn muốn hủy yêu cầu nghỉ học này?',
+              style: defaultText16M,
+            ),
+            const SizedBox(height: 8),
+            // TextField(
+            //   controller: reasonController,
+            //   maxLines: 3,
+            //   decoration: InputDecoration(
+            //     hintText: 'Nhập lý do nghỉ',
+            //     border: OutlineInputBorder(
+            //       borderRadius: BorderRadius.circular(8),
+            //     ),
+            //     contentPadding: const EdgeInsets.all(12),
+            //   ),
+            // ),
             const SizedBox(height: 24),
             Row(
               children: [
@@ -56,12 +158,22 @@ class LeaveRequestDialog extends StatelessWidget {
                 const SizedBox(width: 16),
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       // Handle confirmation logic
-                      print('Lý do nghỉ: ${reasonController.text}');
+                      await CustomerRepo().cancleSchedule(
+                        checkinOffId: checkinOffId,
+                        mettingId: mettingId,
+                      );
+                      onConfirm();
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Đã hủy yêu cầu nghỉ học'),
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFF7C98B),
+                      backgroundColor: const Color(0xffED1C24),
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                     ),

@@ -72,6 +72,38 @@ class CustomerRepo {
     }
   }
 
+  Future<String> leaveSchedule(
+      {required String checkinOffId, required String reason}) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    dio.options.headers['Authorization'] = 'Bearer $token';
+    Response response;
+    response = await dio.post(
+      ApiPath.xinNghi,
+      data: {
+        'meeting_customer_zoom_google_offline_id': checkinOffId,
+        'reason': reason,
+      },
+    );
+    return response.data['message'];
+  }
+
+  Future<String> cancleSchedule(
+      {required String checkinOffId, required String mettingId}) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    dio.options.headers['Authorization'] = 'Bearer $token';
+    Response response;
+    response = await dio.post(
+      ApiPath.cancelXinNghi,
+      data: {
+        'meeting_customer_zoom_google_offline_id': checkinOffId,
+        'meeting_id': mettingId,
+      },
+    );
+    return response.data['message'];
+  }
+
   Future<String> changePassword(
       String oldPass, String password, String newPass) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
