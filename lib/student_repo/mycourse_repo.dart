@@ -118,7 +118,9 @@ class MycourseRepo {
         'lesson_type': lessonType,
       },
     );
-    return response.data['data']['lesson_content'];
+
+    return response.data['data']['lesson_content'] ??
+        response.data['data']['link_webview'];
   }
 
   Future<DetailMyCourse> getDetailMyCourse({required String id}) async {

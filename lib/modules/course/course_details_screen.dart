@@ -242,19 +242,21 @@ class _LessonItemState extends State<LessonItem> {
                       //   );
                       // },
                       onTap: () async {
-                        // String link = await MycourseRepo().getLinkVideo(
-                        //   lessonId: e.lessonsId,
-                        //   settingCoureTypeId: e.settingCourseTypeId,
-                        //   lessonType: e.lessonType,
-                        //   type: widget.type,
-                        // );
+                        String link = await MycourseRepo().getLinkVideo(
+                          lessonId: e.lessonsId,
+                          settingCoureTypeId: e.settingCourseTypeId,
+                          lessonType: e.lessonType,
+                          type: widget.type,
+                        );
                         // if (!await launchUrl(Uri.parse(link))) {
                         //   throw Exception('Could not launch ');
                         // }
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const VdoCipherScreen(),
+                            builder: (context) => VideoWebviewPage(
+                              link: link,
+                            ),
                           ),
                         );
                       },
