@@ -80,7 +80,7 @@ class MycourseRepo {
     return CourseVideoModel.fromJson(response.data['data']);
   }
 
-  Future<List<LessonVideoModel>> getlistLessonVideo({
+  Future<LessonVideoResult> getlistLessonVideo({
     required String topicalId,
     required String settingCoureTypeId,
     required int type,
@@ -95,9 +95,8 @@ class MycourseRepo {
         'setting_course_type_id': settingCoureTypeId,
       },
     );
-    List<LessonVideoModel> result = ((response.data)['data']['lessons'] as List)
-        .map((e) => LessonVideoModel.fromJson(e))
-        .toList();
+    LessonVideoResult result =
+        LessonVideoResult.fromJson((response.data)['data']);
     return result;
   }
 

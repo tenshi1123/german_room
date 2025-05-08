@@ -133,7 +133,11 @@ class LessonItem extends StatefulWidget {
 
 class _LessonItemState extends State<LessonItem> {
   bool isExpanded = false;
-  List<LessonVideoModel> listLessonVideoModels = [];
+
+  LessonVideoResult lessonVideoResult = LessonVideoResult(
+    videos: [],
+    documents: [],
+  );
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -145,8 +149,8 @@ class _LessonItemState extends State<LessonItem> {
         ),
         InkWell(
           onTap: () async {
-            if (listLessonVideoModels.isEmpty) {
-              listLessonVideoModels = await MycourseRepo().getlistLessonVideo(
+            if (lessonVideoResult.videos.isEmpty) {
+              lessonVideoResult = await MycourseRepo().getlistLessonVideo(
                 topicalId: widget.topicModel.topicalId,
                 settingCoureTypeId: widget.topicModel.settingCourseTypeId,
                 type: widget.type,
@@ -219,63 +223,65 @@ class _LessonItemState extends State<LessonItem> {
           endIndent: 20.w,
         ),
         if (isExpanded)
-          Column(
-            children: listLessonVideoModels
-                .map((e) => InkWell(
-                      // onTap: () async {
-                      //   String link = await VideoRepository().getLinkVideo(
-                      //       lessonId: e.lessonsId,
-                      //       settingCoureTypeId: e.settingCourseTypeId,
-                      //       lessonType: e.lessonType);
-                      //   pushWithoutNavBar(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //       builder: ((context) => WebViewScreen(
-                      //                 link: link,
-                      //                 title: e.name,
-                      //               )
-                      //           // AnimationPlayer(
-                      //           //       link: link,
-                      //           //     )
-                      //           ),
-                      //     ),
-                      //   );
-                      // },
-                      onTap: () async {
-                        String link = await MycourseRepo().getLinkVideo(
-                          lessonId: e.lessonsId,
-                          settingCoureTypeId: e.settingCourseTypeId,
-                          lessonType: e.lessonType,
-                          type: widget.type,
-                        );
-                        // if (!await launchUrl(Uri.parse(link))) {
-                        //   throw Exception('Could not launch ');
-                        // }
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => VideoWebviewPage(
-                              link: link,
-                            ),
-                          ),
-                        );
-                      },
-                      child: DetailItem(
-                        title: e.name,
-                        index: listLessonVideoModels.indexOf(e),
+          Column(children: [
+            ...lessonVideoResult.videos.map((e) => InkWell(
+                  onTap: () async {
+                    String link = await MycourseRepo().getLinkVideo(
+                      lessonId: e.lessonsId,
+                      settingCoureTypeId: e.settingCourseTypeId,
+                      lessonType: e.lessonType,
+                      type: widget.type,
+                    );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => VideoWebviewPage(
+                          link: link,
+                        ),
                       ),
-                    ))
-                .toList(),
-          ),
+                    );
+                  },
+                  child: DetailItem(
+                    title: e.name,
+                    index: lessonVideoResult.videos.indexOf(e),
+                    time: formatSeconds(e.time),
+                    type: 'video',
+                  ),
+                )),
+            ...lessonVideoResult.documents.map((e) => InkWell(
+                  onTap: () async {
+                    if (!await launchUrl(
+                      Uri.parse(
+                        e.url,
+                      ),
+                    )) {
+                      throw Exception('Could not launch ');
+                    }
+                  },
+                  child: DetailItem(
+                    title: e.name,
+                    index: lessonVideoResult.documents.indexOf(e),
+                    time: '',
+                    type: 'doc',
+                  ),
+                )),
+          ]),
       ],
     );
   }
 }
 
 class DetailItem extends StatelessWidget {
-  const DetailItem({super.key, required this.title, required this.index});
+  const DetailItem(
+      {super.key,
+      required this.title,
+      required this.index,
+      required this.time,
+      required this.type});
   final String title;
   final int index;
+  final String time;
+  final String type;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -285,32 +291,40 @@ class DetailItem extends StatelessWidget {
         SizedBox(
           width: 16.w,
         ),
-        Column(
-          children: [
-            SvgPicture.asset(
-              'assets/icons/green_tick.svg',
-              height: 12.h,
-              width: 12.w,
-            ),
-            Container(
-              height: 32.h,
-              width: 1.w,
-              margin: EdgeInsets.symmetric(vertical: 8.h),
-              decoration: const BoxDecoration(
-                color: Colors.green,
-              ),
-            ),
-          ],
-        ),
+        type == 'video'
+            ? Column(
+                children: [
+                  SvgPicture.asset(
+                    'assets/icons/green_tick.svg',
+                    height: 12.h,
+                    width: 12.w,
+                  ),
+                  Container(
+                    height: 32.h,
+                    width: 1.w,
+                    margin: EdgeInsets.symmetric(vertical: 8.h),
+                    decoration: const BoxDecoration(
+                      color: Colors.green,
+                    ),
+                  ),
+                ],
+              )
+            : const SizedBox(),
         SizedBox(
           width: 16.w,
         ),
-        Image.asset(
-          'assets/images/video.png',
-          height: 24.h,
-          width: 24.w,
-          fit: BoxFit.fill,
-        ),
+        type == 'video'
+            ? Image.asset(
+                'assets/images/video.png',
+                height: 24.h,
+                width: 24.w,
+                fit: BoxFit.fill,
+              )
+            : Icon(
+                Icons.file_present_outlined,
+                size: 24.sp,
+                color: const Color(0xff2F9CD3),
+              ),
         SizedBox(
           width: 16.w,
         ),
@@ -329,20 +343,33 @@ class DetailItem extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Bài giảng',
-                    style: defaultText12M.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: const Color(0xff3C3C3C).withValues(alpha: 0.6),
-                    ),
-                  ),
-                  Text(
-                    '10 Phút',
-                    style: defaultText12M.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: const Color(0xff3C3C3C).withValues(alpha: 0.6),
-                    ),
-                  ),
+                  type == 'video'
+                      ? Text(
+                          'Bài giảng',
+                          style: defaultText12M.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color:
+                                const Color(0xff3C3C3C).withValues(alpha: 0.6),
+                          ),
+                        )
+                      : Text(
+                          'Tài liệu',
+                          style: defaultText12M.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color:
+                                const Color(0xff3C3C3C).withValues(alpha: 0.6),
+                          ),
+                        ),
+                  type == 'video'
+                      ? Text(
+                          time,
+                          style: defaultText12M.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color:
+                                const Color(0xff3C3C3C).withValues(alpha: 0.6),
+                          ),
+                        )
+                      : const SizedBox(),
                 ],
               ),
             ),
@@ -358,5 +385,21 @@ class DetailItem extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+String formatSeconds(String secondsString) {
+  int totalSeconds = int.tryParse(secondsString) ?? 0;
+  int hours = totalSeconds ~/ 3600;
+  int minutes = (totalSeconds % 3600) ~/ 60;
+
+  if (hours > 0 && minutes > 0) {
+    return "$hours giờ $minutes phút";
+  } else if (hours > 0) {
+    return "$hours giờ";
+  } else if (minutes > 0) {
+    return "$minutes phút";
+  } else {
+    return "${totalSeconds % 60} giây";
   }
 }

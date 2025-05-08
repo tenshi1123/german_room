@@ -77,7 +77,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                     BorderRadius.all(Radius.circular(8.r))),
                             child: Text(
                               ('Vào Phòng học zoom'),
-                              style: defaultText14B.copyWith(
+                              style: defaultText20B.copyWith(
                                 color: Colors.white,
                               ),
                             ),
@@ -285,11 +285,11 @@ class _NestedTabBarState extends State<NestedTabBar>
                       children: [
                         Row(
                           children: [
-                            Image(
-                              image: const AssetImage(
-                                  'assets/images/icon_file.png'),
-                              height: 48.h,
-                              width: 48.w,
+                            //icon exercise
+                            Icon(
+                              Icons.assignment,
+                              color: const Color(0xff296142),
+                              size: 20.h,
                             ),
                             SizedBox(
                               width: 16.w,
@@ -297,7 +297,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                             Expanded(
                               child: Text(
                                 _detailLesson.listHomeWorks[index].name,
-                                style: defaultText16B,
+                                style: defaultText20B,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 3,
                               ),
@@ -319,24 +319,14 @@ class _NestedTabBarState extends State<NestedTabBar>
                           height: 10.h,
                         ),
                         GestureDetector(
-                          onTap: () {
-                            // Navigator.push(
-                            //   context,
-                            //   PageRouteBuilder(
-                            //     opaque: false,
-                            //     barrierColor: Colors.black,
-                            //     pageBuilder: (BuildContext context, _, __) {
-                            //       return FullScreenPage(
-                            //         dark: true,
-                            //         child: Image.network(
-                            //           _detailLesson.listHomeWorks[index].image,
-                            //           width: 100.w,
-                            //           height: 90.h,
-                            //         ),
-                            //       );
-                            //     },
-                            //   ),
-                            // );
+                          onTap: () async {
+                            if (!await launchUrl(
+                              Uri.parse(
+                                _detailLesson.listHomeWorks[index].image,
+                              ),
+                            )) {
+                              throw Exception('Could not launch ');
+                            }
                           },
                           child: Stack(
                             children: [

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:german_room/modules/bottombar/screen/extension.dart/class_screen.dart';
-import 'package:german_room/modules/course/course_details_screen.dart';
 import 'package:german_room/student_repo/mycourse_repo.dart';
 import 'package:german_room/student_models/my_course_model.dart';
 import 'package:german_room/utils/constants/color.dart';
@@ -116,7 +115,7 @@ class _ClassHistoryScreenState extends State<ClassHistoryScreen> {
 }
 
 class _CourseItem extends StatelessWidget {
-  const _CourseItem({super.key, required this.index, required this.model});
+  const _CourseItem({required this.index, required this.model});
   final int index;
   final MyCourseModel model;
   @override

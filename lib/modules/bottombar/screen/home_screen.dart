@@ -7,13 +7,9 @@ import 'package:german_room/modules/course/course_details_screen.dart';
 import 'package:german_room/student_models/schedule_model.dart';
 import 'package:german_room/utils/widget/custom_dialog.dart';
 import 'package:intl/intl.dart';
-import 'package:german_room/modules/chat/screen/list_conversation_screen.dart';
-import 'package:german_room/modules/course/recomment_course.dart';
 import 'package:german_room/modules/feature_home/academic_report_screen.dart';
 import 'package:german_room/modules/notification/notification.dart';
-import 'package:german_room/student_models/chat_models.dart';
 import 'package:german_room/student_models/my_course_model.dart';
-import 'package:german_room/student_repo/chat_repo.dart';
 import 'package:german_room/student_repo/customer_repo.dart';
 import 'package:german_room/student_repo/home_repo.dart';
 import 'package:german_room/student_models/home_model.dart';
@@ -184,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     },
                     child: _homeIcon(
-                        title: 'Lịch sử', image: 'assets/images/bai_tap.png')),
+                        title: 'Khóa học', image: 'assets/images/bai_tap.png')),
                 GestureDetector(
                   onTap: () async {
                     List<BaoCaoHocTapModel> model =

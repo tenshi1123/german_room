@@ -453,6 +453,26 @@ class TopicalModel {
   }
 }
 
+class LessonVideoResult {
+  final List<LessonVideoModel> videos;
+  final List<DocumentModel> documents;
+  LessonVideoResult({
+    required this.videos,
+    required this.documents,
+  });
+  factory LessonVideoResult.fromJson(Map<String, dynamic> json) {
+    return LessonVideoResult(
+      videos: ((json['lessons'] as List)
+          .map((e) => LessonVideoModel.fromJson(e))
+          .toList()),
+      documents: (json['document'] as List?)
+              ?.map((e) => DocumentModel.fromJson(e))
+              .toList() ??
+          [],
+    );
+  }
+}
+
 class LessonVideoModel {
   final String lessonsId;
   final String lessonType;
@@ -485,6 +505,30 @@ class LessonVideoModel {
       documentFilesActive: json['document_files_active'] ?? '',
       type: json['type'] ?? '',
       //document: json['document'] ?? '',
+    );
+  }
+}
+
+class DocumentModel {
+  final String id;
+  final String type;
+  final String settingCourseTypeId;
+  final String url;
+  final String name;
+  DocumentModel({
+    required this.id,
+    required this.type,
+    required this.settingCourseTypeId,
+    required this.url,
+    required this.name,
+  });
+  factory DocumentModel.fromJson(Map<String, dynamic> json) {
+    return DocumentModel(
+      id: json['id'] ?? '',
+      type: json['type'] ?? '',
+      settingCourseTypeId: json['setting_course_type_id'] ?? '',
+      url: json['url'] ?? '',
+      name: json['name'] ?? '',
     );
   }
 }

@@ -60,7 +60,7 @@ class CustomerRepo {
         ApiPath.userInfo,
       );
       return ProfileModel.fromJson(response.data['data']);
-    } on DioException catch (e) {
+    } on DioException {
       SharedPreferences prefs = await SharedPreferences.getInstance();
 
       await prefs.remove('token');
