@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:german_room/modules/bottombar/screen/extension.dart/class_history_screen.dart';
+import 'package:german_room/modules/bottombar/screen/extension.dart/hoc_lieu/hoc_lieu_screen.dart';
 import 'package:german_room/modules/bottombar/screen/extension.dart/free_course_screen.dart';
 import 'package:german_room/modules/course/course_details_screen.dart';
 import 'package:german_room/student_models/schedule_model.dart';
@@ -180,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     },
                     child: _homeIcon(
-                        title: 'Khóa học', image: 'assets/images/bai_tap.png')),
+                        title: 'Học liệu', image: 'assets/images/bai_tap.png')),
                 GestureDetector(
                   onTap: () async {
                     List<BaoCaoHocTapModel> model =

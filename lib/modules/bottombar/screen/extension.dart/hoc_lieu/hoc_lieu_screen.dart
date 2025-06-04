@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:german_room/modules/bottombar/screen/extension.dart/class_screen.dart';
-import 'package:german_room/student_repo/mycourse_repo.dart';
-import 'package:german_room/student_models/my_course_model.dart';
+import 'package:german_room/modules/bottombar/screen/extension.dart/hoc_lieu/class_screen.dart';
+import 'package:german_room/student_models/hoclieu_model.dart';
+import 'package:german_room/student_repo/hoc_lieu_repo.dart';
 import 'package:german_room/utils/constants/color.dart';
 import 'package:german_room/utils/constants/styles.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
@@ -15,7 +15,7 @@ class ClassHistoryScreen extends StatefulWidget {
 }
 
 class _ClassHistoryScreenState extends State<ClassHistoryScreen> {
-  List<MyCourseModel> listMyCourse = [];
+  List<OverviewModel> listMyCourse = [];
   @override
   void initState() {
     super.initState();
@@ -23,7 +23,7 @@ class _ClassHistoryScreenState extends State<ClassHistoryScreen> {
   }
 
   Future<void> _fetchData() async {
-    listMyCourse = await MycourseRepo().getListMyCourse();
+    listMyCourse = await HocLieuRepo().getDsCap1();
     setState(() {});
   }
 
@@ -64,7 +64,7 @@ class _ClassHistoryScreenState extends State<ClassHistoryScreen> {
                         width: 10.w,
                       ),
                       Text(
-                        'Lịch sử học tập',
+                        'Học liệu',
                         style: defaultText20B.copyWith(
                           color: Colors.white,
                         ),
@@ -91,7 +91,7 @@ class _ClassHistoryScreenState extends State<ClassHistoryScreen> {
                 width: 20.w,
               ),
               Text(
-                'Danh sách lớp học',
+                'Tổng quan',
                 style: defaultText20B,
               ),
             ],
@@ -117,7 +117,7 @@ class _ClassHistoryScreenState extends State<ClassHistoryScreen> {
 class _CourseItem extends StatelessWidget {
   const _CourseItem({required this.index, required this.model});
   final int index;
-  final MyCourseModel model;
+  final OverviewModel model;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -138,7 +138,7 @@ class _CourseItem extends StatelessWidget {
               topRight: Radius.circular(16),
             ),
             child: Image.network(
-              model.courseImg,
+              model.categoryImg,
               width: 350.w,
               fit: BoxFit.fitWidth,
             ),
@@ -152,50 +152,24 @@ class _CourseItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  ' Khóa học : ${model.courseName}',
+                  ' Khóa học : ${model.categoryName}',
                   style: TextStyle(
                     color: key1Color,
                     fontWeight: FontWeight.w500,
-                    fontSize: 14.sp,
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                  decoration: BoxDecoration(
-                    gradient: mainGradient,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(4.r),
-                    ),
-                  ),
-                  child: Text(
-                    model.settingCourseTypeName,
-                    style: defaultText12B.copyWith(color: Colors.white),
+                    fontSize: 16.sp,
                   ),
                 ),
               ],
             ),
           ),
           SizedBox(
-            height: 16.h,
-          ),
-          Text(
-            'Lớp: ${model.courseScheduleName} ',
-            style: defaultText14M.copyWith(
-              color: key1Color.withValues(alpha: 0.7),
-            ),
-          ),
-          SizedBox(
-            height: 10.h,
-          ),
-          SizedBox(
             height: 10.h,
           ),
           GestureDetector(
             onTap: () async {
-              ClassDetailModel detailClassModel =
-                  await MycourseRepo().getListLesson(
-                typeId: model.settingCourseTypeId,
-                scheduleId: model.courseScheduleId,
+              List<KhoaHocModel> detailClassModel =
+                  await HocLieuRepo().getDsCap2(
+                categoryId: model.id,
               );
               pushWithoutNavBar(
                 context,
@@ -226,6 +200,13 @@ class _CourseItem extends StatelessWidget {
               ),
             ),
           ),
+          SizedBox(
+            height: 10.h,
+          ),
+          Divider(
+            color: key2Color,
+            thickness: 1.h,
+          )
         ],
       ),
     );
