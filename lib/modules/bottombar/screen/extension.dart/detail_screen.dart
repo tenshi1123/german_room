@@ -348,7 +348,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                                       ]),
                                 ),
                                 child: Image.network(
-                                    _detailLesson.listHomeWorks[index].image),
+                                    'https://t4.ftcdn.net/jpg/02/71/07/33/360_F_271073385_A6geLjwkrty3xkDPxaf7lcaEiNMtMwjN.jpg'),
                               ),
                               Container(
                                 width: 120.w,
@@ -370,16 +370,11 @@ class _NestedTabBarState extends State<NestedTabBar>
                             ],
                           ),
                         ),
-                        SizedBox(
-                          height: 10.h,
-                        ),
-                        Expanded(
-                          child: Text(
-                            _detailLesson.listHomeWorks[index].note,
-                            style: defaultText16M,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 3,
-                          ),
+                        Text(
+                          _detailLesson.listHomeWorks[index].note,
+                          style: defaultText16M,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
                         ),
                         Expanded(
                           child: Text(
@@ -402,24 +397,14 @@ class _NestedTabBarState extends State<NestedTabBar>
                   itemCount: _detailLesson.listDocument.length,
                   itemBuilder: (context, index) {
                     return GestureDetector(
-                      onTap: () {
-                        // Navigator.push(
-                        //   context,
-                        //   PageRouteBuilder(
-                        //     opaque: false,
-                        //     barrierColor: Colors.black,
-                        //     pageBuilder: (BuildContext context, _, __) {
-                        //       return FullScreenPage(
-                        //         dark: true,
-                        //         child: Image.network(
-                        //           _detailLesson.listDocument[index].point,
-                        //           width: 100.w,
-                        //           height: 90.h,
-                        //         ),
-                        //       );
-                        //     },
-                        //   ),
-                        // );
+                      onTap: () async {
+                        if (!await launchUrl(
+                          Uri.parse(
+                            _detailLesson.listDocument[index].point,
+                          ),
+                        )) {
+                          throw Exception('Could not launch ');
+                        }
                       },
                       child: Padding(
                         padding: EdgeInsets.symmetric(
@@ -429,7 +414,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                           children: [
                             Image(
                               image: const AssetImage(
-                                  'assets/images/icon_file.png'),
+                                  'assets/images/ducoment.png'),
                               height: 48.h,
                               width: 48.w,
                             ),

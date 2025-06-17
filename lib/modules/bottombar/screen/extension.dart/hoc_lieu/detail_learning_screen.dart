@@ -126,6 +126,7 @@ class _DetailLearingScreenState extends State<DetailLearingScreen> {
                     style: defaultText16B.copyWith(color: key2Color),
                   )
                 : ListView.builder(
+                    padding: EdgeInsets.zero,
                     shrinkWrap: true, // ✅ cần thiết khi đặt trong scroll view
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: detailLearingModel.listVideo.length,
@@ -133,12 +134,10 @@ class _DetailLearingScreenState extends State<DetailLearingScreen> {
                       final video = detailLearingModel.listVideo[index];
                       return ListTile(
                         title: Text(video.name, style: defaultText16B),
+                        leading: Icon(Icons.play_circle,
+                            size: 32.sp, color: Colors.grey),
                         onTap: () async {
-                          //open web brower
-                          // You can use a package like url_launcher to open the video link
-                          // For example:
                           if (!await launchUrl(Uri.parse(video.link))) {
-                            // If the URL cannot be launched, show an error message
                             throw Exception('Could not launch ');
                           }
                         },
@@ -147,7 +146,7 @@ class _DetailLearingScreenState extends State<DetailLearingScreen> {
                   ),
             // List of questions
             SizedBox(
-              height: 20.h,
+              height: 16.h,
             ),
             Text(
               'Danh sách câu hỏi',
@@ -155,25 +154,48 @@ class _DetailLearingScreenState extends State<DetailLearingScreen> {
                 color: key1Color,
               ),
             ),
-
+            SizedBox(
+              height: 10.h,
+            ),
             ListView.builder(
-              shrinkWrap: true, // ✅ cần thiết khi đặt trong scroll view
+              shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
+              padding: EdgeInsets.zero,
               itemCount: detailLearingModel.listQuestion.length,
               itemBuilder: (context, index) {
                 final question = detailLearingModel.listQuestion[index];
-                return ListTile(
-                  title: Text(question.title, style: defaultText16B),
-                  onTap: () async {
-                    String url = await HocLieuRepo().getLinkQuestion(
-                        partId: question.partLearningMaterialsId,
-                        questionId: question.questionsPartLearningMaterialId);
-                    //open web brower
-                    if (!await launchUrl(Uri.parse(url))) {
-                      // If the URL cannot be launched, show an error message
-                      throw Exception('Could not launch $url');
-                    }
-                  },
+                return Container(
+                  margin: EdgeInsets.only(
+                    bottom: 16.h,
+                    left: 16.w,
+                    right: 16.w,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        offset: const Offset(0, 2),
+                        blurRadius: 4,
+                      ),
+                    ],
+                  ),
+                  child: ListTile(
+                    title: Text(question.title, style: defaultText16B),
+                    trailing: Icon(Icons.arrow_forward_ios,
+                        size: 16.sp, color: Colors.black),
+                    onTap: () async {
+                      String url = await HocLieuRepo().getLinkQuestion(
+                          partId: question.partLearningMaterialsId,
+                          questionId: question.questionsPartLearningMaterialId);
+                      //open web brower
+                      if (!await launchUrl(Uri.parse(url))) {
+                        // If the URL cannot be launched, show an error message
+                        throw Exception('Could not launch $url');
+                      }
+                    },
+                  ),
                 );
               },
             ),
