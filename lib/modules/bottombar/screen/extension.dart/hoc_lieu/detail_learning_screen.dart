@@ -118,7 +118,7 @@ class _DetailLearingScreenState extends State<DetailLearingScreen> {
               ),
             ),
             SizedBox(
-              height: 10.h,
+              height: detailLearingModel.listVideo.isEmpty ? 10.h : 0,
             ),
             detailLearingModel.listVideo.isEmpty
                 ? Text(
@@ -135,7 +135,7 @@ class _DetailLearingScreenState extends State<DetailLearingScreen> {
                       return ListTile(
                         title: Text(video.name, style: defaultText16B),
                         leading: Icon(Icons.play_circle,
-                            size: 32.sp, color: Colors.grey),
+                            size: 40.sp, color: Colors.grey),
                         onTap: () async {
                           if (!await launchUrl(Uri.parse(video.link))) {
                             throw Exception('Could not launch ');
@@ -155,7 +155,7 @@ class _DetailLearingScreenState extends State<DetailLearingScreen> {
               ),
             ),
             SizedBox(
-              height: 10.h,
+              height: 16.h,
             ),
             ListView.builder(
               shrinkWrap: true,
