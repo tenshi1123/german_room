@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:german_room/modules/course/course_details_screen.dart';
+import 'package:german_room/modules/course/point_excercise.dart';
 import 'package:german_room/student_repo/mycourse_repo.dart';
 import 'package:german_room/student_models/my_course_model.dart';
 import 'package:german_room/utils/constants/color.dart';
@@ -193,7 +194,7 @@ class _CourseItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  ' Khóa học : ${model.courseName}',
+                  'Khóa học :\n${model.courseName}',
                   style: TextStyle(
                     color: key1Color,
                     fontWeight: FontWeight.w500,
@@ -228,12 +229,44 @@ class _CourseItem extends StatelessWidget {
           SizedBox(
             height: 10.h,
           ),
+          GestureDetector(
+            onTap: () async {
+              if (!context.mounted) return;
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PointScreen(
+                    courseScheduleId: model.courseScheduleId,
+                  ),
+                ),
+              );
+            },
+            child: Container(
+              height: 39.h,
+              margin: EdgeInsets.symmetric(horizontal: 10.w),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                  border: Border.all(
+                    color: key2Color,
+                  )),
+              child: Center(
+                child: Text(
+                  'Xem điểm số',
+                  style: TextStyle(
+                    color: key1Color,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14.sp,
+                  ),
+                ),
+              ),
+            ),
+          ),
           SizedBox(
             height: 10.h,
           ),
           GestureDetector(
             onTap: () async {
-              CourseVideoModel detailClassModel =
+              CourseVideoModel? detailClassModel =
                   await MycourseRepo().getListTopical(
                 typeId: model.settingCourseTypeId,
                 scheduleId: model.courseScheduleId,
@@ -241,6 +274,14 @@ class _CourseItem extends StatelessWidget {
                 type: 1,
               );
               if (!context.mounted) return;
+              if (detailClassModel == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Không có dữ liệu khóa học'),
+                  ),
+                );
+                return;
+              }
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -363,7 +404,7 @@ class _FreeCourseItem extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () async {
-              CourseVideoModel detailClassModel =
+              CourseVideoModel? detailClassModel =
                   await MycourseRepo().getListTopical(
                 typeId: '',
                 scheduleId: '',
@@ -371,6 +412,14 @@ class _FreeCourseItem extends StatelessWidget {
                 type: 2,
               );
               if (!context.mounted) return;
+              if (detailClassModel == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Không có dữ liệu khóa học'),
+                  ),
+                );
+                return;
+              }
               Navigator.push(
                 context,
                 MaterialPageRoute(

@@ -310,7 +310,7 @@ class _HomeScreenState extends State<HomeScreen> {
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
                     onTap: () async {
-                      CourseVideoModel detailClassModel =
+                      CourseVideoModel? detailClassModel =
                           await MycourseRepo().getListTopical(
                         typeId: '',
                         scheduleId: '',
@@ -318,6 +318,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         type: 2,
                       );
                       if (!context.mounted) return;
+                      if (detailClassModel == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Không có dữ liệu'),
+                          ),
+                        );
+                        return;
+                      }
                       Navigator.push(
                         context,
                         MaterialPageRoute(

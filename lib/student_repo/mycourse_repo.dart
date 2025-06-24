@@ -60,24 +60,36 @@ class MycourseRepo {
     return result;
   }
 
-  Future<CourseVideoModel> getListTopical({
+  Future<CourseVideoModel?> getListTopical({
     required String typeId,
     required String scheduleId,
     required String courseId,
     required int type,
   }) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? token = prefs.getString('token');
-    dio.options.headers['Authorization'] = 'Bearer $token';
-    final response = await dio.post(
-      type == 1 ? ApiPath.topical : ApiPath.topicalFree,
-      data: {
-        'course_id': courseId,
-        'course_schedule_id': scheduleId,
-        'setting_course_type_id': typeId,
-      },
-    );
-    return CourseVideoModel.fromJson(response.data['data']);
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? token = prefs.getString('token');
+      if (token == null) {
+        return null;
+      }
+      dio.options.headers['Authorization'] = 'Bearer $token';
+      final response = await dio.post(
+        type == 1 ? ApiPath.topical : ApiPath.topicalFree,
+        data: {
+          'course_id': courseId,
+          'course_schedule_id': scheduleId,
+          'setting_course_type_id': typeId,
+        },
+      );
+      // Kiểm tra status và trả về null nếu không phải true
+      if (response.data is Map && response.data['status'] == true) {
+        return CourseVideoModel.fromJson(response.data['data']);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
   }
 
   Future<LessonVideoResult> getlistLessonVideo({
@@ -120,62 +132,6 @@ class MycourseRepo {
 
     return response.data['data']['lesson_content'] ??
         response.data['data']['link_webview'];
-  }
-
-  Future<DetailMyCourse> getDetailMyCourse({required String id}) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? token = prefs.getString('token');
-    dio.options.headers['Authorization'] = 'Bearer $token';
-    Response response;
-    response = await dio.post(
-      ApiPath.listClass,
-      data: {
-        'id': id,
-      },
-    );
-    return DetailMyCourse.fromJson(response.data['data']);
-  }
-
-  Future<DetailBaoCaoModel> getMycourseBaocao({required String id}) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? token = prefs.getString('token');
-    dio.options.headers['Authorization'] = 'Bearer $token';
-    Response response;
-    response = await dio.post(
-      ApiPath.listClass,
-      data: {
-        'id': id,
-      },
-    );
-    return DetailBaoCaoModel.fromJson(response.data['data']);
-  }
-
-  Future<MycourseBaiTapModel> getMycourseBaitap({required String id}) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? token = prefs.getString('token');
-    dio.options.headers['Authorization'] = 'Bearer $token';
-    Response response;
-    response = await dio.post(
-      ApiPath.listClass,
-      data: {
-        'id': id,
-      },
-    );
-    return MycourseBaiTapModel.fromJson(response.data);
-  }
-
-  Future<VideoLessonModel> getVideoLesson({
-    required String id,
-  }) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? token = prefs.getString('token');
-    dio.options.headers['Authorization'] = 'Bearer $token';
-    Response response;
-    response = await dio.post(
-      ApiPath.listClass,
-      data: {'id': id, 'type': "video"},
-    );
-    return VideoLessonModel.fromJson(response.data['data']['value']);
   }
 
   Future<List<FreeCourseModel>> getLessonFree() async {
@@ -228,7 +184,7 @@ class MycourseRepo {
     return list;
   }
 
-  Future<EvaluationModel> getEvaluation({
+  Future<PointModel> getPoint({
     required String id,
   }) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -236,9 +192,11 @@ class MycourseRepo {
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
     response = await dio.post(
-      ApiPath.detailClass,
-      data: {'id': id, 'type': "evaluation"},
+      ApiPath.point,
+      data: {
+        'course_schedule_id': id,
+      },
     );
-    return EvaluationModel.fromJson(response.data['data']['evaluation']);
+    return PointModel.fromJson(response.data['data']);
   }
 }

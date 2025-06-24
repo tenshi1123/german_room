@@ -200,7 +200,7 @@ class _FreeCourseItem extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () async {
-              CourseVideoModel detailClassModel =
+              CourseVideoModel? detailClassModel =
                   await MycourseRepo().getListTopical(
                 typeId: '',
                 scheduleId: '',
@@ -208,6 +208,14 @@ class _FreeCourseItem extends StatelessWidget {
                 type: 2,
               );
               if (!context.mounted) return;
+              if (detailClassModel == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Không có dữ liệu khóa học'),
+                  ),
+                );
+                return;
+              }
               Navigator.push(
                 context,
                 MaterialPageRoute(

@@ -41,7 +41,7 @@ class ApiPath {
 
   static const String listClass = '$baseUrl/class';
   static const String detailClass = '$baseUrl/class/detail';
-
+  static const String point = '$baseUrl/student/point';
   //Khoa hoc mien phi
   static const String lessonFree = '$baseUrl/lesson/free';
   static const String topicalFree = '$baseUrl/lesson/topical/free';

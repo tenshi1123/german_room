@@ -29,7 +29,8 @@ class _CalenderScreenState extends State<CalenderScreen> {
   DateTime? _rangeStart;
   DateTime? _rangeEnd;
   late List<ScheduleModel> _listLichHoc;
-
+  final Map<DateTime, List<ScheduleModel>> _events = {};
+  final Set<String> _loadedMonths = {};
   @override
   void initState() {
     super.initState();
@@ -38,12 +39,38 @@ class _CalenderScreenState extends State<CalenderScreen> {
     _selectedEvents = ValueNotifier(_getEventsForRange(
         DateTime(_focusedDay.year, _focusedDay.month, 1),
         DateTime(_focusedDay.year, _focusedDay.month + 1, 0)));
+    _fetchEventsForMonth(_focusedDay);
   }
 
   @override
   void dispose() {
     _selectedEvents.dispose();
     super.dispose();
+  }
+
+  Future<void> _fetchEventsForMonth(DateTime date) async {
+    final key = '${date.year}-${date.month.toString().padLeft(2, '0')}';
+    if (_loadedMonths.contains(key)) return;
+
+    final start = DateTime(date.year, date.month, 1);
+    final end = DateTime(date.year, date.month + 1, 0);
+
+    final fetchedEvents = await CustomerRepo().getScheduleList(
+      DateFormat('dd-MM-yyyy').format(start),
+      DateFormat('dd-MM-yyyy').format(end),
+    );
+    if (fetchedEvents.isEmpty) return;
+    setState(() {
+      for (final e in fetchedEvents) {
+        final day = DateTime(
+            e.createdDate.year, e.createdDate.month, e.createdDate.day);
+        _events.putIfAbsent(day, () => []).add(e);
+      }
+      _loadedMonths.add(key);
+      if (_selectedDay != null) {
+        _selectedEvents.value = _events[_selectedDay!] ?? [];
+      }
+    });
   }
 
   Future<void> getSchedule(
@@ -60,13 +87,6 @@ class _CalenderScreenState extends State<CalenderScreen> {
             DateFormat('dd-MM-yyyy').format(day.add(const Duration(days: 1))));
     return _listLichHoc;
   }
-
-  // List<ScheduleModel> _getEventLoad(DateTime day) {
-  //   List<ScheduleModel> test = [
-  //     ..._listFullLich.where((e) => e.createdDate.day == day.day)
-  //   ];
-  //   return test;
-  // }
 
   List<ScheduleModel> _getEventsForRange(DateTime start, DateTime end) {
     getSchedule(
@@ -184,7 +204,7 @@ class _CalenderScreenState extends State<CalenderScreen> {
                 ),
               ),
               Container(
-                height: 403.h,
+                //height: 403.h,
                 width: 350.w,
                 decoration: BoxDecoration(
                   color: Colors.blue.withValues(alpha: 0.1),
@@ -213,7 +233,10 @@ class _CalenderScreenState extends State<CalenderScreen> {
                   daysOfWeekHeight: 36.h,
                   calendarFormat: _calendarFormat,
                   rangeSelectionMode: _rangeSelectionMode,
-                  // eventLoader: _getEventLoad,
+                  eventLoader: (day) {
+                    final d = DateTime(day.year, day.month, day.day);
+                    return _events[d] ?? [];
+                  },
                   startingDayOfWeek: StartingDayOfWeek.monday,
                   calendarBuilders: CalendarBuilders(
                     markerBuilder: (context, date, events) {
@@ -242,6 +265,10 @@ class _CalenderScreenState extends State<CalenderScreen> {
                   },
                   onPageChanged: (focusedDay) {
                     _focusedDay = focusedDay;
+                    _fetchEventsForMonth(focusedDay);
+                    _selectedEvents.value = _getEventsForRange(
+                        DateTime(_focusedDay.year, _focusedDay.month, 1),
+                        DateTime(_focusedDay.year, _focusedDay.month + 1, 0));
                   },
                 ),
               ),

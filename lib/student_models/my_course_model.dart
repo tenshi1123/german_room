@@ -532,3 +532,124 @@ class DocumentModel {
     );
   }
 }
+
+class PointModel {
+  final List<List<BaiTapBoTroModel>> baiTapBoTro;
+  final List<List<ExerciseModel>> exercise;
+
+  PointModel({
+    required this.baiTapBoTro,
+    required this.exercise,
+  });
+
+  factory PointModel.fromJson(Map<String, dynamic> json) {
+    return PointModel(
+      baiTapBoTro: (json['bai_tap_bo_tro'] as List<dynamic>?)
+              ?.map((list) => (list as List<dynamic>)
+                  .map((item) => BaiTapBoTroModel.fromJson(item ?? {}))
+                  .toList())
+              .toList() ??
+          [],
+      exercise: (json['exercise'] as List<dynamic>?)
+              ?.map((list) => (list as List<dynamic>)
+                  .map((item) => ExerciseModel.fromJson(item ?? {}))
+                  .toList())
+              .toList() ??
+          [],
+    );
+  }
+}
+
+/// Model cho "bai_tap_bo_tro"
+class BaiTapBoTroModel {
+  final String name;
+  final String urlFile;
+  final String timeDeadline;
+  final String? finalMark;
+  final String urlFileCustomer;
+  final String? urlFileLecturers;
+  final String noteCustomer;
+  final String noteLecturers;
+  final String createdAtCustomer;
+
+  BaiTapBoTroModel({
+    required this.name,
+    required this.urlFile,
+    required this.timeDeadline,
+    this.finalMark,
+    required this.urlFileCustomer,
+    this.urlFileLecturers,
+    required this.noteCustomer,
+    required this.noteLecturers,
+    required this.createdAtCustomer,
+  });
+
+  factory BaiTapBoTroModel.fromJson(Map<String, dynamic> json) {
+    return BaiTapBoTroModel(
+      name: json['name'] ?? '',
+      urlFile: json['url_file'] ?? '',
+      timeDeadline: json['time_deadline'] ?? '',
+      finalMark: json['final_mark'],
+      urlFileCustomer: json['url_file_customer'] ?? '',
+      urlFileLecturers: json['url_file_lecturers'], // Có thể null
+      noteCustomer: json['note_customer'] ?? '',
+      noteLecturers: json['note_lecturers'] ?? '',
+      createdAtCustomer: json['created_at_customer'] ?? '',
+    );
+  }
+}
+
+/// Model cho "exercise"
+class ExerciseModel {
+  final String id;
+  final String name;
+  final String timeDeadline;
+  final String note;
+  final String lecturersId;
+  final String createdAt;
+  final String updateAt;
+  final String entranceTestType;
+  final String slug;
+  final String entranceTestId;
+  final String skills;
+  final String? entranceTestResultsId;
+  final String? finalMark;
+  final String? entranceTestResultsCreatedAt;
+
+  ExerciseModel({
+    required this.id,
+    required this.name,
+    required this.timeDeadline,
+    required this.note,
+    required this.lecturersId,
+    required this.createdAt,
+    required this.updateAt,
+    required this.entranceTestType,
+    required this.slug,
+    required this.entranceTestId,
+    required this.skills,
+    this.entranceTestResultsId,
+    this.finalMark,
+    this.entranceTestResultsCreatedAt,
+  });
+
+  factory ExerciseModel.fromJson(Map<String, dynamic> json) {
+    return ExerciseModel(
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+      timeDeadline: json['time_deadline'] ?? '',
+      note: json['note'] ?? '',
+      lecturersId: json['lecturers_id'] ?? '',
+      createdAt: json['created_at'] ?? '',
+      updateAt: json['update_at'] ?? '',
+      entranceTestType: json['entrance_test_type'] ?? '',
+      slug: json['slug'] ?? '',
+      entranceTestId: json['entrance_test_id'] ?? '',
+      skills: json['skills'] ?? '',
+      entranceTestResultsId: json['entrance_test_results_id'], // Có thể null
+      finalMark: json['final_mark'], // Có thể null
+      entranceTestResultsCreatedAt:
+          json['entrance_test_results_created_at'], // Có thể null
+    );
+  }
+}

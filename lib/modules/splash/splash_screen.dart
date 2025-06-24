@@ -25,9 +25,6 @@ class _SplshscreenState extends State<Splshscreen> {
       final String? token = prefs.getString('token');
       checked = (token != null && token != '');
       if (checked) {
-        // if (type != null) {
-        //if (type == 'student') {
-        // StudentHomeModel? infoModel = await CustomerRepo().getHomeInfo();
         ProfileModel? profileModel = await CustomerRepo().getCustomerProfile();
         if (profileModel != null) {
           AppRouter.toPage(context, AppPages.BottomNavBarPage, arguments: {
