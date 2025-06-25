@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:german_room/student_models/my_course_model.dart';
 import 'package:german_room/student_repo/mycourse_repo.dart';
 import 'package:german_room/utils/constants/color.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PointScreen extends StatefulWidget {
   const PointScreen({super.key, required this.courseScheduleId});
@@ -321,24 +322,10 @@ Widget _buildActionRow({
   );
 }
 
-// Hàm giả lập mở URL (trong thực tế bạn sẽ dùng package url_launcher)
-void _launchURL(String url) async {
-  // Thêm package url_launcher vào pubspec.yaml:
-  // dependencies:
-  //   url_launcher: ^6.0.0 (hoặc phiên bản mới nhất)
-  //
-  // Sau đó import:
-  // import 'package:url_launcher/url_launcher.dart';
-  //
-  // và sử dụng như sau:
-  // if (await canLaunch(url)) {
-  //   await launch(url);
-  // } else {
-  //   print('Không thể mở URL: $url');
-  //   // Hiển thị thông báo lỗi cho người dùng
-  // }
-  print('Đã cố gắng mở URL: $url');
-  // Trong ví dụ này chỉ in ra console
+Future<void> _launchURL(String url) async {
+  if (!await launchUrl(Uri.parse(url))) {
+    throw Exception('Could not launch $url');
+  }
 }
 
 // Hàm hiển thị SnackBar (thông báo nhỏ ở cuối màn hình)
