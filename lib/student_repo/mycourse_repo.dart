@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:german_room/student_models/home_model.dart';
 import 'package:german_room/student_models/my_course_model.dart';
@@ -22,21 +24,6 @@ class MycourseRepo {
     return list;
   }
 
-  Future<ClassDetailModel> getListLesson(
-      {required String typeId, required String scheduleId}) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? token = prefs.getString('token');
-    dio.options.headers['Authorization'] = 'Bearer $token';
-    final response = await dio.post(
-      ApiPath.detailClass,
-      data: {
-        'setting_course_type_id': typeId,
-        'course_schedule_id': scheduleId,
-      },
-    );
-    return ClassDetailModel.fromJson(response.data['data']);
-  }
-
   //chi tiet lich hoc
   Future<DetaiLessonModel> getDetailSchedule({
     required String? checkinOffId,
@@ -58,6 +45,35 @@ class MycourseRepo {
     DetaiLessonModel result =
         DetaiLessonModel.fromJson((response.data)['data']);
     return result;
+  }
+
+  Future<bool> uploadHomework({
+    required String classLessonDocumentId,
+    required List<File> photos,
+  }) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    dio.options.headers['Authorization'] = 'Bearer $token';
+
+    try {
+      List<MultipartFile> photoFiles = await Future.wait(
+        photos.map(
+          (file) => MultipartFile.fromFile(file.path),
+        ),
+      );
+      final formData = FormData.fromMap({
+        'class_lesson_document_id': classLessonDocumentId,
+        'file[]': photoFiles,
+      });
+      final response = await dio.post(
+        ApiPath.uploadHomework,
+        data: formData,
+      );
+      return response.data['status'] == true;
+    } on DioException catch (e) {
+      print('Error: ${e.message}');
+      return false;
+    }
   }
 
   Future<CourseVideoModel?> getListTopical({
@@ -148,22 +164,37 @@ class MycourseRepo {
     return result;
   }
 
-  Future<List<BaiTapValueModel>> getExerciseLesson({
-    required String id,
-  }) async {
+  Future<List<MyCourseModel>> getLessonClass() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    dio.options.headers['Authorization'] = 'Bearer $token';
+    Response response;
+    response = await dio.get(
+      ApiPath.listClass,
+    );
+    List<MyCourseModel> result = ((response.data)['data'] as List)
+        .map((e) => MyCourseModel.fromJson(e))
+        .toList();
+    return result;
+  }
+
+  Future<List<ScheduleModel>> getListSchedule(
+      {required String settingId, required String courseId}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('token');
     dio.options.headers['Authorization'] = 'Bearer $token';
     Response response;
     response = await dio.post(
       ApiPath.detailClass,
-      data: {'id': id, 'type': "exercise"},
+      data: {
+        'setting_course_type_id': settingId,
+        'course_schedule_id': courseId,
+      },
     );
-    List<BaiTapValueModel> list = [];
-    for (var item in response.data['data']['exercise']) {
-      list.add(BaiTapValueModel.fromJson(item));
-    }
-    return list;
+    List<ScheduleModel> result = ((response.data)['data']['class'] as List)
+        .map((e) => ScheduleModel.fromJson(e))
+        .toList();
+    return result;
   }
 
   Future<List<DeValueModel>> getDocument({

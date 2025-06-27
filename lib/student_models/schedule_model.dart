@@ -1,4 +1,5 @@
 // model một buổi học trong lịch học
+import 'package:html_unescape/html_unescape.dart';
 import 'package:intl/intl.dart';
 
 class ScheduleModel {
@@ -40,15 +41,16 @@ class ScheduleModel {
     return ScheduleModel(
       courseName: json["course_name"] ?? '',
       courseAlias: json["course_alias"] ?? '',
-      buoiHoc: json["buoi_hoc"] ?? '',
+      buoiHoc: json["buoi_hoc"] ?? json['name'] ?? '',
       createdDate: DateFormat("dd-MM-yyyy").parse(json["created_date"] ?? ''),
-      timeStart:
-          DateFormat("yyyy-MM-dd HH:mm:ss").parse(json["time_start"] ?? ''),
-      timeEnd: DateFormat("yyyy-MM-dd HH:mm:ss").parse(json["time_end"] ?? ''),
+      timeStart: DateFormat("yyyy-MM-dd HH:mm:ss")
+          .parse(json["time_start"] ?? '0000-00-00 00:00:00'),
+      timeEnd: DateFormat("yyyy-MM-dd HH:mm:ss")
+          .parse(json["time_end"] ?? '0000-00-00 00:00:00'),
       phongHocName: json["phonghoc_name"],
       cosoName: json["coso_name"],
       checkinOffId: json["checkin_off_id"],
-      linkZoom: json["link_zoom"],
+      linkZoom: json["link_zoom"] ?? json['link_learn'],
       meetingId: json["meeting_id"],
       customerLeaveId: json["customer_leave_id"],
       customerLeaveReason: json["customer_leave_reason"],
@@ -80,9 +82,14 @@ class DetaiLessonModel {
       listDocument: (json["document"] as List)
           .map((e) => DocumentModel.fromJson(e))
           .toList(),
-      feedback: json['feedback'],
+      feedback: sanitizeHtml(json['feedback']),
     );
   }
+}
+
+String sanitizeHtml(String raw) {
+  final unescape = HtmlUnescape();
+  return unescape.convert(raw).replaceAll(RegExp(r'[\r\n]+'), '').trim();
 }
 
 class InfoLessonModel {
@@ -181,6 +188,8 @@ class HomeWorkModel {
   final String customerId;
   final String typeLearn;
   final String eventCheckinOffId;
+  final String? baiTapDaNop;
+
   HomeWorkModel({
     required this.image,
     required this.name,
@@ -192,6 +201,7 @@ class HomeWorkModel {
     required this.customerId,
     required this.typeLearn,
     required this.eventCheckinOffId,
+    this.baiTapDaNop,
   });
   factory HomeWorkModel.fromJson(Map<String, dynamic> json) {
     return HomeWorkModel(
@@ -205,6 +215,7 @@ class HomeWorkModel {
       customerId: json['class_lesson_document_customer_id'] ?? '',
       typeLearn: json['type_learn'] ?? '',
       eventCheckinOffId: json['event_checkin_off_id'] ?? '',
+      baiTapDaNop: json['url_file_customer'],
     );
   }
 }

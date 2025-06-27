@@ -310,7 +310,7 @@ class _AccountScreenState extends State<AccountScreen> {
                         style: defaultText14M,
                       ),
                       Text(
-                        '1900 8978',
+                        '077 457 2930',
                         style: defaultText14M.copyWith(
                           color: sub1Color,
                         ),

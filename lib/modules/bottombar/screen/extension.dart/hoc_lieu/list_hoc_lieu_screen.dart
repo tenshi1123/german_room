@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:german_room/modules/bottombar/screen/extension.dart/hoc_lieu/detail_learning_screen.dart';
 import 'package:german_room/student_models/hoclieu_model.dart';
 import 'package:german_room/student_repo/hoc_lieu_repo.dart';
+import 'package:german_room/utils/constants/color.dart';
 import 'package:german_room/utils/constants/styles.dart';
 
 class TopicListScreen extends StatelessWidget {
@@ -17,7 +19,7 @@ class TopicListScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         title: Text(
           'Chi tiết khóa học',
-          style: defaultText16M,
+          style: defaultText16B,
         ),
         leading: IconButton(
           icon:
@@ -32,13 +34,27 @@ class TopicListScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           final topic = topics[index];
           return ExpansionTile(
-            title: Text(topic.name, style: defaultText16B),
+            title: Row(
+              children: [
+                Icon(Icons.description, color: main1Color, size: 20.w),
+                SizedBox(width: 8.w),
+                Text(topic.name, style: defaultText16M),
+              ],
+            ),
             children: topic.menuItems.map((menuItem) {
               return ListTile(
-                title: Text(menuItem.name),
+                title: Row(
+                  children: [
+                    SizedBox(width: 8.w),
+                    Icon(Icons.touch_app, color: main1Color, size: 16.w),
+                    SizedBox(width: 8.w),
+                    Text(
+                      menuItem.name,
+                      style: defaultText14M,
+                    ),
+                  ],
+                ),
                 onTap: () async {
-                  // Xử lý khi người dùng chọn menu con
-                  // Ví dụ: chuyển trang hoặc hiển thị chi tiết
                   DetailLearingModel detailLearingModel =
                       await HocLieuRepo().getDetailLearing(
                     learningMaterialsId: topic.learningMaterialsId,

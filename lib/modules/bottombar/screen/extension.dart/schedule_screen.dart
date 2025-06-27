@@ -349,7 +349,6 @@ class _ItemTableCalenderState extends State<ItemTableCalender> {
           typeLearn: widget.model.typeLearn,
           meetingId: widget.model.meetingId,
         );
-
         pushWithoutNavBar(
           context,
           MaterialPageRoute(

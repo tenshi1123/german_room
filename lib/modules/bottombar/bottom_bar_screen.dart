@@ -71,7 +71,7 @@ class _BottombarState extends State<Bottombar> {
                       : 'assets/icons/course_icon.svg',
                   height: 30.h,
                 ),
-                label: 'Video'),
+                label: 'Khóa học'),
             BottomNavigationBarItem(
                 // backgroundColor: notifire.getprimerycolor,
                 icon: SvgPicture.asset(

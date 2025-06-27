@@ -133,30 +133,28 @@ class _PointScreenState extends State<PointScreen>
                                                   'ĐIỂM:',
                                                   baiTap.finalMark ??
                                                       'Chưa có'),
-                                              _buildActionRow(
-                                                context:
-                                                    null, // Context sẽ được cung cấp từ widget cha khi sử dụng
+                                              buildActionRow(
+                                                context: null,
                                                 label: 'Xem đề bài',
                                                 icon: Icons.description,
                                                 onTap: () {
                                                   if (baiTap
                                                       .urlFile.isNotEmpty) {
-                                                    _launchURL(baiTap.urlFile);
+                                                    launchURL(baiTap.urlFile);
                                                   } else {
                                                     _showSnackBar(context,
                                                         'Đề bài không có sẵn.');
                                                   }
                                                 },
                                               ),
-                                              _buildActionRow(
-                                                context:
-                                                    null, // Context sẽ được cung cấp từ widget cha khi sử dụng
+                                              buildActionRow(
+                                                context: null,
                                                 label: 'Xem bài đã nộp',
-                                                icon: Icons.cloud_upload,
+                                                icon: Icons.cloud_done,
                                                 onTap: () {
                                                   if (baiTap.urlFileCustomer
                                                       .isNotEmpty) {
-                                                    _launchURL(
+                                                    launchURL(
                                                         baiTap.urlFileCustomer);
                                                   } else {
                                                     _showSnackBar(context,
@@ -164,9 +162,8 @@ class _PointScreenState extends State<PointScreen>
                                                   }
                                                 },
                                               ),
-                                              _buildActionRow(
-                                                context:
-                                                    null, // Context sẽ được cung cấp từ widget cha khi sử dụng
+                                              buildActionRow(
+                                                context: null,
                                                 label: 'Xem đáp án',
                                                 icon: Icons.school,
                                                 onTap: () {
@@ -174,7 +171,7 @@ class _PointScreenState extends State<PointScreen>
                                                           null &&
                                                       baiTap.urlFileLecturers!
                                                           .isNotEmpty) {
-                                                    _launchURL(baiTap
+                                                    launchURL(baiTap
                                                         .urlFileLecturers!);
                                                   } else {
                                                     _showSnackBar(context,
@@ -289,32 +286,29 @@ String _addLeadingZero(int number) {
   return number.toString().padLeft(2, '0');
 }
 
-// --- HÀM TIỆN ÍCH CHO CÁC HÀNG HÀNH ĐỘNG (DÒNG MỚI THÊM VÀO) ---
-Widget _buildActionRow({
-  required BuildContext?
-      context, // Đặt là nullable để ví dụ main() chạy được mà không cần context thực
+Widget buildActionRow({
+  required BuildContext? context,
   required String label,
   required IconData icon,
   required VoidCallback onTap,
 }) {
   return InkWell(
-    // Giúp cho toàn bộ hàng có thể nhấn được
     onTap: onTap,
     child: Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
-          Icon(icon, color: const Color(0xFF296142)), // Icon màu xanh
+          Icon(icon, color: const Color(0xFF296142)),
           const SizedBox(width: 12.0),
           Text(
             label,
             style: const TextStyle(
               fontSize: 16,
-              color: Colors.blue, // Màu xanh để biểu thị là liên kết/hành động
+              color: Colors.blue,
               fontWeight: FontWeight.w500,
             ),
           ),
-          const Spacer(), // Đẩy icon mũi tên sang phải
+          const Spacer(),
           const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
         ],
       ),
@@ -322,13 +316,12 @@ Widget _buildActionRow({
   );
 }
 
-Future<void> _launchURL(String url) async {
+Future<void> launchURL(String url) async {
   if (!await launchUrl(Uri.parse(url))) {
     throw Exception('Could not launch $url');
   }
 }
 
-// Hàm hiển thị SnackBar (thông báo nhỏ ở cuối màn hình)
 void _showSnackBar(BuildContext context, String message) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(

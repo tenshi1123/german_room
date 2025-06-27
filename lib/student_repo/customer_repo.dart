@@ -109,13 +109,27 @@ class CustomerRepo {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? token = prefs.getString('token');
     dio.options.headers['Authorization'] = 'Bearer $token';
-    Response response;
-    response = await dio.post(ApiPath.changePassword, data: {
-      'password_old': oldPass,
-      'pass_new': password,
-      're_pass_new': newPass,
-    });
-    return response.data['message'];
+    try {
+      Response response;
+      response = await dio.get(
+        ApiPath.checkPassword,
+        queryParameters: {
+          'password': oldPass,
+        },
+      );
+      if (response.data['status'] == true) {
+        Response response2;
+        response2 = await dio.post(ApiPath.changePassword, data: {
+          'password': password,
+          're_password': newPass,
+        });
+        return response2.data['message'];
+      } else {
+        return response.data['message'];
+      }
+    } catch (e) {
+      return "Đã có lỗi xảy ra, vui lòng thử lại sau";
+    }
   }
 
   // change teacher password

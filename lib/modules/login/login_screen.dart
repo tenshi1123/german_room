@@ -296,7 +296,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    _makePhoneCall('1900 8978');
+                    _makePhoneCall('077 457 2930');
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -306,13 +306,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         ' Hotline hỗ trợ ',
                         style: defaultText12M,
                       ),
-                      Container(
-                        height: 1.h,
-                        width: 168.w,
-                        color: key1Color,
-                      ),
+                      const Spacer(),
                       Text(
-                        '1900 8978',
+                        '077 457 2930',
                         style: defaultText14M.copyWith(color: sub1Color),
                       )
                     ],

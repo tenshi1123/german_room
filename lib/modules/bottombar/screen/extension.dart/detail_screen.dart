@@ -1,6 +1,10 @@
+import 'dart:io';
+import 'package:german_room/student_repo/mycourse_repo.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
+import 'package:german_room/modules/course/point_excercise.dart';
 import 'package:german_room/student_models/schedule_model.dart';
 import 'package:german_room/utils/constants/styles.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -94,10 +98,13 @@ class _DetailScreenState extends State<DetailScreen> {
                 style: defaultText14B.copyWith(color: const Color(0xff296142)),
               ),
               SizedBox(height: 12.h),
-              Text(
-                widget.detailLesson.infoLesson.topic,
-                style: defaultText16B.copyWith(color: const Color(0xff296142)),
-              ),
+              widget.detailLesson.infoLesson.topic == ''
+                  ? const SizedBox()
+                  : Text(
+                      widget.detailLesson.infoLesson.topic,
+                      style: defaultText16B.copyWith(
+                          color: const Color(0xff296142)),
+                    ),
               SizedBox(height: 12.h),
               Text(
                 'Nội dung buổi học: ${widget.detailLesson.infoLesson.lessonContent}',
@@ -224,30 +231,6 @@ class _NestedTabBarState extends State<NestedTabBar>
             ),
           ],
         ),
-        // TabBar.secondary(
-        //   tabAlignment: TabAlignment.start,
-        //   padding: EdgeInsets.zero,
-        //   indicatorPadding: EdgeInsets.zero,
-        //   labelPadding: EdgeInsets.symmetric(horizontal: 10.w),
-        //   isScrollable: true,
-        //   indicatorColor: keyBlack,
-        //   indicatorSize: TabBarIndicatorSize.label,
-        //   indicator: UnderlineTabIndicator(
-        //     borderSide: BorderSide(width: 2.w), //hight of indicator
-        //     insets: EdgeInsets.symmetric(
-        //         horizontal:
-        //             20.w), //give some padding to reduce the size of indicator
-        //   ),
-        //   unselectedLabelColor: keyBlack.withOpacity(0.3),
-        //   labelStyle: defaultText14M,
-        //   labelColor: keyBlack,
-        //   controller: _tabController,
-        //   tabs: <Widget>[
-        //     homeTab(title: 'Toàn bộ', isSeprator: false),
-        //     homeTab(title: 'Chưa làm'),
-        //     homeTab(title: 'Hoàn thành'),
-        //   ],
-        // ),
         Expanded(
           child: TabBarView(
             controller: _tabController,
@@ -258,7 +241,7 @@ class _NestedTabBarState extends State<NestedTabBar>
                 itemCount: _detailLesson.listHomeWorks.length,
                 itemBuilder: (context, index) {
                   return Container(
-                    height: 367.h,
+                    height: 234.h,
                     width: 343.w,
                     margin: EdgeInsets.symmetric(
                       horizontal: 16.w,
@@ -280,111 +263,156 @@ class _NestedTabBarState extends State<NestedTabBar>
                       ],
                       color: Colors.white,
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            //icon exercise
-                            Icon(
-                              Icons.assignment,
-                              color: const Color(0xff296142),
-                              size: 20.h,
-                            ),
-                            SizedBox(
-                              width: 16.w,
-                            ),
-                            Expanded(
-                              child: Text(
-                                _detailLesson.listHomeWorks[index].name,
-                                style: defaultText20B,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 3,
-                              ),
-                            ),
-                            // Text(
-                            //   'chọn bài tập bạn muốn xem',
-                            //   style: defaultText14Re.copyWith(
-                            //     color: Colors.black.withAlpha(60),
-                            //   ),
-                            // ),
-                          ],
-                        ),
-                        const Divider(thickness: 1),
-                        Text(
-                          'Hạn nộp bài: ${_detailLesson.listHomeWorks[index].timeDeadline}',
-                          style: defaultText14B,
-                        ),
-                        SizedBox(
-                          height: 10.h,
-                        ),
-                        GestureDetector(
-                          onTap: () async {
-                            if (!await launchUrl(
-                              Uri.parse(
-                                _detailLesson.listHomeWorks[index].image,
-                              ),
-                            )) {
-                              throw Exception('Could not launch ');
-                            }
-                          },
-                          child: Stack(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
                             children: [
-                              Container(
-                                width: 120.w,
-                                height: 80.h,
-                                decoration: BoxDecoration(
-                                  color: Colors.blue.shade100,
-                                  gradient: LinearGradient(
-                                      begin: FractionalOffset.topCenter,
-                                      end: FractionalOffset.bottomCenter,
-                                      colors: [
-                                        Colors.grey.withOpacity(0.0),
-                                        Colors.black,
-                                      ],
-                                      stops: const [
-                                        0.0,
-                                        1.0,
-                                      ]),
-                                ),
-                                child: Image.network(
-                                    'https://t4.ftcdn.net/jpg/02/71/07/33/360_F_271073385_A6geLjwkrty3xkDPxaf7lcaEiNMtMwjN.jpg'),
+                              //icon exercise
+                              Icon(
+                                Icons.assignment,
+                                color: const Color(0xff296142),
+                                size: 20.h,
                               ),
-                              Container(
-                                width: 120.w,
-                                height: 80.h,
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                      begin: FractionalOffset.topCenter,
-                                      end: FractionalOffset.bottomCenter,
-                                      colors: [
-                                        Colors.white,
-                                        Colors.black.withAlpha(40),
-                                      ],
-                                      stops: const [
-                                        0.0,
-                                        1.0,
-                                      ]),
+                              SizedBox(
+                                width: 16.w,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  _detailLesson.listHomeWorks[index].name,
+                                  style: defaultText20B,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 3,
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                        Text(
-                          _detailLesson.listHomeWorks[index].note,
-                          style: defaultText16M,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                        ),
-                        Expanded(
-                          child: Text(
+                          const Divider(thickness: 1),
+                          Text(
                             'Giáo viên : ${_detailLesson.listHomeWorks[index].nameTeacher}',
                             style: defaultText16M,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 3,
                           ),
-                        ),
-                      ],
+                          SizedBox(
+                            height: 10.h,
+                          ),
+                          // GestureDetector(
+                          //   onTap: () async {
+                          //     if (!await launchUrl(
+                          //       Uri.parse(
+                          //         _detailLesson.listHomeWorks[index].image,
+                          //       ),
+                          //     )) {
+                          //       throw Exception('Could not launch ');
+                          //     }
+                          //   },
+                          //   child: Stack(
+                          //     children: [
+                          //       Container(
+                          //         width: 120.w,
+                          //         height: 80.h,
+                          //         decoration: BoxDecoration(
+                          //           color: Colors.blue.shade100,
+                          //           gradient: LinearGradient(
+                          //               begin: FractionalOffset.topCenter,
+                          //               end: FractionalOffset.bottomCenter,
+                          //               colors: [
+                          //                 Colors.grey.withOpacity(0.0),
+                          //                 Colors.black,
+                          //               ],
+                          //               stops: const [
+                          //                 0.0,
+                          //                 1.0,
+                          //               ]),
+                          //         ),
+                          //         child: Image.network(
+                          //             'https://t4.ftcdn.net/jpg/02/71/07/33/360_F_271073385_A6geLjwkrty3xkDPxaf7lcaEiNMtMwjN.jpg'),
+                          //       ),
+                          //       Container(
+                          //         width: 120.w,
+                          //         height: 80.h,
+                          //         decoration: BoxDecoration(
+                          //           gradient: LinearGradient(
+                          //               begin: FractionalOffset.topCenter,
+                          //               end: FractionalOffset.bottomCenter,
+                          //               colors: [
+                          //                 Colors.white,
+                          //                 Colors.black.withAlpha(40),
+                          //               ],
+                          //               stops: const [
+                          //                 0.0,
+                          //                 1.0,
+                          //               ]),
+                          //         ),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
+                          Text(
+                            'Hạn nộp bài: ${_detailLesson.listHomeWorks[index].timeDeadline}',
+                            style: defaultText14B,
+                          ),
+                          buildActionRow(
+                            context: null,
+                            label: 'Xem đề bài',
+                            icon: Icons.description,
+                            onTap: () {
+                              if (_detailLesson
+                                  .listHomeWorks[index].image.isNotEmpty) {
+                                launchURL(
+                                    _detailLesson.listHomeWorks[index].image);
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Đề bài không có sẵn.'),
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                          buildActionRow(
+                            context: null,
+                            label: 'Nộp bài',
+                            icon: Icons.upload_file,
+                            onTap: () {
+                              pickImageFromGallery(
+                                context,
+                                _detailLesson.listHomeWorks[index].documentId,
+                              );
+                            },
+                          ),
+                          buildActionRow(
+                            context: null,
+                            label: 'Xem bài đã nộp',
+                            icon: Icons.cloud_done,
+                            onTap: () {
+                              if (_detailLesson
+                                      .listHomeWorks[index].baiTapDaNop !=
+                                  null) {
+                                launchURL(_detailLesson
+                                        .listHomeWorks[index].baiTapDaNop ??
+                                    '');
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Không có sẵn.'),
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                          Text(
+                            _detailLesson.listHomeWorks[index].note,
+                            style: defaultText16M,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -429,58 +457,212 @@ class _NestedTabBarState extends State<NestedTabBar>
                                 maxLines: 3,
                               ),
                             ),
-                            // Text(
-                            //   'chọn bài tập bạn muốn xem',
-                            //   style: defaultText14Re.copyWith(
-                            //     color: Colors.black.withAlpha(60),
-                            //   ),
-                            // ),
                           ],
                         ),
                       ),
                     );
                   }),
-              // Column(
-              //   children: [
-              //     SizedBox(
-              //       width: 343.w,
-              //       height: 80.h,
-              //       child: Row(
-              //         children: [
-              //           Text('Không có tài liệu', style: defaultText16M)
-              //         ],
-              //       ),
-              //     )
-              //   ],
-              // ),
+
               Column(
                 children: [
                   SizedBox(
                     height: 10.h,
                   ),
                   HtmlWidget(
-                    _detailLesson.feedback,
+                    normalizeFeedback(_detailLesson.feedback),
                     textStyle: defaultText14B,
                   ),
                 ],
               ),
-              // Column(
-              //   children: [
-              //     SizedBox(
-              //       width: 343.w,
-              //       height: 80.h,
-              //       child: Row(
-              //         children: [
-              //           Text('Không có đánh giá', style: defaultText16M)
-              //         ],
-              //       ),
-              //     )
-              //   ],
-              // ),
             ],
           ),
         ),
       ],
+    );
+  }
+}
+
+String normalizeFeedback(String html) {
+  if (html.trim().isEmpty) return 'Chưa có đánh giá nào';
+  final cleaned = html.replaceAll(RegExp(r'<[^>]+>'), '').trim();
+  if (cleaned.isEmpty ||
+      cleaned.contains(RegExp(r'\d{2}:\d{2}\s\d{2}-\d{2}-\d{4}'))) {
+    return 'Chưa có đánh giá nào';
+  }
+
+  return html;
+}
+
+Future pickImageFromGallery(
+  BuildContext context,
+  final String classLessonDocumentId,
+) async {
+  final returnedImage = await ImagePicker().pickMultiImage();
+
+  if (returnedImage.isNotEmpty) {
+    List<File> photos = List<File>.from(returnedImage.map((e) => File(e.path)));
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setStateDialog) {
+            return Dialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16)),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.verified_user_outlined,
+                              color: Colors.blue),
+                          const SizedBox(width: 8),
+                          Text('Xem trước', style: defaultText14M),
+                          const Spacer(),
+                          const CloseButton(
+                            color: Colors.black,
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 12.h),
+                        child: Divider(
+                          color: Colors.grey.shade300,
+                          thickness: 1,
+                        ),
+                      ),
+                      ...photos.asMap().entries.map(
+                        (entry) {
+                          int index = entry.key;
+                          File photo = entry.value;
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.file(
+                                    photo,
+                                    width: double.infinity,
+                                    height: 200,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 8,
+                                  right: 8,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setStateDialog(() {
+                                        photos.removeAt(index);
+                                      });
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.black54,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      padding: const EdgeInsets.all(4),
+                                      child: const Icon(
+                                        Icons.remove,
+                                        color: Colors.white,
+                                        size: 20,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                      // OutlinedButton.icon(
+                      //   onPressed: () async {
+                      //     final moreImages =
+                      //         await ImagePicker().pickMultiImage();
+                      //     setStateDialog(() {
+                      //       photos.addAll(moreImages.map((e) => File(e.path)));
+                      //     });
+                      //   },
+                      //   icon: const Icon(Icons.add),
+                      //   label: const Text('Tải thêm ảnh lên'),
+                      //   style: OutlinedButton.styleFrom(
+                      //     side: const BorderSide(color: Colors.blue),
+                      //   ),
+                      // ),
+                      InkWell(
+                        onTap: () async {
+                          //gọi api
+                          bool success = await MycourseRepo().uploadHomework(
+                            classLessonDocumentId: classLessonDocumentId,
+                            photos: photos,
+                          );
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text(
+                                  'Thông báo',
+                                  style: defaultText16B,
+                                ),
+                                content: Text(
+                                  success
+                                      ? 'Yêu cầu nộp bài đã được gửi thành công!'
+                                      : 'Không thể nộp bài.',
+                                  style: defaultText14M,
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(
+                              left: 16.w, bottom: 26.h, top: 16.h, right: 16.w),
+                          padding: EdgeInsetsDirectional.symmetric(
+                            horizontal: 16.w,
+                            vertical: 12.w,
+                          ),
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Color(0xFF25AAE1),
+                                Color(0xFF004071),
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              stops: [0.0, 1.0],
+                            ),
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                          ),
+                          child: Center(
+                              child: Text(
+                            'Nộp bài',
+                            style: defaultText14B.copyWith(color: Colors.white),
+                          )),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

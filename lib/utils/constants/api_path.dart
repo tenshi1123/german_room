@@ -40,7 +40,9 @@ class ApiPath {
   static const String uploadHomework = '$baseUrl/homework/upload';
 
   static const String listClass = '$baseUrl/class';
+  //danh sách buổi học trong lớp
   static const String detailClass = '$baseUrl/class/detail';
+
   static const String point = '$baseUrl/student/point';
   //Khoa hoc mien phi
   static const String lessonFree = '$baseUrl/lesson/free';

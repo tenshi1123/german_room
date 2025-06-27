@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
+import 'package:german_room/modules/course/point_excercise.dart';
 import 'package:german_room/student_models/home_model.dart';
+import 'package:german_room/student_models/my_course_model.dart';
 import 'package:german_room/student_repo/home_repo.dart';
 import 'package:german_room/utils/constants/color.dart';
 import 'package:german_room/utils/constants/styles.dart';
 
 class AcademicReportScreen extends StatelessWidget {
   const AcademicReportScreen({super.key, required this.model});
-  final List<BaoCaoHocTapModel> model;
+  final List<MyCourseModel> model;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,122 +87,61 @@ class _BaoCaoHocTapItem extends StatelessWidget {
   const _BaoCaoHocTapItem({
     required this.model,
   });
-  final BaoCaoHocTapModel model;
+  final MyCourseModel model;
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 20.w, right: 20.w),
-      child: Container(
-        width: 350.w,
-        margin: EdgeInsets.only(top: 10.h),
-        padding: EdgeInsets.symmetric(
-          horizontal: 10.w,
-          vertical: 6.h,
-        ),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.2),
-              spreadRadius: 5,
-              blurRadius: 7,
-              offset: const Offset(0, 2), // changes position of shadow
+    return InkWell(
+      onTap: () async {
+        if (!context.mounted) return;
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PointScreen(
+              courseScheduleId: model.courseScheduleId,
             ),
-          ],
-        ),
-        child: Column(
-          children: [
-            Text(
-              model.name,
-              style: defaultText16B,
+          ),
+        );
+      },
+      child: Padding(
+        padding: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 10.h),
+        child: Container(
+          width: 350.w,
+          margin: EdgeInsets.only(top: 10.h),
+          padding: EdgeInsets.symmetric(
+            horizontal: 10.w,
+            vertical: 6.h,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(
+              12.r,
             ),
-            Divider(
-              color: key1Color,
-              thickness: 1,
-              indent: 15.w,
-              endIndent: 15.w,
-            ),
-            ListView.builder(
-                shrinkWrap: true,
-                physics: const ClampingScrollPhysics(),
-                itemCount: model.schedules.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return InkWell(
-                    onTap: () async {
-                      String detailFeedBack =
-                          await HomeRepo().getDetailFeedback(
-                        model.schedules[index].meetingId,
-                        model.schedules[index].typeLearn,
-                        model.schedules[index].meetingId,
-                      );
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: ((context) => DetailReportScreen(
-                                feedback: detailFeedBack,
-                              )),
-                        ),
-                      );
-                    },
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 30.h,
-                          width: 30.w,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withValues(alpha: 0.2),
-                                spreadRadius: 5,
-                                blurRadius: 7,
-                                offset: const Offset(
-                                    0, 2), // changes position of shadow
-                              ),
-                            ],
-                          ),
-                          child: const Center(
-                              child: Icon(Icons.keyboard_arrow_right_outlined)),
-                        ),
-                        SizedBox(
-                          width: 10.w,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              height: 4.h,
-                            ),
-                            Text(
-                              model.schedules[index].name,
-                              style: defaultText14B,
-                            ),
-                            Text(
-                              model.schedules[index].createdAt,
-                              style: defaultText14Re,
-                            ),
-                            Text(
-                              model.schedules[index].typeLearn,
-                              style: defaultText12Re.copyWith(
-                                color: main1Color,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 4.h,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  );
-                }),
-            SizedBox(
-              height: 10.h,
-            ),
-          ],
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withValues(alpha: 0.2),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: const Offset(0, 2), // changes position of shadow
+              ),
+            ],
+          ),
+          child: Column(
+            children: [
+              Text(
+                model.courseScheduleName,
+                style: defaultText16B,
+              ),
+              Divider(
+                color: key1Color,
+                thickness: 1,
+                indent: 15.w,
+                endIndent: 15.w,
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
+            ],
+          ),
         ),
       ),
     );

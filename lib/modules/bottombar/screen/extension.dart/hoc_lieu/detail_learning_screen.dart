@@ -21,6 +21,7 @@ class DetailLearingScreen extends StatefulWidget {
 
 class _DetailLearingScreenState extends State<DetailLearingScreen> {
   late DetailLearingModel detailLearingModel;
+  int? expandedIndex;
   @override
   void initState() {
     super.initState();
@@ -164,14 +165,13 @@ class _DetailLearingScreenState extends State<DetailLearingScreen> {
               itemCount: detailLearingModel.listQuestion.length,
               itemBuilder: (context, index) {
                 final question = detailLearingModel.listQuestion[index];
+                final isExpanded = expandedIndex == index;
+
                 return Container(
-                  margin: EdgeInsets.only(
-                    bottom: 16.h,
-                    left: 16.w,
-                    right: 16.w,
-                  ),
+                  margin:
+                      EdgeInsets.only(bottom: 16.h, left: 16.w, right: 16.w),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: isExpanded ? const Color(0xfff3faff) : Colors.white,
                     borderRadius: BorderRadius.circular(12.r),
                     boxShadow: [
                       BoxShadow(
@@ -181,24 +181,75 @@ class _DetailLearingScreenState extends State<DetailLearingScreen> {
                       ),
                     ],
                   ),
-                  child: ListTile(
-                    title: Text(question.title, style: defaultText16B),
-                    trailing: Icon(Icons.arrow_forward_ios,
-                        size: 16.sp, color: Colors.black),
-                    onTap: () async {
-                      String url = await HocLieuRepo().getLinkQuestion(
-                          partId: question.partLearningMaterialsId,
-                          questionId: question.questionsPartLearningMaterialId);
-                      //open web brower
-                      if (!await launchUrl(Uri.parse(url))) {
-                        // If the URL cannot be launched, show an error message
-                        throw Exception('Could not launch $url');
-                      }
-                    },
+                  child: Theme(
+                    data: Theme.of(context)
+                        .copyWith(dividerColor: Colors.transparent),
+                    child: ExpansionTile(
+                      key: Key(index.toString()), // để giữ trạng thái mở
+                      tilePadding: EdgeInsets.symmetric(horizontal: 16.w),
+                      onExpansionChanged: (expanded) {
+                        setState(() {
+                          expandedIndex = expanded ? index : null;
+                        });
+                      },
+                      title:
+                          Text('Übungen ${index + 1}', style: defaultText16B),
+                      trailing: Icon(
+                        isExpanded
+                            ? Icons.keyboard_arrow_up
+                            : Icons.keyboard_arrow_down,
+                        size: 20.sp,
+                        color: Colors.black,
+                      ),
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 16.w, vertical: 12.h),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                question.title,
+                                style: defaultText14M.copyWith(
+                                    color: Colors.grey[800]),
+                              ),
+                              SizedBox(height: 12.h),
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: ElevatedButton(
+                                  onPressed: () async {
+                                    String url =
+                                        await HocLieuRepo().getLinkQuestion(
+                                      partId: question.partLearningMaterialsId,
+                                      questionId: question
+                                          .questionsPartLearningMaterialId,
+                                    );
+                                    if (!await launchUrl(Uri.parse(url))) {
+                                      throw Exception('Could not launch $url');
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF00BFA6),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 20.w, vertical: 10.h),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8.r),
+                                    ),
+                                  ),
+                                  child: Text('Làm bài',
+                                      style: defaultText14B.copyWith(
+                                          color: Colors.white)),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 );
               },
-            ),
+            )
           ],
         ),
       ),

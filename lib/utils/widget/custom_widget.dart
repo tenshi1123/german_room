@@ -3,13 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:german_room/modules/chat/screen/chat_screen.dart';
-import 'package:german_room/modules/feature_home/exercise/detail_exam_screen.dart';
-import 'package:german_room/modules/feature_home/exercise/exercise_detail_screen.dart';
 import 'package:german_room/student_models/chat_models.dart';
 import 'package:german_room/student_models/home_model.dart';
-import 'package:german_room/student_models/my_course_model.dart';
 import 'package:german_room/student_repo/chat_repo.dart';
-import 'package:german_room/student_repo/home_repo.dart';
 import 'package:german_room/teacher/teacher_model/home_teacher_model.dart';
 import 'package:german_room/utils/constants/color.dart';
 import 'package:german_room/utils/constants/styles.dart';
@@ -123,100 +119,6 @@ class ExamDay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Placeholder();
-  }
-}
-
-class ExcerciseItem extends StatelessWidget {
-  const ExcerciseItem(
-      {super.key, required this.isComplete, this.model, this.courseID});
-  final bool isComplete;
-  final BaiTapValueModel? model;
-  final String? courseID;
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () async {
-        DetailExcerciseModel detailExcerciseModel =
-            await HomeRepo().getDetailExsercise(
-          id: model?.id ?? '',
-          customerCourseScheduleId: courseID ?? '',
-        );
-        if (!context.mounted) return;
-        if (model?.type == '1') {
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => TestScreen(
-              excerciseModel: detailExcerciseModel,
-            ),
-          ));
-        } else {
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => DetailTuLuanScreen(
-              documentModel: detailExcerciseModel.document,
-              valueModel: detailExcerciseModel.valueModel,
-            ),
-          ));
-        }
-      },
-      child: Container(
-        height: 66.h,
-        width: 350.w,
-        margin:
-            EdgeInsets.only(bottom: 10.h, right: 10.w, left: 10.w, top: 10.h),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.2),
-              spreadRadius: 5,
-              blurRadius: 7,
-              offset: const Offset(0, 1), // changes position of shadow
-            ),
-          ],
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          children: [
-            SizedBox(
-              width: 10.w,
-            ),
-            Container(
-              height: 45.h,
-              width: 45.w,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: isComplete ? mainGradient2 : mainGradient4,
-              ),
-              child: SvgPicture.asset(
-                'assets/icons/excercise.svg',
-                height: 18.h,
-                width: 18.w,
-                fit: BoxFit.scaleDown,
-              ),
-            ),
-            SizedBox(
-              width: 15.w,
-            ),
-            SizedBox(
-              height: 70.h,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    model?.name ?? 'Bai tap',
-                    style: defaultText16B,
-                  ),
-                  Text(
-                    'Hạn nộp: ${DateFormat("dd-MM-yyyy").format(model?.timeDeadline ?? DateTime.now())}',
-                    style: defaultText14Re,
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-    );
   }
 }
 
@@ -424,14 +326,6 @@ class _InfoLichhenState extends State<InfoLichhen> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(16.r)),
-            // boxShadow: const [
-            //   BoxShadow(
-            //     color: Colors.black,
-            //     offset: Offset(6, 6),
-            //     spreadRadius: 2,
-            //     blurStyle: BlurStyle.solid,
-            //   ),
-            // ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -501,31 +395,6 @@ class _InfoLichhenState extends State<InfoLichhen> {
                 title2:
                     ': ${DateFormat('HH:mm dd-MM-yyyy').format(_model.appointmentDate)}',
               ),
-
-              // Padding(
-              //   padding: EdgeInsets.only(
-              //     left: 12.w,
-              //     top: 10.h,
-              //     right: 12.w,
-              //   ),
-              //   child: Container(
-              //       width: 310.w,
-              //       height: 120.h,
-              //       padding: EdgeInsets.only(
-              //         left: 16.w,
-              //         top: 10.h,
-              //       ),
-              //       decoration: BoxDecoration(
-              //         borderRadius: BorderRadius.all(Radius.circular(12.r)),
-              //         color: const Color(0xffF5F7FA),
-              //       ), //
-              //       child: Text(
-              //         'Khách hẹn đến trung tâm',
-              //         style: defaultText14M.copyWith(
-              //           color: const Color(0xff09204E),
-              //         ),
-              //       )),
-              // ),
               const SizedBox(height: 16),
             ],
           ),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:german_room/modules/course/course_details_screen.dart';
+import 'package:german_room/modules/course/list_lesson_screen.dart';
 import 'package:german_room/modules/course/point_excercise.dart';
+import 'package:german_room/student_models/schedule_model.dart';
 import 'package:german_room/student_repo/mycourse_repo.dart';
 import 'package:german_room/student_models/my_course_model.dart';
 import 'package:german_room/utils/constants/color.dart';
@@ -224,6 +226,47 @@ class _CourseItem extends StatelessWidget {
             'Lớp: ${model.courseScheduleName} ',
             style: defaultText14M.copyWith(
               color: key1Color.withValues(alpha: 0.7),
+            ),
+          ),
+          SizedBox(
+            height: 10.h,
+          ),
+          GestureDetector(
+            onTap: () async {
+              List<ScheduleModel>? detailClassModel =
+                  await MycourseRepo().getListSchedule(
+                settingId: model.settingCourseTypeId,
+                courseId: model.courseScheduleId,
+              );
+              if (!context.mounted) return;
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ListLessonScreen(
+                    listLessonModel: detailClassModel,
+                    title: model.courseName,
+                  ),
+                ),
+              );
+            },
+            child: Container(
+              height: 39.h,
+              margin: EdgeInsets.symmetric(horizontal: 10.w),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                  border: Border.all(
+                    color: key2Color,
+                  )),
+              child: Center(
+                child: Text(
+                  'Lịch học',
+                  style: TextStyle(
+                    color: key1Color,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14.sp,
+                  ),
+                ),
+              ),
             ),
           ),
           SizedBox(

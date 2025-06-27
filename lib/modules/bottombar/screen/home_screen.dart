@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:german_room/modules/bottombar/screen/extension.dart/hoc_lieu/hoc_lieu_screen.dart';
 import 'package:german_room/modules/bottombar/screen/extension.dart/free_course_screen.dart';
 import 'package:german_room/modules/course/course_details_screen.dart';
+import 'package:german_room/modules/course/list_lesson_screen.dart';
 import 'package:german_room/student_models/schedule_model.dart';
 import 'package:german_room/utils/widget/custom_dialog.dart';
 import 'package:intl/intl.dart';
@@ -32,7 +33,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late ProfileModel infomodel;
   late List<ScheduleModel> listLichHoc = [];
-  late List<FreeCourseModel> listFreeCourse = [];
+  late List<MyCourseModel> listClass = [];
   @override
   void initState() {
     super.initState();
@@ -41,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _fetchData() async {
-    listFreeCourse = await MycourseRepo().getLessonFree();
+    listClass = await MycourseRepo().getLessonClass();
     listLichHoc = await CustomerRepo().getScheduleList(
       DateFormat('dd-MM-yyyy').format(DateTime.now()),
       DateFormat('dd-MM-yyyy').format(
@@ -183,14 +184,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: 'Học liệu', image: 'assets/images/bai_tap.png')),
                 GestureDetector(
                   onTap: () async {
-                    List<BaoCaoHocTapModel> model =
-                        await HomeRepo().getBaoCaoDiem();
+                    List<MyCourseModel> listModel =
+                        await MycourseRepo().getListMyCourse();
+                    // List<BaoCaoHocTapModel> model =
+                    //     await HomeRepo().getBaoCaoDiem();
                     if (!context.mounted) return;
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => AcademicReportScreen(
-                          model: model,
+                          model: listModel,
                         ),
                       ),
                     );
@@ -293,7 +296,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Padding(
             padding: EdgeInsets.symmetric(vertical: 10.h),
             child: Text(
-              '    Khóa học ',
+              '     Lớp học',
               style: defaultText16B,
             ),
           ),
@@ -306,39 +309,33 @@ class _HomeScreenState extends State<HomeScreen> {
               physics: const ScrollPhysics(),
               //itemExtent: 390.0.w,
               padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-              itemCount: listFreeCourse.length,
+              itemCount: listClass.length,
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
-                    onTap: () async {
-                      CourseVideoModel? detailClassModel =
-                          await MycourseRepo().getListTopical(
-                        typeId: '',
-                        scheduleId: '',
-                        courseId: listFreeCourse[index].courseId,
-                        type: 2,
-                      );
-                      if (!context.mounted) return;
-                      if (detailClassModel == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Không có dữ liệu'),
-                          ),
-                        );
-                        return;
-                      }
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CourseDetails(
-                            detailMyCourse: detailClassModel,
-                            type: 2,
-                          ),
+                  onTap: () async {
+                    List<ScheduleModel>? detailClassModel =
+                        await MycourseRepo().getListSchedule(
+                      settingId: listClass[index].settingCourseTypeId,
+                      courseId: listClass[index].courseScheduleId,
+                    );
+                    if (!context.mounted) return;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ListLessonScreen(
+                          listLessonModel: detailClassModel,
+                          title: listClass[index].courseName,
                         ),
-                      );
-                    },
-                    child: _reComment(model: listFreeCourse[index]));
+                      ),
+                    );
+                  },
+                  child: _reComment(model: listClass[index]),
+                );
               },
             ),
+          ),
+          SizedBox(
+            height: 20.h,
           ),
         ],
       ),
@@ -389,7 +386,7 @@ Widget _homeIcon({required String title, required String image}) {
   );
 }
 
-Widget _reComment({required FreeCourseModel model}) {
+Widget _reComment({required MyCourseModel model}) {
   return Container(
     height: 228.h,
     width: 252.w,
@@ -430,7 +427,7 @@ Widget _reComment({required FreeCourseModel model}) {
           style: defaultText14M,
         ),
         Text(
-          'Lộ trình: ${model.lessonNumber}',
+          model.settingCourseTypeName,
           style: defaultText12Re,
         ),
       ],
@@ -532,14 +529,15 @@ class _UpcomingState extends State<_Upcoming> {
                 ),
                 Container(
                   //height: 70.h,
-                  width: 70.w,
+                  width: 80.w,
                   decoration: BoxDecoration(
                     gradient: mainGradient2,
                     borderRadius: BorderRadius.all(
                       Radius.circular(12.r),
                     ),
                   ),
-                  padding: EdgeInsets.symmetric(vertical: 15.h),
+                  padding:
+                      EdgeInsets.symmetric(vertical: 12.h, horizontal: 4.w),
                   child: (Text(
                     widget.model.courseAlias,
                     style: defaultText16B.copyWith(
@@ -567,7 +565,10 @@ class _UpcomingState extends State<_Upcoming> {
                         style: defaultText14M,
                       ),
                       Text(
-                        '${widget.model.timeStart.hour}h : ${widget.model.timeStart.minute}',
+                        MaterialLocalizations.of(context).formatTimeOfDay(
+                          TimeOfDay.fromDateTime(widget.model.timeStart),
+                          alwaysUse24HourFormat: false,
+                        ),
                         style: defaultText14M,
                       ),
                     ],
@@ -580,7 +581,7 @@ class _UpcomingState extends State<_Upcoming> {
             ),
             Container(
               //height: 74.h,
-              width: 325.w,
+              width: 320.w,
               padding: EdgeInsets.symmetric(horizontal: 10.w),
               decoration: BoxDecoration(
                 color: key1Color.withValues(alpha: 0.1),
@@ -593,7 +594,7 @@ class _UpcomingState extends State<_Upcoming> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    height: 4.h,
+                    height: 8.h,
                   ),
                   Row(
                     children: [
@@ -601,7 +602,7 @@ class _UpcomingState extends State<_Upcoming> {
                         width: 80.w,
                         child: Text(
                           'Phòng học',
-                          style: defaultText14Re,
+                          style: defaultText14M,
                         ),
                       ),
                       Text(
@@ -610,9 +611,10 @@ class _UpcomingState extends State<_Upcoming> {
                       ),
                     ],
                   ),
-                  const Divider(
+                  Divider(
                     color: Colors.white,
                     thickness: 2,
+                    height: 20.h,
                   ),
                   Row(
                     children: [
@@ -620,7 +622,7 @@ class _UpcomingState extends State<_Upcoming> {
                         width: 80.w,
                         child: Text(
                           'Địa chỉ',
-                          style: defaultText14Re,
+                          style: defaultText14M,
                         ),
                       ),
                       SizedBox(
@@ -631,6 +633,9 @@ class _UpcomingState extends State<_Upcoming> {
                         ),
                       ),
                     ],
+                  ),
+                  SizedBox(
+                    height: 8.h,
                   ),
                 ],
               ),
@@ -704,7 +709,7 @@ class _UpcomingState extends State<_Upcoming> {
                   ),
                 ),
                 SizedBox(
-                  width: 60.w,
+                  width: 30.w,
                 ),
               ],
             ),
