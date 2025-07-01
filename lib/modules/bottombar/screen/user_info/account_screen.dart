@@ -212,7 +212,7 @@ class _AccountScreenState extends State<AccountScreen> {
                         56.r,
                       ),
                       child: Image.network(
-                        'https://lms.pmpenglish.edu.vn/images/${widget.profileModel.avatar}',
+                        widget.profileModel.avatar,
                         fit: BoxFit.fill,
                         errorBuilder: (BuildContext context, Object exception,
                             StackTrace? stackTrace) {

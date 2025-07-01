@@ -7,6 +7,7 @@ import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart
 import 'package:german_room/modules/course/point_excercise.dart';
 import 'package:german_room/student_models/schedule_model.dart';
 import 'package:german_room/utils/constants/styles.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 //import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -378,6 +379,33 @@ class _NestedTabBarState extends State<NestedTabBar>
                             label: 'Nộp bài',
                             icon: Icons.upload_file,
                             onTap: () {
+                              // nếu quá hạn nộp bài thì không cho nộp bài
+                              if (DateFormat("HH:mm dd-MM-yyyy")
+                                  .parse(_detailLesson
+                                      .listHomeWorks[index].timeDeadline)
+                                  .isBefore(DateTime.now())) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text(
+                                      'Thông báo',
+                                      style: defaultText16M,
+                                    ),
+                                    content: Text(
+                                      'Đã quá hạn nộp bài.',
+                                      style: defaultText14M,
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(),
+                                        child: const Text('Đóng'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                                return;
+                              }
                               pickImageFromGallery(
                                 context,
                                 _detailLesson.listHomeWorks[index].documentId,

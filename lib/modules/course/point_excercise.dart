@@ -124,11 +124,6 @@ class _PointScreenState extends State<PointScreen>
                                                   'THỜI GIAN NỘP:',
                                                   _formatDateTime(baiTap
                                                       .createdAtCustomer)),
-                                              _buildInfoRow('GHI CHÚ HỌC VIÊN:',
-                                                  baiTap.noteCustomer),
-                                              _buildInfoRow(
-                                                  'GHI CHÚ GIÁO VIÊN:',
-                                                  baiTap.noteLecturers),
                                               _buildInfoRow(
                                                   'ĐIỂM:',
                                                   baiTap.finalMark ??

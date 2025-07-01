@@ -482,7 +482,7 @@ class _ItemTableCalenderState extends State<ItemTableCalender> {
                           style: defaultText16M,
                           children: [
                             TextSpan(
-                                text: DateFormat('kk:mm– dd/MM/yyyy')
+                                text: DateFormat('kk:mm')
                                     .format(widget.model.timeStart),
                                 style:
                                     defaultText16B.copyWith(color: main1Color)),
@@ -498,7 +498,7 @@ class _ItemTableCalenderState extends State<ItemTableCalender> {
                           style: defaultText16M,
                           children: [
                             TextSpan(
-                                text: DateFormat('kk:mm – dd/MM/yyyy')
+                                text: DateFormat('kk:mm')
                                     .format(widget.model.timeEnd),
                                 style:
                                     defaultText16B.copyWith(color: main1Color)),
