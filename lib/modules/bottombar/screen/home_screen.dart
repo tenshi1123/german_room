@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:german_room/modules/bottombar/screen/extension.dart/detail_screen.dart';
 import 'package:german_room/modules/bottombar/screen/extension.dart/hoc_lieu/hoc_lieu_screen.dart';
 import 'package:german_room/modules/bottombar/screen/extension.dart/free_course_screen.dart';
 import 'package:german_room/modules/course/course_details_screen.dart';
@@ -18,6 +19,7 @@ import 'package:german_room/student_models/profile_model.dart';
 import 'package:german_room/student_repo/mycourse_repo.dart';
 import 'package:german_room/utils/constants/color.dart';
 import 'package:german_room/utils/constants/styles.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'extension.dart/schedule_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -488,16 +490,19 @@ class _UpcomingState extends State<_Upcoming> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        // VideoLessonModel videoLesson =
-        //     await MycourseRepo().getVideoLesson(id: model.id);
-        // if (!context.mounted) return;
-        // Navigator.of(context).push(
-        //   MaterialPageRoute(
-        //     builder: (context) => DetailLessonScreen(
-        //       videoLessonModel: videoLesson,
-        //     ),
-        //   ),
-        // );
+        DetaiLessonModel listExcercise = await MycourseRepo().getDetailSchedule(
+          checkinOffId: widget.model.checkinOffId,
+          typeLearn: widget.model.typeLearn,
+          meetingId: widget.model.meetingId,
+        );
+        pushWithoutNavBar(
+          context,
+          MaterialPageRoute(
+            builder: ((context) => DetailScreen(
+                  detailLesson: listExcercise,
+                )),
+          ),
+        );
       },
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),

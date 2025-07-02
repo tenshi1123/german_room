@@ -43,10 +43,12 @@ class ScheduleModel {
       courseAlias: json["course_alias"] ?? '',
       buoiHoc: json["buoi_hoc"] ?? json['name'] ?? '',
       createdDate: DateFormat("dd-MM-yyyy").parse(json["created_date"] ?? ''),
-      timeStart: DateFormat("HH:mm:ss")
-          .parse(json["time_start"] ?? '0000-00-00 00:00:00'),
-      timeEnd: DateFormat("HH:mm:ss")
-          .parse(json["time_end"] ?? '0000-00-00 00:00:00'),
+      timeStart: (json["time_start"].contains('-'))
+          ? DateFormat('yyyy-MM-dd HH:mm:ss').parse(json["time_start"])
+          : DateFormat('HH:mm:ss').parse(json["time_start"]),
+      timeEnd: (json["time_end"].contains('-'))
+          ? DateFormat('yyyy-MM-dd HH:mm:ss').parse(json["time_end"])
+          : DateFormat('HH:mm:ss').parse(json["time_end"]),
       phongHocName: json["phonghoc_name"],
       cosoName: json["coso_name"],
       checkinOffId: json["checkin_off_id"],
