@@ -8,8 +8,9 @@ import 'package:german_room/utils/constants/styles.dart';
 
 class TopicListScreen extends StatelessWidget {
   final List<HocLieuModel> topics;
-
-  const TopicListScreen({super.key, required this.topics});
+  final String imageUrl;
+  const TopicListScreen(
+      {super.key, required this.topics, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +66,7 @@ class TopicListScreen extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (context) => DetailLearingScreen(
                         detailearningModel: detailLearingModel,
+                        url: imageUrl,
                       ),
                     ),
                   );

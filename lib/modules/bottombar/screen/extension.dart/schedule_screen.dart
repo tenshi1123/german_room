@@ -275,10 +275,10 @@ class _CalenderScreenState extends State<CalenderScreen> {
               SizedBox(
                 height: 20.h,
               ),
-              Text(
-                'Chọn ngày trên lịch để xem lịch học',
-                style: defaultText16B,
-              ),
+              // Text(
+              //   'Chọn ngày trên lịch để xem lịch học',
+              //   style: defaultText16B,
+              // ),
               ValueListenableBuilder<List<ScheduleModel>>(
                 valueListenable: _selectedEvents,
                 builder: (context, value, _) {

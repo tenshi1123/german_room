@@ -162,6 +162,7 @@ class _CourseItem extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (context) => TopicListScreen(
                     topics: listHoclieuModel,
+                    imageUrl: model.courseImg,
                   ),
                 ),
               );

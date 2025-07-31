@@ -7,13 +7,16 @@ import 'package:german_room/student_repo/hoc_lieu_repo.dart';
 import 'package:german_room/utils/constants/color.dart';
 import 'package:german_room/utils/constants/styles.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:just_audio/just_audio.dart';
 
 class DetailLearingScreen extends StatefulWidget {
   const DetailLearingScreen({
     super.key,
     required this.detailearningModel,
+    required this.url,
   });
   final DetailLearingModel detailearningModel;
+  final String url;
 
   @override
   State<DetailLearingScreen> createState() => _DetailLearingScreenState();
@@ -95,13 +98,13 @@ class _DetailLearingScreenState extends State<DetailLearingScreen> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: 20.w,
+                horizontal: 16.w,
               ),
               child: Html(
-                data: testHtml,
+                data: detailLearingModel.detailModel.detail,
                 style: {
                   "body": Style(
-                    fontSize: FontSize(16.sp),
+                    fontSize: FontSize(14.sp),
                     color: key1Color,
                     textAlign: TextAlign.justify,
                   ),
@@ -112,12 +115,7 @@ class _DetailLearingScreenState extends State<DetailLearingScreen> {
             SizedBox(
               height: 20.h,
             ),
-            Text(
-              'Danh sách Video',
-              style: defaultText20B.copyWith(
-                color: key1Color,
-              ),
-            ),
+
             SizedBox(
               height: detailLearingModel.listVideo.isEmpty ? 10.h : 0,
             ),
@@ -133,22 +131,44 @@ class _DetailLearingScreenState extends State<DetailLearingScreen> {
                     itemCount: detailLearingModel.listVideo.length,
                     itemBuilder: (context, index) {
                       final video = detailLearingModel.listVideo[index];
-                      return ListTile(
-                        title: Text(video.name, style: defaultText16B),
-                        leading: Icon(Icons.play_circle,
-                            size: 40.sp, color: Colors.grey),
-                        onTap: () async {
-                          if (!await launchUrl(Uri.parse(video.link))) {
-                            throw Exception('Could not launch ');
-                          }
-                        },
-                      );
+                      return video.type == 'audio'
+                          ? SimpleAudioPlayer(
+                              model: video,
+                            )
+                          : Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                // Ảnh mờ
+                                Opacity(
+                                  opacity: 0.6, // điều chỉnh độ mờ
+                                  child: Image.network(
+                                    widget.url,
+                                    height: 200.h,
+                                    width: 350.w,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                Container(
+                                  width: 60,
+                                  height: 60,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.black45,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(
+                                    Icons.play_arrow,
+                                    color: Colors.white,
+                                    size: 40,
+                                  ),
+                                ),
+                              ],
+                            );
                     },
                   ),
             // List of questions
-            SizedBox(
-              height: 16.h,
-            ),
+            // SizedBox(
+            //   height: 16.h,
+            // ),
             Text(
               'Danh sách câu hỏi',
               style: defaultText20B.copyWith(
@@ -257,99 +277,114 @@ class _DetailLearingScreenState extends State<DetailLearingScreen> {
   }
 }
 
-class _CourseItem extends StatelessWidget {
-  const _CourseItem({required this.index, required this.model});
-  final int index;
-  final KhoaHocModel model;
+class SimpleAudioPlayer extends StatefulWidget {
+  final VideoModel model;
+
+  const SimpleAudioPlayer({super.key, required this.model});
+
+  @override
+  State<SimpleAudioPlayer> createState() => _SimpleAudioPlayerState();
+}
+
+class _SimpleAudioPlayerState extends State<SimpleAudioPlayer> {
+  late AudioPlayer _player;
+  Duration _duration = Duration.zero;
+  Duration _position = Duration.zero;
+  @override
+  void initState() {
+    super.initState();
+    _player = AudioPlayer();
+    _init();
+    _player.durationStream.listen((d) {
+      if (d != null) {
+        setState(() => _duration = d);
+      }
+    });
+    _player.positionStream.listen((p) {
+      setState(() => _position = p);
+    });
+  }
+
+  Future<void> _init() async {
+    await _player.setUrl(widget.model.link);
+  }
+
+  @override
+  void dispose() {
+    _player.dispose();
+    super.dispose();
+  }
+
+  String formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final minutes = twoDigits(duration.inMinutes.remainder(60));
+    final seconds = twoDigits(duration.inSeconds.remainder(60));
+    return '$minutes:$seconds';
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 20.w),
-      //height: 402.h,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(
-          Radius.circular(16),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16),
-            ),
-            child: Image.network(
-              model.courseImg,
-              width: 350.w,
-              fit: BoxFit.fitWidth,
-            ),
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+          margin: EdgeInsets.symmetric(horizontal: 16.w),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade200,
+            borderRadius: BorderRadius.circular(32),
           ),
-          SizedBox(
-            height: 10.h,
-          ),
-          SizedBox(
-            width: 330.w,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  ' Khóa học : ${model.name}',
-                  style: TextStyle(
-                    color: key1Color,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16.sp,
-                  ),
+          child: Row(
+            children: [
+              // Nút play/pause
+              IconButton(
+                icon: Icon(
+                  _player.playing
+                      ? Icons.pause_circle_filled
+                      : Icons.play_circle_fill,
+                  size: 36,
                 ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 10.h,
-          ),
-          GestureDetector(
-            onTap: () async {
-              List<HocLieuModel> listHoclieuModel =
-                  await HocLieuRepo().getDsCap3(courseId: model.courseId);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => TopicListScreen(
-                    topics: listHoclieuModel,
-                  ),
-                ),
-              );
-            },
-            child: Container(
-              height: 39.h,
-              margin: EdgeInsets.symmetric(horizontal: 10.w),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.0),
-                  border: Border.all(
-                    color: key2Color,
-                  )),
-              child: Center(
-                child: Text(
-                  'Chi tiết',
-                  style: TextStyle(
-                    color: key1Color,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14.sp,
-                  ),
+                onPressed: () {
+                  _player.playing ? _player.pause() : _player.play();
+                },
+              ),
+
+              // Thời gian
+              Text(
+                '${formatDuration(_position)} / ${formatDuration(_duration)}',
+                style: defaultText14M,
+              ),
+
+              const SizedBox(width: 10),
+
+              // Thanh tiến trình
+              Expanded(
+                child: Slider(
+                  value: _position.inSeconds
+                      .toDouble()
+                      .clamp(0, _duration.inSeconds.toDouble()),
+                  min: 0,
+                  max: _duration.inSeconds.toDouble(),
+                  onChanged: (value) {
+                    _player.seek(Duration(seconds: value.toInt()));
+                  },
                 ),
               ),
-            ),
+            ],
           ),
-          Divider(
-            color: key2Color,
-            thickness: 1.h,
-          )
-        ],
-      ),
+        ),
+        RichText(
+          text: TextSpan(
+            text: '${widget.model.type} - ',
+            style: defaultText16M,
+            children: [
+              TextSpan(
+                  text: widget.model.name,
+                  style: defaultText16B.copyWith(color: main1Color)),
+            ],
+          ),
+        ),
+        SizedBox(height: 16.h),
+      ],
     );
   }
 }
-
-String testHtml =
-    '<style>\r\n    body {\r\n      font-family: sans-serif;\r\n      padding: 10px;\r\n      margin: 0;\r\n      line-height: 1.6;\r\n    }\r\n\r\n    img {\r\n      max-width: 100%;\r\n      height: auto;\r\n      display: block;\r\n      margin-bottom: 1em;\r\n    }\r\n\r\n    table {\r\n      width: 100%;\r\n      border-collapse: collapse;\r\n    }\r\n\r\n    td, th {\r\n      padding: 10px;\r\n      vertical-align: top;\r\n      word-wrap: break-word;\r\n    }\r\n\r\n    @media (max-width: 600px) {\r\n      table, tbody, tr, td {\r\n        display: block;\r\n        width: 100%;\r\n      }\r\n\r\n      td {\r\n        margin-bottom: 10px;\r\n        border: none;\r\n      }\r\n    }\r\n  </style><p>Hier lernen Sie:</p>\r\n\r\n<ul>\r\n\t<li>Vorstellungen verstehen</li>\r\n</ul>\r\n\r\n<p>&Uuml;bungen: 3<br />\r\nZeit: 45 min</p>\r\n\r\n<p>1. Lernen Sie zwei Deutschlerner kennen. Lesen Sie den Text und beantworten Sie Fragen zum Text in den &Uuml;bungen unten.</p>\r\n\r\n<table border="1" cellpadding="1" cellspacing="1" style="width:100%">\r\n\t<tbody>\r\n\t\t<tr>\r\n\t\t\t<td><img alt="" src="https://lms.germanroom.vn/images/khoa_hoc/junge_frau_flickr3177468665_Kennyrivas_240.jpg" style="height:240px; width:180px" /></td>\r\n\t\t\t<td>Hallo. Ich hei&szlig;e Maria. Ich bin 26 Jahre alt und Spanierin. Ich komme aus Madrid und habe dort BWL, also&nbsp;Betriebswirtschaft, studiert. Mein Schwerpunkt im Studium waren internationale&nbsp;Handelsbeziehungen\r\n\t\t\t<p>&ouml;konomische Kontakte zwischen zwei Partnern</p>\r\n\t\t\t. Da ist Deutsch nat&uuml;rlich wichtig! Ich habe schon w&auml;hrend des Studiums viel Deutsch gelernt, weil Deutschland, &Ouml;sterreich und die Schweiz wichtige Handelspartner f&uuml;r Spanien sind. 2008 war ich dann Erasmus-Studentin. Ich habe ein Semester an der Humboldt-Universit&auml;t in Berlin studiert. Der erste Monat an einer deutschen Universit&auml;t war schwer, weil ich noch nicht so gut Deutsch gesprochen habe. Aber sp&auml;ter wurde es leichter. Ich bin sogar ins Theater gegangen und habe es gut verstanden. In Berlin habe ich Thomas kennen gelernt. Im letzten Jahr haben wir geheiratet. Jetzt lebe ich in Berlin und arbeite bei der Firma &bdquo;Seiler&ldquo;. Sie produzieren B&uuml;rom&ouml;bel. Ich reise oft nach Spanien, weil &bdquo;Seiler&ldquo; dort viele M&ouml;bel verkauft</td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td><img alt="" src="https://lms.germanroom.vn/images/khoa_hoc/junger_mann_flickr3125029673_EmeryCoPhoto_240.jpg" style="height:240px; width:180px" /></td>\r\n\t\t\t<td>Hi. Ich bin Alexander und wohne in Warschau, Polen. Ich habe schon in der Schule Deutsch gelernt. Meine Klasse hatte eine deutsche Partnerklasse in Leipzig. Jeder polnische Sch&uuml;ler hatte einen deutschen Partnersch&uuml;ler. Mein Partnersch&uuml;ler war Martin. Wir haben oft E-Mails geschrieben und sp&auml;ter auch telefoniert. In der zehnten Klasse haben wir die Partnerklasse besucht. Leipzig ist eine tolle Stadt mit vielen historischen Sehensw&uuml;rdigkeiten. Zum Beispiel das &quot;V&ouml;lkerschlachtdenkmal\r\n\t\t\t<p>Sehensw&uuml;rdigkeit in Leipzig</p>\r\n\t\t\t&quot;. Das ist ein langes Wort, oder? Ich mag die deutsche Sprache, weil man so lange W&ouml;rter&nbsp;basteln&nbsp;kann. Jetzt studiere ich Geschichte und Deutsch an der Warschauer Universit&auml;t. Nach dem Studium m&ouml;chte ich das in der Schule unterrichten. Warum Deutsch? Weil Polen und Deutschland Nachbarn sind und wir uns verstehen m&uuml;ssen. Nach Leipzig fahre ich jedes Jahr und besuche meinen Freund Martin.</td>\r\n\t\t</tr>\r\n\t</tbody>\r\n</table>\r\n\r\n<p>Beantworten Sie jetzt die Fragen zu den Texten in den&nbsp;<a href="https://de.deutsch-uni.com/lernplattform/inhalte/index.do?do=uebung&amp;sequ=de9cbefcf58ca98ad4597f21776b4d1" onclick="openAppletWindow()" target="sequence">&Uuml;bungen</a>.</p>\r\n';
