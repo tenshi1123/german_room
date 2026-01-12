@@ -12,6 +12,7 @@ class ApiPath {
 
   //Tai khoan ca nhan
   static const String userInfo = '$baseUrl/user/info';
+  static const String changeAvatar = '$baseUrl/user/update/avatar';
   static const String deleteUser = '$baseUrl/user/delete';
   // check password
   static const String checkPassword = '$baseUrl/user/password/check';

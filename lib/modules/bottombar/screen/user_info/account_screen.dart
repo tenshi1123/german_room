@@ -1,12 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:german_room/modules/bottombar/screen/user_info/change_pass_screen.dart';
 import 'package:german_room/modules/login/login_screen.dart';
 import 'package:german_room/student_models/profile_model.dart';
+import 'package:german_room/student_repo/customer_repo.dart';
 import 'package:german_room/utils/constants/color.dart';
 import 'package:german_room/utils/constants/styles.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key, required this.profileModel});
@@ -16,12 +20,77 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
+  final ImagePicker _picker = ImagePicker();
+  File? _avatarFile;
+
   Future<void> _makePhoneCall(String phoneNumber) async {
     final Uri launchUri = Uri(
       scheme: 'tel',
       path: phoneNumber,
     );
     await launchUrl(launchUri);
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    final XFile? pickedFile = await _picker.pickImage(
+      source: source,
+      imageQuality: 80,
+    );
+    if (pickedFile != null) {
+      setState(() {
+        _avatarFile = File(pickedFile.path);
+      });
+      bool status = await CustomerRepo().changeAvatar(_avatarFile!);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            status
+                ? 'Đổi ảnh đại diện thành công!'
+                : 'Đổi ảnh đại diện thất bại!',
+          ),
+        ),
+      );
+    }
+  }
+
+  void _showPickImageDialog() {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
+      ),
+      builder: (_) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: Text(
+                  'Chọn từ thư viện',
+                  style: defaultText14M,
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  _pickImage(ImageSource.gallery);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: Text(
+                  'Chụp ảnh',
+                  style: defaultText14M,
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  _pickImage(ImageSource.camera);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -205,20 +274,47 @@ class _AccountScreenState extends State<AccountScreen> {
                 Positioned(
                   top: 0,
                   left: 15.w,
-                  child: CircleAvatar(
-                    radius: 56.r,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(
-                        56.r,
-                      ),
-                      child: Image.network(
-                        widget.profileModel.avatar,
-                        fit: BoxFit.fill,
-                        errorBuilder: (BuildContext context, Object exception,
-                            StackTrace? stackTrace) {
-                          return const Text('N/A');
-                        },
-                      ),
+                  child: GestureDetector(
+                    onTap: _showPickImageDialog,
+                    child: Stack(
+                      children: [
+                        CircleAvatar(
+                          radius: 56.r,
+                          backgroundColor: Colors.grey.shade200,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(56.r),
+                            child: _avatarFile != null
+                                ? Image.file(
+                                    _avatarFile!,
+                                  )
+                                : Image.network(
+                                    widget.profileModel.avatar,
+                                    errorBuilder: (_, __, ___) => const Icon(
+                                      Icons.person,
+                                      size: 40,
+                                    ),
+                                  ),
+                          ),
+                        ),
+
+                        /// ICON CAMERA
+                        Positioned(
+                          bottom: 2,
+                          right: 2,
+                          child: Container(
+                            padding: EdgeInsets.all(6.r),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.6),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.camera_alt,
+                              color: Colors.white,
+                              size: 18.r,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

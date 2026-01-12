@@ -361,7 +361,7 @@ Widget _homeIcon({required String title, required String image}) {
                   height: 62.h,
                   width: 62.w,
                   decoration: BoxDecoration(
-                      shape: BoxShape.circle, gradient: mainGradient2),
+                      shape: BoxShape.circle, gradient: asdjajsdhasjidas),
                 ),
               ),
               Center(

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:german_room/student_models/profile_model.dart';
 import 'package:german_room/student_models/schedule_model.dart';
@@ -69,6 +71,23 @@ class CustomerRepo {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.remove('token');
       return null;
+    }
+  }
+
+  Future<bool> changeAvatar(File file) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+    dio.options.headers['Authorization'] = 'Bearer $token';
+    try {
+      final formData = FormData.fromMap({
+        'file': await MultipartFile.fromFile(file.path),
+      });
+      final response = await dio.post(ApiPath.changeAvatar, data: formData);
+      return response.data['status'] == true;
+    } on DioException {
+      return false;
+    } catch (e) {
+      return false;
     }
   }
 
