@@ -38,6 +38,12 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        
+        externalNativeBuild {
+            cmake {
+                arguments += "-DCMAKE_SHARED_LINKER_FLAGS=-Wl,-z,max-page-size=16384"
+            }
+        }
     }
     signingConfigs {
         create("release") {
@@ -52,6 +58,12 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("release")
+        }
+    }
+    packaging {
+        jniLibs {
+            // Quan trọng: Không nén thư viện .so để hệ thống có thể memory-map trực tiếp
+            useLegacyPackaging = false
         }
     }
 }
